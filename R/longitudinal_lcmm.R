@@ -80,6 +80,12 @@ predict_lcmm_ <- function(x, newdata, subject, avg = FALSE) {
   ### rownames(cluster_allocation) <- newdata$patient.id
   # Make predictions with lcmm package
   predictions <- lcmm::predictY(x, newdata = newdata)
+  if (nrow(predictions$pred) != nrow(newdata)) {
+    stop(sprintf(
+      "lcmm::predictY produced %d predictions but expected %d. Probable reason: static covariates contain missing data.",
+      nrow(predictions$pred), nrow(newdata)
+    ))
+  }
   # Choose correct cluster for prediction
   if (avg == FALSE) {
     #### predictions <- predictions$pred * model.matrix(~as.factor(cluster)-1,data=cluster_allocation)

@@ -55,7 +55,7 @@ the relevant dynamic covariate.
 
 ```{r}
 # DF with Static covariates
-epilectic_dfs <- split_wide_df(
+epileptic_dfs <- split_wide_df(
   epileptic,
   ids = "id",
   times = "time",
@@ -63,13 +63,13 @@ epilectic_dfs <- split_wide_df(
   dynamic = c("dose"),
   measurement_name = "value"
 )
-static <- epilectic_dfs$df_static
+static <- epileptic_dfs$df_static
 head(static)
 ```
 
 ```{r}
 # DF with Dynamic covariates
-dynamic <- epilectic_dfs$df_dynamic
+dynamic <- epileptic_dfs$df_dynamic
 head(dynamic[["dose"]])
 ```
 

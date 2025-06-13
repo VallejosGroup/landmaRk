@@ -184,6 +184,13 @@ setMethod(
           newdata = newdata,
           ...
         )
+        if (length(x@longitudinal_predictions[[as.character(landmarks)]][[predictor]]) != nrow(newdata)) {
+          stop(paste("Number of predictions for predictor",
+          predictor,
+          "at landmark time",
+          landmarks,
+          "differs from number of observations in the risk set."))
+        }
       }
     } else {
       # Recursion
