@@ -36,7 +36,8 @@ test_that("LCMM works as expected", {
       formula = value ~ treat + age + gender + learn.dis,
       mixture = ~ treat + age + gender + learn.dis,
       subject = "id",
-      ng = 2
+      ng = 2,
+      dynamic_covariates = "dose"
     )
 
 
@@ -45,7 +46,8 @@ test_that("LCMM works as expected", {
       landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
       method = "lcmm",
       subject = "id",
-      avg = FALSE
+      avg = FALSE,
+      dynamic_covariates = "dose"
     ),
     paste(
       "lcmm::predictY produced 387 predictions but expected 430.",

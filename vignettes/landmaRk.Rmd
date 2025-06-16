@@ -163,12 +163,14 @@ landmarking_object <- landmarking_object |>
   fit_longitudinal(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     method = "lme4",
-    formula = value ~ treat + age + gender + learn.dis + (time | id)
+    formula = value ~ treat + age + gender + learn.dis + (time | id),
+    dynamic_covariates = c("dose")
   ) |>
   predict_longitudinal(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     method = "lme4",
-    allow.new.levels = TRUE
+    allow.new.levels = TRUE,
+    dynamic_covariates = c("dose")
   ) |>
   fit_survival(
     formula = Surv(event_time, event_status) ~
@@ -217,13 +219,15 @@ landmarking_object <- landmarking_object |>
     formula = value ~ treat + age + gender + learn.dis,
     mixture = ~ treat + age + gender + learn.dis,
     subject = "id",
-    ng = 2
+    ng = 2,
+    dynamic_covariates = c("dose")
   ) |>
   predict_longitudinal(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     method = "lcmm",
     subject = "id",
-    avg = FALSE
+    avg = FALSE,
+    dynamic_covariates = c("dose")
   ) |>
   fit_survival(
     formula = Surv(event_time, event_status) ~

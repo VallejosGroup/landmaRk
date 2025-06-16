@@ -5,7 +5,7 @@
 \title{Fits the specified longitudinal model for the latent processes underlying the
 relevant time-varying covariates, up until the landmarking times}
 \usage{
-\S4method{fit_longitudinal}{Landmarking}(x, landmarks, method, formula, ...)
+\S4method{fit_longitudinal}{Landmarking}(x, landmarks, method, formula, dynamic_covariates, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{Landmarking}}.}
@@ -16,6 +16,9 @@ relevant time-varying covariates, up until the landmarking times}
 argument is a formula, and has at least an argument "data".}
 
 \item{formula}{A formula to be used in longitudinal submodel fitting.}
+
+\item{dynamic_covariates}{Vector of time-varying covariates to be modelled
+as the outcome of a longitudinal model.}
 
 \item{...}{Additional arguments passed to the longitudinal model fitting
 function (e.g. number of classes/clusters for lcmm).}

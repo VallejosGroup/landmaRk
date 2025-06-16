@@ -90,12 +90,28 @@ setMethod(
               get(x@event_time)
             )
           )
-
-        if (length(dynamic_covariates) > 0) {
+        # Construct formula for survival analysis
+        survival_formula <- paste0(
+          "survival::Surv(",
+          "event_time",
+          ", ",
+          "event_status",
+          ") ~ "
+        )
+        # Add time-varying covariates to formula and dataset for survival analysis
+        if (length(dynamic_covariates) == 0) {
+          survival_formula <- as.formula(paste0(survival_formula, "1"))
+        } else {
+          survival_formula <- as.formula(paste0(
+            survival_formula,
+            paste(dynamic_covariates,
+                  collapse = " + "
+            )
+          ))
           dataset <- cbind(
             dataset,
             do.call(
-              cbind,
+              bind_cols,
               x@longitudinal_predictions[[as.character(landmarks)]]
             )
           )

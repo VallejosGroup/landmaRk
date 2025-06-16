@@ -4,7 +4,7 @@
 \alias{predict_longitudinal,Landmarking-method}
 \title{Make predictions for time-varying covariates at specified landmark times}
 \usage{
-\S4method{predict_longitudinal}{Landmarking}(x, landmarks, method, ...)
+\S4method{predict_longitudinal}{Landmarking}(x, landmarks, method, dynamic_covariates, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{Landmarking}}.}
@@ -12,6 +12,9 @@
 \item{landmarks}{A numeric vector of landmark times.}
 
 \item{method}{Longitudinal data analysis method used to make predictions}
+
+\item{dynamic_covariates}{Vector of time-varying covariates to be modelled
+as the outcome of a longitudinal model.}
 
 \item{...}{Additional arguments passed to the prediction function (e.g.
 number of classes/clusters for lcmm).}
