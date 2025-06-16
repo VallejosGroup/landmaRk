@@ -140,6 +140,8 @@ setGeneric(
 setMethod(
   "predict_longitudinal", "Landmarking",
   function(x, landmarks, method, dynamic_covariates, ...) {
+    value <- NULL # Global var
+
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "lcmm") {
       method <- predict_lcmm_
@@ -199,7 +201,7 @@ setMethod(
                     "dynamic covariate",
                     dynamic_covariate,
                     "Imputing values.")
-            if (class(predictions) == "numeric") {
+            if (inherits(predictions) == "numeric") {
               predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
             } else {
               predictions[is.na(predictions)] <- names(sort(-table(predictions)))[1]
