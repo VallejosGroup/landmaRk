@@ -118,6 +118,7 @@ Now we call the function fit_survival to fit the survival model.
 landmarking_object <- landmarking_object |>
   fit_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    formula = Surv(event_time, event_status) ~ treat + age + gender + learn.dis,
     windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c()
@@ -170,6 +171,8 @@ landmarking_object <- landmarking_object |>
     allow.new.levels = TRUE
   ) |>
   fit_survival(
+    formula = Surv(event_time, event_status) ~
+      treat + age + gender + learn.dis + dose,
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
     method = "coxph",
@@ -223,6 +226,8 @@ landmarking_object <- landmarking_object |>
     avg = FALSE
   ) |>
   fit_survival(
+    formula = Surv(event_time, event_status) ~
+      treat + age + gender + learn.dis + dose,
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
     method = "coxph",
@@ -234,5 +239,4 @@ landmarking_object <- landmarking_object |>
     method = "coxph", 
     type = "survival"
   )
-
 ```

@@ -5,12 +5,14 @@
 \title{Fits the specified survival model at the landmark times and up to the horizon
 times specified by the user}
 \usage{
-fit_survival(x, landmarks, windows, method, dynamic_covariates = c())
+fit_survival(x, formula, landmarks, windows, method, dynamic_covariates = c())
 }
 \arguments{
 \item{x}{An object of class \code{\link{Landmarking}}.}
 
-\item{landmarks}{Numeric vector of landmark times}
+\item{formula}{A formula to be used in survival submodel fitting.}
+
+\item{landmarks}{Numeric vector of landmark times.}
 
 \item{windows}{Vector of prediction windows determining horizon times.}
 
