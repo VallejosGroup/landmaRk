@@ -7,7 +7,7 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(landmarkR)
+library(landmaRk)
 library(tidyverse)
 
-test_check("landmarkR")
+test_check("landmaRk")

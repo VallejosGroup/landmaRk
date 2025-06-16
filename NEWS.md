@@ -1,3 +1,3 @@
-# landmarkR (development version)
+# landmaRk (development version)
 
-* Initial release of landmarkR
+* Initial release of landmaRk
