@@ -1,4 +1,4 @@
-Package: landmarkR
+Package: landmaRk
 Title: Time-to-Event Landmark Analysis using an Array of Longitudinal and Survival Sub-Models
 Version: 0.0.0.9000
 Authors@R: c(
@@ -17,7 +17,7 @@ Description: Provides a comprehensive framework for conducting time-to-event
   It aims to facilitate the analysis of time-to-event data with time-dependent
   covariates.
 License: GPL (>= 3)
-BugReports: https://github.com/VallejosGroup/landmarkR/issues
+BugReports: https://github.com/VallejosGroup/landmaRk/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
@@ -41,5 +41,5 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 LazyData: true
 VignetteBuilder: knitr
-URL: https://vallejosgroup.github.io/landmarkR/, https://github.com/VallejosGroup/landmarkR
+URL: https://vallejosgroup.github.io/landmaRk/, https://github.com/VallejosGroup/landmaRk
 Language: en-GB

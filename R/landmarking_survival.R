@@ -2,7 +2,8 @@
 #' times specified by the user
 #'
 #' @param x An object of class \code{\link{Landmarking}}.
-#' @param landmarks Numeric vector of landmark times
+#' @param landmarks Numeric vector of landmark times.
+#' @param formula A formula to be used in survival submodel fitting.
 #' @param windows Vector of prediction windows determining horizon times.
 #' @param method Method for survival analysis, either "survfit" or "coxph".
 #' @param dynamic_covariates Vector of time-varying covariates to be used
@@ -15,6 +16,7 @@
 setGeneric(
   "fit_survival",
   function(x,
+           formula,
            landmarks,
            windows,
            method,
@@ -36,6 +38,7 @@ setMethod(
   "fit_survival",
   "Landmarking",
   function(x,
+           formula,
            landmarks,
            windows,
            method,
@@ -44,9 +47,8 @@ setMethod(
     if (is(method)[1] == "character" && method == "survfit") {
       method <- survival::survfit
     } else if (is(method)[1] == "character" && method == "coxph") {
-      method <- survival::coxph
-    }
-    if (!(is(method)[1] == "function")) {
+      method <- "coxph"
+    } else if (!(is(method)[1] == "function")) {
       stop(
         "Argument ",
         method,
@@ -54,7 +56,7 @@ setMethod(
         "\n"
       )
     }
-    if (!("data" %in% names(as.list(args(method))))) {
+    if ((is(method)[1] == "function") && !("data" %in% names(as.list(args(method))))) {
       stop(
         "Argument ",
         method,
@@ -115,14 +117,23 @@ setMethod(
           )
         }
         # Call to method that performs survival analysis
-        x@survival_fits[[paste0(landmarks, "-", window)]] <- method(survival_formula,
-          data = dataset
-        )
+        if (is(method)[1] == "character" && method == "coxph") {
+          x@survival_fits[[paste0(landmarks, "-", window)]] <- survival::coxph(formula,
+                                                                      data = dataset,
+                                                                      x = TRUE,
+                                                                      model = TRUE
+          )
+        } else {
+          x@survival_fits[[paste0(landmarks, "-", window)]] <- method(formula,
+                                                                      data = dataset
+          )
+        }
       }
     } else {
       # Recursion
       x <- fit_survival(
         x,
+        formula,
         landmarks[1],
         windows,
         method,
@@ -130,6 +141,7 @@ setMethod(
       )
       x <- fit_survival(
         x,
+        formula,
         landmarks[-1],
         windows,
         method,

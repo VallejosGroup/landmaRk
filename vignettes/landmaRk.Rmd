@@ -1,8 +1,8 @@
 ---
-title: "Introduction to the landmarkR package"
+title: "Introduction to the landmaRk package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to the landmarkR package}
+  %\VignetteIndexEntry{Introduction to the landmaRk package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(tidyverse)
-library(landmarkR)
+library(landmaRk)
 ```
 
 # Setup
@@ -118,6 +118,7 @@ Now we call the function fit_survival to fit the survival model.
 landmarking_object <- landmarking_object |>
   fit_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    formula = Surv(event_time, event_status) ~ treat + age + gender + learn.dis,
     windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c()
@@ -172,6 +173,8 @@ landmarking_object <- landmarking_object |>
     dynamic_covariates = c("dose")
   ) |>
   fit_survival(
+    formula = Surv(event_time, event_status) ~
+      treat + age + gender + learn.dis + dose,
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
     method = "coxph",
@@ -227,6 +230,8 @@ landmarking_object <- landmarking_object |>
     dynamic_covariates = c("dose")
   ) |>
   fit_survival(
+    formula = Surv(event_time, event_status) ~
+      treat + age + gender + learn.dis + dose,
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
     method = "coxph",
@@ -238,5 +243,4 @@ landmarking_object <- landmarking_object |>
     method = "coxph", 
     type = "survival"
   )
-
 ```
