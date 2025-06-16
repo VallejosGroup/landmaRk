@@ -162,12 +162,14 @@ landmarking_object <- landmarking_object |>
   fit_longitudinal(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     method = "lme4",
-    formula = value ~ treat + age + gender + learn.dis + (time | id)
+    formula = value ~ treat + age + gender + learn.dis + (time | id),
+    cores = 8
   ) |>
   predict_longitudinal(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     method = "lme4",
-    allow.new.levels = TRUE
+    allow.new.levels = TRUE,
+    cores = 8
   ) |>
   fit_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),

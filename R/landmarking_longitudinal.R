@@ -6,6 +6,8 @@
 #' @param method A function for fitting a longitudinal data model, whose first
 #' argument is a formula, and has at least an argument "data".
 #' @param formula A formula to be used in longitudinal submodel fitting.
+#' @param cores The number of cores to use when fitting longitudinal models
+#'  in parallel.
 #' @param ... Additional arguments passed to the longitudinal model fitting
 #'   function (e.g. number of classes/clusters for lcmm).
 #' @returns An object of class \code{\link{Landmarking}}.
@@ -18,6 +20,7 @@ setGeneric(
            landmarks,
            method,
            formula,
+           cores = getOption("Ncpus", 1L),
            ...) {
     standardGeneric("fit_longitudinal")
   }
@@ -34,7 +37,7 @@ setGeneric(
 setMethod(
   "fit_longitudinal",
   "Landmarking",
-  function(x, landmarks, method, formula, ...) {
+  function(x, landmarks, method, formula, cores = getOption("Ncpus", 1L), ...) {
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "lcmm") {
       method <- fit_lcmm_
@@ -91,8 +94,10 @@ setMethod(
           data = dataframe, ...
         )
       }
+
     } else {
       # Recursion
+      x@longitudinal_fits[[as.character(landmarks)]][[predictor]]
       x <- fit_longitudinal(x, landmarks[1], method, formula, ...)
       x <- fit_longitudinal(x, landmarks[-1], method, formula, ...)
     }
