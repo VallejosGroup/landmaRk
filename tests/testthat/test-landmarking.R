@@ -18,7 +18,7 @@ test_that("Validity checks for Landmarking class work", {
   names(temp) <- NULL
 
   expect_error(
-    landmarkR::Landmarking(
+    Landmarking(
       data_static = static,
       data_dynamic = temp,
       event_indicator = "with.status",
@@ -32,7 +32,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: event_indicator column missing from data_static
   expect_error(
-    landmarkR::Landmarking(
+    Landmarking(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "missing.column",
@@ -46,7 +46,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: ids column missing from data_static
   expect_error(
-    landmarkR::Landmarking(
+    Landmarking(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",
@@ -60,7 +60,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: event_time column missing from data_static
   expect_error(
-    landmarkR::Landmarking(
+    Landmarking(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",
@@ -74,7 +74,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: times column missing from data_dynamic
   expect_error(
-    landmarkR::Landmarking(
+    Landmarking(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",
@@ -88,7 +88,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: measurements column missing from data_dynamic
   expect_error(
-    landmarkR::Landmarking(
+    Landmarking(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",

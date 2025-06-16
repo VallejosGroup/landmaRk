@@ -1,4 +1,4 @@
-# landmarkR <img src="man/figures/logo.png" align="right" width="150" alt = "landmarkR package logo"/>
+# landmaRk <img src="man/figures/logo.png" align="right" width="150" alt = "landmaRk package logo"/>
 
 Time-to-event analysis using a wide array of longitudinal and survival
 sub-models.
@@ -7,9 +7,9 @@ sub-models.
 
 | Usage                                                                                                                                                | Release                                                                                                                         | Development                                                                                                                                                                                                                     |
 |------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)                                                        | [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/landmarkR)](https://cran.r-project.org/package=landmarkR)            | [![R build status](https://github.com/VallejosGroup/landmarkR/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/VallejosGroup/landmarkR/actions/workflows/R-CMD-check.yaml)                         |
-| [![License: GPL-3](https://img.shields.io/badge/License-GPL3-green.svg)](https://opensource.org/license/gpl-3-0)                                     | [![r-universe](https://vallejosgroup.r-universe.dev/badges/landmarkR)](https://vallejosgroup.r-universe.dev/landmarkR)          | [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)  |
-| [![Website](https://img.shields.io/website?url=https%3A%2F%2Fvallejosgroup.github.io%2FlandmarkR%2F)](https://vallejosgroup.github.io/landmarkR/)    |                                                                                                                                 | [![codecov](https://codecov.io/gh/VallejosGroup/landmarkR/graph/badge.svg?token=YUQ6PINJSO)](https://app.codecov.io/gh/VallejosGroup/landmarkR)                                                                                 |
+| ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)                                                        | [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/landmaRk)](https://cran.r-project.org/package=landmaRk)            | [![R build status](https://github.com/VallejosGroup/landmaRk/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/VallejosGroup/landmaRk/actions/workflows/R-CMD-check.yaml)                         |
+| [![License: GPL-3](https://img.shields.io/badge/License-GPL3-green.svg)](https://opensource.org/license/gpl-3-0)                                     | [![r-universe](https://vallejosgroup.r-universe.dev/badges/landmaRk)](https://vallejosgroup.r-universe.dev/landmaRk)          | [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)  |
+| [![Website](https://img.shields.io/website?url=https%3A%2F%2Fvallejosgroup.github.io%2FlandmaRk%2F)](https://vallejosgroup.github.io/landmaRk/)    |                                                                                                                                 | [![codecov](https://codecov.io/gh/VallejosGroup/landmaRk/graph/badge.svg?token=YUQ6PINJSO)](https://app.codecov.io/gh/VallejosGroup/landmaRk)                                                                                 |
 
 <!-- badges: end -->
 
@@ -33,7 +33,7 @@ Moreover, whilst landmarking methods typically reply on Cox proportional
 hazards models, nearly any survival model can also be used.
 
 Whilst packages already exist which implement landmarking, these packages
-implement specific longitudinal and survival models. The aim of `landmarkR` is
+implement specific longitudinal and survival models. The aim of `landmaRk` is
 to support a wide array of longitudinal and survival sub-models whilst providing
 a modular system which allows others to incorporate their own models. 
 
@@ -43,7 +43,7 @@ We are planning to release the package on CRAN once the software is mature. For
 now, you can get a CRAN-like experience by installing from our r-universe 
 
 ``` R
-install.packages("landmarkR",
+install.packages("landmaRk",
                  repos = c("https://vallejosgroup.r-universe.dev",
                            "https://cloud.r-project.org"))
 ```
@@ -52,21 +52,21 @@ Alternatively, the package can be built from source using `remotes`
 
 ``` R
 # install.packages("remotes")
-remotes::install_github("vallejosgroup/landmarkR", build_vignettes = TRUE)
+remotes::install_github("vallejosgroup/landmaRk", build_vignettes = TRUE)
 ```
 
 ## Getting started
 
-We recommend starting with the `landmarkR` vignette, which provides an
+We recommend starting with the `landmaRk` vignette, which provides an
 overview of the package and how to use it. You can access the vignette in R by
 calling
 
 ``` R
-vignette("landmarkR")
+vignette("landmaRk")
 ```
 
 Alternatively, you can view the vignette
-[online](https://vallejosgroup.github.io/landmarkR/articles/landmarkR.html).
+[online](https://vallejosgroup.github.io/landmaRk/articles/landmaRk.html).
 
 ## References
 

@@ -1,4 +1,4 @@
-#' landmarkR
+#' landmaRk
 ## usethis namespace: start
 #' @importFrom methods new is
 #' @importFrom stats as.formula predict model.matrix
@@ -6,6 +6,6 @@
 #' @import dplyr
 ## usethis namespace: end
 #' @docType package
-#' @name landmarkR
+#' @name landmaRk
 #' @keywords internal
 "_PACKAGE"
