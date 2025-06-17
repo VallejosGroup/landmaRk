@@ -19,7 +19,7 @@
 #'
 #' @examples
 split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
-  if (!("data.frame" %in% is(df))) {
+  if (!is.data.frame(df)) {
     stop("@df must be a data frame.")
   } else if (!(is(ids)[1] == "character")) {
     stop("@ids must be a character.")
