@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+set.seed(123)
 library(tidyverse)
 library(landmaRk)
 ```
