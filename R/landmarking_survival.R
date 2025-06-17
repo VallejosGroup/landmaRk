@@ -86,8 +86,8 @@ setMethod(
               get(x@event_indicator)
             ),
             event_time = ifelse(get(x@event_time) > horizon,
-              horizon,
-              get(x@event_time)
+              window,
+              get(x@event_time) - landmarks
             )
           )
         # Construct formula for survival analysis
