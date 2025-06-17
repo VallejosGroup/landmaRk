@@ -22,15 +22,21 @@ split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
   if (!("data.frame" %in% is(df))) {
     stop("@df must be a data frame.")
   } else if (!(is(ids)[1] == "character")) {
-    stop("@ids must be a string.")
+    stop("@ids must be a character.")
+  } else if (length(ids) != 1) {
+    stop("@ids should be of length one.")
   } else if (!(is(times)[1] == "character")) {
-    stop("@times must be a string.")
+    stop("@times must be a character.")
+  } else if (length(times) != 1) {
+    stop("@times should be of length one.")
   } else if (!(is(measurement_name)[1] == "character")) {
-    stop("@measurement_name must be a string.")
+    stop("@measurement_name must be a character.")
+  } else if (length(measurement_name) != 1) {
+    stop("@measurement_name should be of length one.")
   } else if (!(is(static)[1] == "character")) {
-    stop("@static must be a vector of strings.")
+    stop("@static must be a character vector.")
   } else if (!(is(dynamic)[1] == "character")) {
-    stop("@dynamic must be a vector of strings.")
+    stop("@dynamic must be a character vector.")
   } else if (!(all(static %in% colnames(df)))) {
     stop("all elements of @static must refer to column names in @df.")
   } else if (!(all(dynamic %in% colnames(df)))) {
