@@ -13,9 +13,7 @@ test_that("LCMM works as expected", {
   static <- epileptic_dfs$df_static
   dynamic <- epileptic_dfs$df_dynamic
 
-  # dynamic$dose[sample(1:nrow(dynamic$dose), nrow(dynamic$dose) * 0.1), "value"] <- NA
-
-  sample_missing <- sample(1:nrow(static), nrow(static) * 0.1)
+  sample_missing <- sample(seq_len(nrow(static)), nrow(static) * 0.1)
   static[sample_missing, "treat"] <- NA
 
   landmarking_object <- Landmarking(
@@ -39,7 +37,6 @@ test_that("LCMM works as expected", {
       ng = 2,
       dynamic_covariates = "dose"
     )
-
 
   expect_error(
     predict_longitudinal(x,
