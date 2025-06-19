@@ -8,6 +8,9 @@
 #' @param formula A formula to be used in longitudinal submodel fitting.
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
+#' @param cores Number of cores/threads to be used for parallel computation.
+#'   Defaults to either \code{options("Ncpus")} if set, or 1 (single threaded)
+#'   otherwise.
 #' @param ... Additional arguments passed to the longitudinal model fitting
 #'   function (e.g. number of classes/clusters for lcmm).
 #' @returns An object of class \code{\link{Landmarking}}.
@@ -49,6 +52,7 @@ setMethod(
     cores = getOption("Ncpus", 1L),
     ...
   ) {
+    landmark <- NULL # Global var
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "lcmm") {
       method <- fit_lcmm_

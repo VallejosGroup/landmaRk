@@ -28,6 +28,10 @@ argument is a formula, and has at least an argument "data".}
 \item{dynamic_covariates}{Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.}
 
+\item{cores}{Number of cores/threads to be used for parallel computation.
+Defaults to either \code{options("Ncpus")} if set, or 1 (single threaded)
+otherwise.}
+
 \item{...}{Additional arguments passed to the longitudinal model fitting
 function (e.g. number of classes/clusters for lcmm).}
 }
