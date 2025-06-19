@@ -9,6 +9,9 @@
 #' @param formula A formula to be used in longitudinal sub-model fitting.
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
+#' @param cores Number of cores/threads to be used for parallel computation.
+#'   Defaults to either \code{options("Ncpus")} if set, or 1 (single threaded)
+#'   otherwise.
 #' @param ... Additional arguments passed to the longitudinal model fitting
 #'   function (e.g. number of classes/clusters for lcmm).
 #' @returns An object of class \code{\link{Landmarking}}.
@@ -17,7 +20,15 @@
 #' @examples
 setGeneric(
   "fit_longitudinal",
-  function(x, landmarks, method, formula, dynamic_covariates, ...) {
+  function(
+    x,
+    landmarks,
+    method,
+    formula,
+    dynamic_covariates,
+    cores = getOption("Ncpus", 1L),
+    ...
+  ) {
     standardGeneric("fit_longitudinal")
   }
 )
@@ -34,7 +45,16 @@ setGeneric(
 setMethod(
   "fit_longitudinal",
   "Landmarking",
-  function(x, landmarks, method, formula, dynamic_covariates, ...) {
+  function(
+    x,
+    landmarks,
+    method,
+    formula,
+    dynamic_covariates,
+    cores = getOption("Ncpus", 1L),
+    ...
+  ) {
+    landmark <- NULL # Global var
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "lcmm") {
       method <- fit_lcmm_
@@ -57,69 +77,67 @@ setMethod(
         "\n"
       )
     }
-    # Base case for recursion
-    if (length(landmarks) == 1) {
-      # Check that relevant risk set is available
-      if (!(landmarks %in% x@landmarks)) {
-        stop(
-          "Risk set for landmark time ",
-          landmarks,
-          " has not been computed",
-          "\n"
-        )
-      }
-      # Create list for storing model fits for longitudinal analysis
-      x@longitudinal_fits[[as.character(landmarks)]] <- list()
+    `%dopar%` <- foreach::`%dopar%`
 
-      # Risk set for the landmark time
-      at_risk_individuals <- x@risk_sets[[as.character(landmarks)]]
-      # Loop that iterates over all time-varying covariates to fit a longitudinal
-      # model for the underlying trajectories
-      for (dynamic_covariate in dynamic_covariates) {
-        if (!(dynamic_covariate) %in% names(x@data_dynamic)) {
-          stop(paste(
-            "Data frame has not been provided for dynamic covariate",
-            dynamic_covariate
-          ))
-        }
-
-        # Construct dataset for the longitudinal analysis (static measurements +
-        # time-varying covariate and its recording time)
-        dataframe <- x@data_dynamic[[dynamic_covariate]] |>
-          # Subset with individuals who are at risk only
-          filter(get(x@ids) %in% at_risk_individuals) |>
-          # Subset with observations prior to landmark time
-          filter(get(x@times) <= landmarks) |>
-          # Join with static covariates
-          left_join(x@data_static, by = x@ids)
-        # Fit longitudinal model according to chosen method
-        x@longitudinal_fits[[as.character(landmarks)]][[
-          dynamic_covariate
-        ]] <- method(
-          formula,
-          data = dataframe,
-          ...
-        )
-      }
+    if (Sys.info()["sysname"] == "Windows") {
+      # Use PSOCK on Windows
+      cl <- parallel::makeCluster(cores, type = "PSOCK")
+      doSNOW::registerDoSNOW(cl)
     } else {
-      # Recursion
-      x <- fit_longitudinal(
-        x,
-        landmarks[1],
-        method,
-        formula,
-        dynamic_covariates,
-        ...
-      )
-      x <- fit_longitudinal(
-        x,
-        landmarks[-1],
-        method,
-        formula,
-        dynamic_covariates,
-        ...
-      )
+      # Use FORK on Unix-like systems
+      cl <- parallel::makeCluster(cores, type = "FORK")
+      doParallel::registerDoParallel(cl)
     }
+
+    on.exit(parallel::stopCluster(cl), add = TRUE)
+
+    x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %dopar%
+      {
+        # Check that relevant risk set is available
+        if (!(landmark %in% x@landmarks)) {
+          stop(
+            "Risk set for landmark time ",
+            landmark,
+            " has not been computed",
+            "\n"
+          )
+        }
+        # Create list for storing model fits for longitudinal analysis
+        model_fits <- list()
+
+        # Risk set for the landmark time
+        at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
+        # Loop that iterates over all time-varying covariates to fit a longitudinal
+        # model for the underlying trajectories
+        for (dynamic_covariate in dynamic_covariates) {
+          if (!(dynamic_covariate) %in% names(x@data_dynamic)) {
+            stop(paste(
+              "Data frame has not been provided for dynamic covariate",
+              dynamic_covariate
+            ))
+          }
+
+          # Construct dataset for the longitudinal analysis (static measurements +
+          # time-varying covariate and its recording time)
+          dataframe <- x@data_dynamic[[dynamic_covariate]] |>
+            # Subset with individuals who are at risk only
+            dplyr::filter(get(x@ids) %in% at_risk_individuals) |>
+            # Subset with observations prior to landmark time
+            dplyr::filter(get(x@times) <= landmark) |>
+            # Join with static covariates
+            dplyr::left_join(x@data_static, by = x@ids)
+          # Fit longitudinal model according to chosen method
+          model_fits[[
+            dynamic_covariate
+          ]] <- method(
+            formula,
+            data = dataframe,
+            ...
+          )
+        }
+        model_fits
+      }
+    names(x@longitudinal_fits) <- landmarks
     x
   }
 )

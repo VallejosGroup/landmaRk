@@ -5,7 +5,15 @@
 \title{Fits the specified longitudinal model for the latent processes underlying the
 relevant time-varying covariates, up until the landmarking times}
 \usage{
-fit_longitudinal(x, landmarks, method, formula, dynamic_covariates, ...)
+fit_longitudinal(
+  x,
+  landmarks,
+  method,
+  formula,
+  dynamic_covariates,
+  cores = getOption("Ncpus", 1L),
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{Landmarking}}.}
@@ -20,6 +28,10 @@ has a \code{data} argument.}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.}
+
+\item{cores}{Number of cores/threads to be used for parallel computation.
+Defaults to either \code{options("Ncpus")} if set, or 1 (single threaded)
+otherwise.}
 
 \item{...}{Additional arguments passed to the longitudinal model fitting
 function (e.g. number of classes/clusters for lcmm).}
