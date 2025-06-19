@@ -3,16 +3,17 @@
 #'
 #' @param x An object of class \code{\link{Landmarking}}.
 #' @param landmarks A vector of Landmark times.
-#' @param method A function for fitting a longitudinal data model, whose first
-#' argument is a formula, and has at least an argument "data".
-#' @param formula A formula to be used in longitudinal submodel fitting.
+#' @param method Either "lcmm" or "lme4" or a function for fitting a
+#'   longitudinal data model, where the first argument is a formula, and also
+#'   has a \code{data} argument.
+#' @param formula A formula to be used in longitudinal sub-model fitting.
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
 #' @param ... Additional arguments passed to the longitudinal model fitting
 #'   function (e.g. number of classes/clusters for lcmm).
 #' @returns An object of class \code{\link{Landmarking}}.
 #' @export
-#'
+#' @seealso [lcmm::hlme()] and [lme4::lmer()] for additional arguments.
 #' @examples
 setGeneric(
   "fit_longitudinal",
@@ -31,6 +32,7 @@ setGeneric(
 #'
 #' @inheritParams fit_longitudinal
 #' @returns An object of class \code{\link{Landmarking}}.
+#' @seealso [lcmm::hlme()] and [lme4::lmer()] for additional arguments.
 #' @export
 #'
 #' @examples
