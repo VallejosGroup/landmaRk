@@ -1,5 +1,5 @@
 # Check that method is a function with arguments formula, data, ...
-check_method_fit <- function(method) {
+check_method_long_fit <- function(method) {
   if (is(method)[1] == "character" && method == "lcmm") {
     method <- fit_lcmm_
   } else if (is(method)[1] == "character" && method == "lme4") {
@@ -26,7 +26,7 @@ check_method_fit <- function(method) {
   method
 }
 
-check_method_predict <- function(method) {
+check_method_long_predict <- function(method) {
   # Check that method is a function with arguments formula, data, ...
   if (is(method)[1] == "character" && method == "lcmm") {
     method <- predict_lcmm_
@@ -66,7 +66,7 @@ check_dynamic_covariate <- function(x, dynamic_covariate) {
 }
 
 # Check that longitudinal model is available for prediction
-check_longitudinal_fit <- function(x, landmarks) {
+check_long_fit <- function(x, landmarks) {
   # Check that relevant model fit is available
   if (!(as.character(landmarks) %in% names(x@longitudinal_fits))) {
     stop(

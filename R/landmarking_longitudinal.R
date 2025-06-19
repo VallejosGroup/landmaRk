@@ -54,7 +54,7 @@ setMethod(
   ) {
     landmark <- NULL # Global var
 
-    method <- check_method_fit(method)
+    method <- check_method_long_fit(method)
 
     cl <- init_cl(cores)
     on.exit(parallel::stopCluster(cl), add = TRUE)
@@ -132,12 +132,12 @@ setMethod(
   function(x, landmarks, method, dynamic_covariates, ...) {
     value <- NULL # Global var
 
-    method <- check_method_predict(method)
+    method <- check_method_long_predict(method)
 
     # Base case for recursion
     if (length(landmarks) == 1) {
       check_riskset(x, landmarks)
-      check_longitudinal_fit(x, landmarks)
+      check_long_fit(x, landmarks)
 
       # Relevant risk set
       risk_set <- x@risk_sets[[as.character(landmarks)]]
