@@ -158,7 +158,7 @@ setMethod(
     cat("  Risk sets:", "\n")
     if (length(object@risk_sets) > 0) {
       for (i in seq_along(object@risk_sets)) {
-        n <- nrow(object@risk_sets[[i]])
+        n <- length(object@risk_sets[[i]])
         cat("    Landmark ",
             object@landmarks[i],
             ": ",
