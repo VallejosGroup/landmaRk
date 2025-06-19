@@ -161,14 +161,6 @@ setMethod(
       if (!(landmarks %in% x@landmarks)) {
         stop("Risk set for landmark time ", landmarks, " has not been computed\n")
       }
-      # Check that relevant model fit is available
-      if (!(as.character(landmarks) %in% names(x@longitudinal_fits))) {
-        stop(
-          "Longitudinal model has not been fit for landmark time",
-          landmarks,
-          "\n"
-        )
-      }
       # Relevant risk set
       risk_set <- x@risk_sets[[as.character(landmarks)]]
       # Create list for storing model predictions, for longitudinal analysis
@@ -179,9 +171,9 @@ setMethod(
         # Check that relevant model fit is available
         if (!(dynamic_covariate %in% names(x@longitudinal_fits[[as.character(landmarks)]]))) {
           warning(
-            "Longitudinal model has not been fit for dynamic covariate ",
+            "Longitudinal model has not been fit for dynamic covariate '",
             dynamic_covariate,
-            " at landmark time",
+            "' at landmark time ",
             landmarks,
             ". Using Last Observation Carried Forward (LOCF).",
             "\n"
@@ -196,12 +188,15 @@ setMethod(
             filter(row_number() == n()) |>
             pull(value, name = get(x@ids))
           predictions[names(last_observations)] <- last_observations
+
+
+
           if (any(is.na(predictions))) {
-            warning("Some observations have no measurement available for",
-                    "dynamic covariate",
+            warning("Some observations have no measurement available for ",
+                    "dynamic covariate '",
                     dynamic_covariate,
-                    "Imputing values.")
-            if (inherits(predictions) == "numeric") {
+                    "'. Imputing values.")
+            if (class(predictions) == "numeric") {
               predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
             } else {
               predictions[is.na(predictions)] <- names(sort(-table(predictions)))[1]
