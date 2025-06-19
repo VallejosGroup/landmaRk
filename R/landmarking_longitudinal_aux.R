@@ -57,7 +57,7 @@ check_riskset <- function(x, landmark) {
 }
 
 check_dynamic_covariate <- function(x, dynamic_covariate) {
-  if (!(dynamic_covariate) %in% names(x@data_dynamic)) {
+  if (!(dynamic_covariate %in% names(x@data_dynamic))) {
     stop(
       "Data frame has not been provided for dynamic covariate",
       dynamic_covariate
