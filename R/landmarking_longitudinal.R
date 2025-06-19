@@ -120,7 +120,7 @@ setMethod(
             # Subset with observations prior to landmark time
             filter(get(x@times) <= landmark) |>
             # Join with static covariates
-            left_join(x@data_static, by = x@ids)
+            dplyr::left_join(x@data_static, by = x@ids)
           # Fit longitudinal model according to chosen method
           model_fits[[
             dynamic_covariate
