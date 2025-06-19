@@ -37,6 +37,9 @@ and biomarkers.}
 \item{\code{longitudinal_predictions}}{List of model predictions for the specified
 landmark times and biomarkers.}
 
+\item{\code{survival_datasets}}{List of survival dataframes used in the survival
+submodel.}
+
 \item{\code{survival_fits}}{List of survival model fits at each of the specified
 landmark times.}
 
