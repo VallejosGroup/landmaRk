@@ -121,7 +121,6 @@ setMethod(
         }
         model_fits
       }
-    parallel::stopCluster(cl)
     names(x@longitudinal_fits) <- landmarks
     x
   }
