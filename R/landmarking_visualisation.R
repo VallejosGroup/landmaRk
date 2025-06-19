@@ -35,8 +35,10 @@ setMethod(
       }
       return(plots)
     } else {
-      stop("Argument @type must be survival. Additional options will be",
-           "supported in the future.")
+      stop(
+        "Argument @type must be survival. Additional options will be",
+        "supported in the future."
+      )
     }
   }
 )
