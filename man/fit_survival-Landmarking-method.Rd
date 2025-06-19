@@ -10,7 +10,7 @@ times specified by the user}
 \arguments{
 \item{x}{An object of class \code{\link{Landmarking}}.}
 
-\item{formula}{A formula to be used in survival submodel fitting.}
+\item{formula}{A formula to be used in survival sub-model fitting.}
 
 \item{landmarks}{Numeric vector of landmark times.}
 

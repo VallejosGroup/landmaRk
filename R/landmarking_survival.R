@@ -3,7 +3,7 @@
 #'
 #' @param x An object of class \code{\link{Landmarking}}.
 #' @param landmarks Numeric vector of landmark times.
-#' @param formula A formula to be used in survival submodel fitting.
+#' @param formula A formula to be used in survival sub-model fitting.
 #' @param windows Vector of prediction windows determining horizon times.
 #' @param method Method for survival analysis, either "survfit" or "coxph".
 #' @param dynamic_covariates Vector of time-varying covariates to be used

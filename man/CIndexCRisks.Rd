@@ -39,10 +39,11 @@ Assess discriminative performance of predictions obtained from a conventional
 or competing risks time-to-event model using time-dependent concordance index.
 }
 \details{
-Uses the proportion of correctly ordered risk pairs for the event \eqn{k},
-based on the predicted risk of the event up to time \eqn{\tau}.
+Uses the proportion of correctly ordered risk pairs for the event
+\eqn{k}, based on the predicted risk of the event up
+to time \eqn{\tau}.
 
-\deqn{{C_k(\tau) = \frac{\sum_{i=1}^N \sum_{j=1}^N (A_{ij} + B_{ij}) \cdot Q_{ij} \cdot N_i^k(\tau)}{\sum_{i=1}^N \sum_{j=1}^N (A_{ij} + B_{ij}) \cdot N_i^k(\tau)}}}
+\deqn{C_k(\tau) = \frac{\sum_{i=1}^N \sum_{j=1}^N (A_{ij} + B_{ij}) \cdot Q_{ij} \cdot N_i^k(\tau)}{\sum_{i=1}^N \sum_{j=1}^N (A_{ij} + B_{ij}) \cdot N_i^k(\tau)}}
 
 A == risk ordering of patients, small time means patient 'i' at higher risk
 than patient 'j' experiencing event of interest \eqn{A[i,j] = 0} for tied

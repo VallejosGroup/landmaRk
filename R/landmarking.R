@@ -164,8 +164,8 @@ setMethod("getRiskSets", "Landmarking", function(object) object@risk_sets)
 
 
 
-#' Compute the list of individuals at risk at given landmark times,
-#' and stores them in an object of class Landmarking
+#' Compute the list of individuals at risk at landmark times
+#'
 #' @param x An object of class \code{\link{Landmarking}}.
 #' @param landmarks Numeric vector of landmark times
 #' @param ... Additional arguments (not used)
@@ -174,6 +174,16 @@ setMethod("getRiskSets", "Landmarking", function(object) object@risk_sets)
 #'   sets for the specified landmark times.
 #' @export
 #'
+#' @details
+#' A risk set describes all subjects still at risk (i.e., not experienced the
+#' event of interest or censored) at a given time. In Landmarking, risk sets
+#' define which subjects should be included in the longitudinal and survival
+#' sub-models for each landmark time.
+#'
+#' The risk sets are stored in the \code{risk_sets} slot of the Landmarking
+#' object, where each risk set is a list of indices corresponding to the
+#' subjects at risk at the respective landmark time.
+#'
 #' @examples
 setGeneric(
   "compute_risk_sets",
@@ -181,14 +191,23 @@ setGeneric(
 )
 
 
-#' Compute the list of individuals at risk at given landmark times,
-#' and stores them in an object of class Landmarking
+#' Compute the list of individuals at risk at landmark times
 #'
 #' @inheritParams compute_risk_sets
 #'
-#' @returns An object of class Landmarking, including desired risk sets for the
-#'   relevant landmark times.
+#' @returns An object of class \code{\link{Landmarking}}, including desired risk
+#'   sets for the relevant landmark times.
 #' @export
+#'
+#' @details
+#' A risk set describes all subjects still at risk (i.e., not experienced the
+#' event of interest or censored) at a given time. In Landmarking, risk sets
+#' define which subjects should be included in the longitudinal and survival
+#' sub-models for each landmark time.
+#'
+#' The risk sets are stored in the \code{risk_sets} slot of the Landmarking
+#' object, where each risk set is a list of indices corresponding to the
+#' subjects at risk at the respective landmark time.
 #'
 #' @examples
 setMethod("compute_risk_sets", "Landmarking", function(x, landmarks, ...) {

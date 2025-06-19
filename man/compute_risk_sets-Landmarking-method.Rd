@@ -2,8 +2,7 @@
 % Please edit documentation in R/landmarking.R
 \name{compute_risk_sets,Landmarking-method}
 \alias{compute_risk_sets,Landmarking-method}
-\title{Compute the list of individuals at risk at given landmark times,
-and stores them in an object of class Landmarking}
+\title{Compute the list of individuals at risk at landmark times}
 \usage{
 \S4method{compute_risk_sets}{Landmarking}(x, landmarks, ...)
 }
@@ -15,10 +14,19 @@ and stores them in an object of class Landmarking}
 \item{...}{Additional arguments (not used)}
 }
 \value{
-An object of class Landmarking, including desired risk sets for the
-relevant landmark times.
+An object of class \code{\link{Landmarking}}, including desired risk
+sets for the relevant landmark times.
 }
 \description{
-Compute the list of individuals at risk at given landmark times,
-and stores them in an object of class Landmarking
+Compute the list of individuals at risk at landmark times
+}
+\details{
+A risk set describes all subjects still at risk (i.e., not experienced the
+event of interest or censored) at a given time. In Landmarking, risk sets
+define which subjects should be included in the longitudinal and survival
+sub-models for each landmark time.
+
+The risk sets are stored in the \code{risk_sets} slot of the Landmarking
+object, where each risk set is a list of indices corresponding to the
+subjects at risk at the respective landmark time.
 }
