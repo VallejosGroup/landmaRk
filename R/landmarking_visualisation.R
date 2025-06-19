@@ -12,7 +12,7 @@ setMethod(
   function(x, type = "survival", ...) {
     if (type == "survival") {
       if (length(x@survival_fits) == 0) {
-        stop("Survival submodel has not been fitted.")
+        stop("Survival submodel has not been fitted.\n")
       }
       # Create list of plots that this function will return.
       plots <- list()
@@ -42,8 +42,8 @@ setMethod(
       return(plots)
     } else {
       stop(
-        "Argument @type must be survival. Additional options will be",
-        "supported in the future."
+        "Argument @type must be survival. Additional options will be ",
+        "supported in the future.\n"
       )
     }
   }
