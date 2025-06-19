@@ -28,7 +28,9 @@ Imports:
     lme4,
     methods,
     survival,
-    lcmm
+    lcmm,
+    doParallel,
+    foreach
 Suggests: 
     knitr,
     rmarkdown,
