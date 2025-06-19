@@ -54,8 +54,7 @@ split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
   }
 
   return(list(
-      df_static = df_static,
-      df_dynamic = df_dynamic
-    )
-  )
+    df_static = df_static,
+    df_dynamic = df_dynamic
+  ))
 }

@@ -15,12 +15,7 @@
 #' @examples
 setGeneric(
   "fit_survival",
-  function(x,
-           formula,
-           landmarks,
-           windows,
-           method,
-           dynamic_covariates = c()) {
+  function(x, formula, landmarks, windows, method, dynamic_covariates = c()) {
     standardGeneric("fit_survival")
   }
 )
@@ -37,12 +32,7 @@ setGeneric(
 setMethod(
   "fit_survival",
   "Landmarking",
-  function(x,
-           formula,
-           landmarks,
-           windows,
-           method,
-           dynamic_covariates = c()) {
+  function(x, formula, landmarks, windows, method, dynamic_covariates = c()) {
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "survfit") {
       method <- survival::survfit
@@ -56,7 +46,10 @@ setMethod(
         "\n"
       )
     }
-    if ((is(method)[1] == "function") && !("data" %in% names(as.list(args(method))))) {
+    if (
+      (is(method)[1] == "function") &&
+        !("data" %in% names(as.list(args(method))))
+    ) {
       stop(
         "Argument ",
         method,
@@ -65,7 +58,8 @@ setMethod(
       )
     }
     # Check that vectors of landmark times and horizons have the same length
-    if (length(landmarks) == 1) { # Base case for recursion
+    if (length(landmarks) == 1) {
+      # Base case for recursion
       if (!(landmarks %in% x@landmarks)) {
         message(
           "Risk set for landmark time ",
@@ -79,13 +73,17 @@ setMethod(
       for (window in windows) {
         horizon <- landmarks + window
         # Construct dataset for survival analysis (censor events past horizon time)
-        dataset <- x@data_static[which(x@data_static[, x@event_time] >= landmarks), ] |>
+        dataset <- x@data_static[
+          which(x@data_static[, x@event_time] >= landmarks),
+        ] |>
           mutate(
-            event_status = ifelse(get(x@event_time) > horizon,
+            event_status = ifelse(
+              get(x@event_time) > horizon,
               0,
               get(x@event_indicator)
             ),
-            event_time = ifelse(get(x@event_time) > horizon,
+            event_time = ifelse(
+              get(x@event_time) > horizon,
               window,
               get(x@event_time) - landmarks
             )
@@ -104,9 +102,7 @@ setMethod(
         } else {
           survival_formula <- as.formula(paste0(
             survival_formula,
-            paste(dynamic_covariates,
-                  collapse = " + "
-            )
+            paste(dynamic_covariates, collapse = " + ")
           ))
           dataset <- cbind(
             dataset,
@@ -118,14 +114,16 @@ setMethod(
         }
         # Call to method that performs survival analysis
         if (is(method)[1] == "character" && method == "coxph") {
-          x@survival_fits[[paste0(landmarks, "-", window)]] <- survival::coxph(formula,
-                                                                      data = dataset,
-                                                                      x = TRUE,
-                                                                      model = TRUE
+          x@survival_fits[[paste0(landmarks, "-", window)]] <- survival::coxph(
+            formula,
+            data = dataset,
+            x = TRUE,
+            model = TRUE
           )
         } else {
-          x@survival_fits[[paste0(landmarks, "-", window)]] <- method(formula,
-                                                                      data = dataset
+          x@survival_fits[[paste0(landmarks, "-", window)]] <- method(
+            formula,
+            data = dataset
           )
         }
       }
@@ -181,7 +179,8 @@ setGeneric(
 #'
 #' @examples
 setMethod(
-  "predict_survival", "Landmarking",
+  "predict_survival",
+  "Landmarking",
   function(x, landmarks, windows, method, ...) {
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "coxph") {
@@ -198,7 +197,11 @@ setMethod(
     if (length(landmarks) == 1) {
       # Check that relevant risk set is available
       if (!(landmarks %in% x@landmarks)) {
-        stop("Risk set for landmark time ", landmarks, " has not been computed\n")
+        stop(
+          "Risk set for landmark time ",
+          landmarks,
+          " has not been computed\n"
+        )
       }
       for (window in windows) {
         model_name <- paste0(landmarks, "-", window)
@@ -220,7 +223,7 @@ setMethod(
       }
     } else {
       # Recursion
-      x <- predict_survival(x, landmarks[1],  windows, method, ...)
+      x <- predict_survival(x, landmarks[1], windows, method, ...)
       x <- predict_survival(x, landmarks[-1], windows, method, ...)
     }
     x

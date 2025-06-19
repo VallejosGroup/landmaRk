@@ -16,12 +16,7 @@
 #' @examples
 setGeneric(
   "fit_longitudinal",
-  function(x,
-           landmarks,
-           method,
-           formula,
-           dynamic_covariates,
-           ...) {
+  function(x, landmarks, method, formula, dynamic_covariates, ...) {
     standardGeneric("fit_longitudinal")
   }
 )
@@ -80,8 +75,10 @@ setMethod(
       # model for the underlying trajectories
       for (dynamic_covariate in dynamic_covariates) {
         if (!(dynamic_covariate) %in% names(x@data_dynamic)) {
-          stop(paste("Data frame has not been provided for dynamic covariate",
-                     dynamic_covariate))
+          stop(paste(
+            "Data frame has not been provided for dynamic covariate",
+            dynamic_covariate
+          ))
         }
 
         # Construct dataset for the longitudinal analysis (static measurements +
@@ -94,15 +91,32 @@ setMethod(
           # Join with static covariates
           left_join(x@data_static, by = x@ids)
         # Fit longitudinal model according to chosen method
-        x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]] <- method(
+        x@longitudinal_fits[[as.character(landmarks)]][[
+          dynamic_covariate
+        ]] <- method(
           formula,
-          data = dataframe, ...
+          data = dataframe,
+          ...
         )
       }
     } else {
       # Recursion
-      x <- fit_longitudinal(x, landmarks[1], method, formula, dynamic_covariates, ...)
-      x <- fit_longitudinal(x, landmarks[-1], method, formula, dynamic_covariates, ...)
+      x <- fit_longitudinal(
+        x,
+        landmarks[1],
+        method,
+        formula,
+        dynamic_covariates,
+        ...
+      )
+      x <- fit_longitudinal(
+        x,
+        landmarks[-1],
+        method,
+        formula,
+        dynamic_covariates,
+        ...
+      )
     }
     x
   }
@@ -138,7 +152,8 @@ setGeneric(
 #'
 #' @examples
 setMethod(
-  "predict_longitudinal", "Landmarking",
+  "predict_longitudinal",
+  "Landmarking",
   function(x, landmarks, method, dynamic_covariates, ...) {
     value <- NULL # Global var
 
@@ -159,7 +174,11 @@ setMethod(
     if (length(landmarks) == 1) {
       # Check that relevant risk set is available
       if (!(landmarks %in% x@landmarks)) {
-        stop("Risk set for landmark time ", landmarks, " has not been computed\n")
+        stop(
+          "Risk set for landmark time ",
+          landmarks,
+          " has not been computed\n"
+        )
       }
       # Check that relevant model fit is available
       if (!(as.character(landmarks) %in% names(x@longitudinal_fits))) {
@@ -177,7 +196,10 @@ setMethod(
       # model for the underlying trajectories
       for (dynamic_covariate in names(x@data_dynamic)) {
         # Check that relevant model fit is available
-        if (!(dynamic_covariate %in% names(x@longitudinal_fits[[as.character(landmarks)]]))) {
+        if (
+          !(dynamic_covariate %in%
+            names(x@longitudinal_fits[[as.character(landmarks)]]))
+        ) {
           warning(
             "Longitudinal model has not been fit for dynamic covariate ",
             dynamic_covariate,
@@ -197,17 +219,23 @@ setMethod(
             pull(value, name = get(x@ids))
           predictions[names(last_observations)] <- last_observations
           if (any(is.na(predictions))) {
-            warning("Some observations have no measurement available for",
-                    "dynamic covariate",
-                    dynamic_covariate,
-                    "Imputing values.")
+            warning(
+              "Some observations have no measurement available for",
+              "dynamic covariate",
+              dynamic_covariate,
+              "Imputing values."
+            )
             if (inherits(predictions) == "numeric") {
               predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
             } else {
-              predictions[is.na(predictions)] <- names(sort(-table(predictions)))[1]
+              predictions[is.na(predictions)] <- names(sort(
+                -table(predictions)
+              ))[1]
             }
           }
-          x@longitudinal_predictions[[as.character(landmarks)]][[dynamic_covariate]] <-
+          x@longitudinal_predictions[[as.character(landmarks)]][[
+            dynamic_covariate
+          ]] <-
             predictions
         } else {
           # Fit longitudinal model according to chosen method
@@ -215,30 +243,53 @@ setMethod(
             filter(get(x@ids) %in% risk_set)
           newdata[, x@times] <- landmarks
 
-          x@longitudinal_predictions[[as.character(landmarks)]][[dynamic_covariate]] <- method(
+          x@longitudinal_predictions[[as.character(landmarks)]][[
+            dynamic_covariate
+          ]] <- method(
             x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
             newdata = newdata,
             ...
           )
         }
 
-        x@longitudinal_predictions[[as.character(landmarks)]][[dynamic_covariate]] <- method(
+        x@longitudinal_predictions[[as.character(landmarks)]][[
+          dynamic_covariate
+        ]] <- method(
           x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
           newdata = newdata,
           ...
         )
-        if (length(x@longitudinal_predictions[[as.character(landmarks)]][[dynamic_covariate]]) != nrow(newdata)) {
-          stop(paste("Number of predictions for dynamic_covariate",
-          dynamic_covariate,
-          "at landmark time",
-          landmarks,
-          "differs from number of observations in the risk set."))
+        if (
+          length(x@longitudinal_predictions[[as.character(landmarks)]][[
+            dynamic_covariate
+          ]]) !=
+            nrow(newdata)
+        ) {
+          stop(paste(
+            "Number of predictions for dynamic_covariate",
+            dynamic_covariate,
+            "at landmark time",
+            landmarks,
+            "differs from number of observations in the risk set."
+          ))
         }
       }
     } else {
       # Recursion
-      x <- predict_longitudinal(x, landmarks[1], method, dynamic_covariates, ...)
-      x <- predict_longitudinal(x, landmarks[-1], method, dynamic_covariates, ...)
+      x <- predict_longitudinal(
+        x,
+        landmarks[1],
+        method,
+        dynamic_covariates,
+        ...
+      )
+      x <- predict_longitudinal(
+        x,
+        landmarks[-1],
+        method,
+        dynamic_covariates,
+        ...
+      )
     }
     x
   }
