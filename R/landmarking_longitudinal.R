@@ -78,14 +78,17 @@ setMethod(
     `%dopar%` <- foreach::`%dopar%`
 
     if (Sys.info()["sysname"] == "Windows") {
+      # Use PSOCK on Windows
       cl <- parallel::makeCluster(cores, type = "PSOCK")
+      doSNOW::registerDoSNOW(cl)
     } else {
+      # Use FORK on Unix-like systems
       cl <- parallel::makeCluster(cores, type = "FORK")
+      doParallel::registerDoParallel(cl)
     }
 
-
     on.exit(parallel::stopCluster(cl), add = TRUE)
-    doParallel::registerDoParallel(cl)
+
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %dopar%
       {
         # Check that relevant risk set is available
@@ -116,11 +119,11 @@ setMethod(
           # time-varying covariate and its recording time)
           dataframe <- x@data_dynamic[[dynamic_covariate]] |>
             # Subset with individuals who are at risk only
-            filter(get(x@ids) %in% at_risk_individuals) |>
+            dplyr::filter(get(x@ids) %in% at_risk_individuals) |>
             # Subset with observations prior to landmark time
-            filter(get(x@times) <= landmark) |>
+            dplyr::filter(get(x@times) <= landmark) |>
             # Join with static covariates
-            left_join(x@data_static, by = x@ids)
+            dplyr::left_join(x@data_static, by = x@ids)
           # Fit longitudinal model according to chosen method
           model_fits[[
             dynamic_covariate

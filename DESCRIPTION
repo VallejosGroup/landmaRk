@@ -30,6 +30,7 @@ Imports:
     survival,
     lcmm,
     doParallel,
+    doSNOW,
     foreach
 Suggests: 
     knitr,
