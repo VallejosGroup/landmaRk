@@ -5,7 +5,15 @@
 \title{Fits the specified longitudinal model for the latent processes underlying the
 relevant time-varying covariates, up until the landmarking times}
 \usage{
-\S4method{fit_longitudinal}{Landmarking}(x, landmarks, method, formula, dynamic_covariates, ...)
+\S4method{fit_longitudinal}{Landmarking}(
+  x,
+  landmarks,
+  method,
+  formula,
+  dynamic_covariates,
+  cores = getOption("Ncpus", 1L),
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{Landmarking}}.}

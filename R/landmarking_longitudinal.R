@@ -16,7 +16,7 @@
 #' @examples
 setGeneric(
   "fit_longitudinal",
-  function(x, landmarks, method, formula, dynamic_covariates, ...) {
+  function(x, landmarks, method, formula, dynamic_covariates, cores = getOption("Ncpus", 1L), ...) {
     standardGeneric("fit_longitudinal")
   }
 )
@@ -32,7 +32,7 @@ setGeneric(
 setMethod(
   "fit_longitudinal",
   "Landmarking",
-  function(x, landmarks, method, formula, dynamic_covariates, ...) {
+  function(x, landmarks, method, formula, dynamic_covariates, cores = getOption("Ncpus", 1L), ...) {
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "lcmm") {
       method <- fit_lcmm_
@@ -55,22 +55,24 @@ setMethod(
         "\n"
       )
     }
-    # Base case for recursion
-    if (length(landmarks) == 1) {
+    `%dopar%` <- foreach::`%dopar%`
+    cl <- parallel::makeCluster(cores)
+    doParallel::registerDoParallel(cl)
+    x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %dopar% {
       # Check that relevant risk set is available
-      if (!(landmarks %in% x@landmarks)) {
+      if (!(landmark %in% x@landmarks)) {
         stop(
           "Risk set for landmark time ",
-          landmarks,
+          landmark,
           " has not been computed",
           "\n"
         )
       }
       # Create list for storing model fits for longitudinal analysis
-      x@longitudinal_fits[[as.character(landmarks)]] <- list()
+      model_fits <- list()
 
       # Risk set for the landmark time
-      at_risk_individuals <- x@risk_sets[[as.character(landmarks)]]
+      at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
       # Loop that iterates over all time-varying covariates to fit a longitudinal
       # model for the underlying trajectories
       for (dynamic_covariate in dynamic_covariates) {
@@ -87,11 +89,11 @@ setMethod(
           # Subset with individuals who are at risk only
           filter(get(x@ids) %in% at_risk_individuals) |>
           # Subset with observations prior to landmark time
-          filter(get(x@times) <= landmarks) |>
+          filter(get(x@times) <= landmark) |>
           # Join with static covariates
           left_join(x@data_static, by = x@ids)
         # Fit longitudinal model according to chosen method
-        x@longitudinal_fits[[as.character(landmarks)]][[
+        model_fits[[
           dynamic_covariate
         ]] <- method(
           formula,
@@ -99,25 +101,10 @@ setMethod(
           ...
         )
       }
-    } else {
-      # Recursion
-      x <- fit_longitudinal(
-        x,
-        landmarks[1],
-        method,
-        formula,
-        dynamic_covariates,
-        ...
-      )
-      x <- fit_longitudinal(
-        x,
-        landmarks[-1],
-        method,
-        formula,
-        dynamic_covariates,
-        ...
-      )
+      model_fits
     }
+    parallel::stopCluster(cl)
+    names(x@longitudinal_fits) <- landmarks
     x
   }
 )
