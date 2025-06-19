@@ -5,7 +5,14 @@ test_that("LCMM works as expected", {
     epileptic,
     ids = "id",
     times = "time",
-    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
     dynamic = c("dose"),
     measurement_name = "value"
   )
@@ -39,7 +46,8 @@ test_that("LCMM works as expected", {
     )
 
   expect_error(
-    predict_longitudinal(x,
+    predict_longitudinal(
+      x,
       landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
       method = "lcmm",
       subject = "id",

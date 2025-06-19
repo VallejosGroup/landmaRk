@@ -23,7 +23,8 @@
 #'   landmark times and prediction windows.
 #'
 #' @export
-setClass("Landmarking",
+setClass(
+  "Landmarking",
   slots = c(
     landmarks = "numeric",
     data_static = "data.frame",
@@ -49,27 +50,47 @@ setClass("Landmarking",
 setValidity("Landmarking", function(object) {
   error_str <- NULL
   if (is.null(names(object@data_dynamic))) {
-    error_str <- c(error_str, "@data_dynamic must be a named list of dataframes")
+    error_str <- c(
+      error_str,
+      "@data_dynamic must be a named list of dataframes"
+    )
   }
   for (covariate in names(object@data_dynamic)) {
     if (!(object@ids %in% colnames(object@data_dynamic[[covariate]]))) {
-      error_str <- c(error_str, "@ids must be a column in every dataframe in @data_dynamic")
+      error_str <- c(
+        error_str,
+        "@ids must be a column in every dataframe in @data_dynamic"
+      )
     }
     if (!(object@times %in% colnames(object@data_dynamic[[covariate]]))) {
-      error_str <- c(error_str, "@times must be a column in every dataframe in @data_dynamic")
+      error_str <- c(
+        error_str,
+        "@times must be a column in every dataframe in @data_dynamic"
+      )
     }
-    if (!(object@measurements %in% colnames(object@data_dynamic[[covariate]]))) {
-      error_str <- c(error_str, "@measurements must be a column in every dataframe in @data_dynamic")
+    if (
+      !(object@measurements %in% colnames(object@data_dynamic[[covariate]]))
+    ) {
+      error_str <- c(
+        error_str,
+        "@measurements must be a column in every dataframe in @data_dynamic"
+      )
     }
   }
   if (!(object@event_indicator %in% colnames(object@data_static))) {
-    error_str <- c(error_str, "@event_indicator must be a column in dataframe @data_static")
+    error_str <- c(
+      error_str,
+      "@event_indicator must be a column in dataframe @data_static"
+    )
   }
   if (!(object@ids %in% colnames(object@data_static))) {
     error_str <- c(error_str, "@ids must be a column in dataframe @data_static")
   }
   if (!(object@event_time %in% colnames(object@data_static))) {
-    error_str <- c(error_str, "@event_time must be a column in dataframe @data_static")
+    error_str <- c(
+      error_str,
+      "@event_time must be a column in dataframe @data_static"
+    )
   }
   if (length(error_str) == 0) {
     return(TRUE)
@@ -94,14 +115,17 @@ setValidity("Landmarking", function(object) {
 #'
 #' @returns An object of class Landmarking
 #' @export
-Landmarking <- function(data_static,
-                        data_dynamic,
-                        event_indicator,
-                        ids,
-                        event_time,
-                        times,
-                        measurements) {
-  new("Landmarking",
+Landmarking <- function(
+  data_static,
+  data_dynamic,
+  event_indicator,
+  ids,
+  event_time,
+  times,
+  measurements
+) {
+  new(
+    "Landmarking",
     data_static = data_static,
     data_dynamic = data_dynamic,
     event_indicator = event_indicator,
@@ -163,7 +187,6 @@ setGeneric("getRiskSets", function(object) standardGeneric("getRiskSets"))
 setMethod("getRiskSets", "Landmarking", function(object) object@risk_sets)
 
 
-
 #' Compute the list of individuals at risk at landmark times
 #'
 #' @param x An object of class \code{\link{Landmarking}}.
@@ -211,7 +234,8 @@ setGeneric(
 #'
 #' @examples
 setMethod("compute_risk_sets", "Landmarking", function(x, landmarks, ...) {
-  if (length(landmarks) == 1) { # If the vector of landmark times is of length 1
+  if (length(landmarks) == 1) {
+    # If the vector of landmark times is of length 1
     if (landmarks %in% x@landmarks) {
       # Risk set for given landmark time is already in memory
       warning("Risk set for landmark time ", landmarks, " already computed")
