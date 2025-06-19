@@ -75,51 +75,52 @@ setMethod(
     cl <- parallel::makeCluster(cores)
     on.exit(parallel::stopCluster(cl), add = TRUE)
     doParallel::registerDoParallel(cl)
-    x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %dopar% {
-      # Check that relevant risk set is available
-      if (!(landmark %in% x@landmarks)) {
-        stop(
-          "Risk set for landmark time ",
-          landmark,
-          " has not been computed",
-          "\n"
-        )
-      }
-      # Create list for storing model fits for longitudinal analysis
-      model_fits <- list()
-
-      # Risk set for the landmark time
-      at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
-      # Loop that iterates over all time-varying covariates to fit a longitudinal
-      # model for the underlying trajectories
-      for (dynamic_covariate in dynamic_covariates) {
-        if (!(dynamic_covariate) %in% names(x@data_dynamic)) {
-          stop(paste(
-            "Data frame has not been provided for dynamic covariate",
-            dynamic_covariate
-          ))
+    x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %dopar%
+      {
+        # Check that relevant risk set is available
+        if (!(landmark %in% x@landmarks)) {
+          stop(
+            "Risk set for landmark time ",
+            landmark,
+            " has not been computed",
+            "\n"
+          )
         }
+        # Create list for storing model fits for longitudinal analysis
+        model_fits <- list()
 
-        # Construct dataset for the longitudinal analysis (static measurements +
-        # time-varying covariate and its recording time)
-        dataframe <- x@data_dynamic[[dynamic_covariate]] |>
-          # Subset with individuals who are at risk only
-          filter(get(x@ids) %in% at_risk_individuals) |>
-          # Subset with observations prior to landmark time
-          filter(get(x@times) <= landmark) |>
-          # Join with static covariates
-          left_join(x@data_static, by = x@ids)
-        # Fit longitudinal model according to chosen method
-        model_fits[[
-          dynamic_covariate
-        ]] <- method(
-          formula,
-          data = dataframe,
-          ...
-        )
+        # Risk set for the landmark time
+        at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
+        # Loop that iterates over all time-varying covariates to fit a longitudinal
+        # model for the underlying trajectories
+        for (dynamic_covariate in dynamic_covariates) {
+          if (!(dynamic_covariate) %in% names(x@data_dynamic)) {
+            stop(paste(
+              "Data frame has not been provided for dynamic covariate",
+              dynamic_covariate
+            ))
+          }
+
+          # Construct dataset for the longitudinal analysis (static measurements +
+          # time-varying covariate and its recording time)
+          dataframe <- x@data_dynamic[[dynamic_covariate]] |>
+            # Subset with individuals who are at risk only
+            filter(get(x@ids) %in% at_risk_individuals) |>
+            # Subset with observations prior to landmark time
+            filter(get(x@times) <= landmark) |>
+            # Join with static covariates
+            left_join(x@data_static, by = x@ids)
+          # Fit longitudinal model according to chosen method
+          model_fits[[
+            dynamic_covariate
+          ]] <- method(
+            formula,
+            data = dataframe,
+            ...
+          )
+        }
+        model_fits
       }
-      model_fits
-    }
     parallel::stopCluster(cl)
     names(x@longitudinal_fits) <- landmarks
     x
