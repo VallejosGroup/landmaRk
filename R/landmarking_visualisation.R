@@ -1,6 +1,6 @@
 #' Plots survival curves for the fitted landmarking models.
 #'
-#' @param Landmarking An objet of class Landmarking.
+#' @param Landmarking An object of class Landmarking.
 #'
 #' @returns
 #' @export
