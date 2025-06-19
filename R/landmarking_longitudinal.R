@@ -57,6 +57,7 @@ setMethod(
     }
     `%dopar%` <- foreach::`%dopar%`
     cl <- parallel::makeCluster(cores)
+    on.exit(parallel::stopCluster(cl), add = TRUE)
     doParallel::registerDoParallel(cl)
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %dopar% {
       # Check that relevant risk set is available
