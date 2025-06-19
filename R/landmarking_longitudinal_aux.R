@@ -66,7 +66,7 @@ check_dynamic_covariate <- function(x, dynamic_covariate) {
 }
 
 # Check that longitudinal model is available for prediction
-check_longitudinal_fit <- function(x, landmark) {
+check_longitudinal_fit <- function(x, landmarks) {
   # Check that relevant model fit is available
   if (!(as.character(landmarks) %in% names(x@longitudinal_fits))) {
     stop(
