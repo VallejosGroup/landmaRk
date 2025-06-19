@@ -26,8 +26,14 @@ setMethod(
         plots[[name]] <- survminer::ggadjustedcurves(
           x@survival_fits[[name]],
           data = x@survival_datasets[[name]],
-          ...) +
-          ggtitle(paste("Landmark = ", landmark, "Prediction window = ", window)) +
+          ...
+        ) +
+          ggtitle(paste(
+            "Landmark = ",
+            landmark,
+            "Prediction window = ",
+            window
+          )) +
           scale_x_continuous(
             breaks = seq(from = 0, to = window, length.out = 4),
             labels = landmark + seq(from = 0, to = window, length.out = 4)
