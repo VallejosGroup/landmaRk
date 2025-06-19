@@ -161,8 +161,9 @@ setMethod(
           "    Landmark ",
           object@landmarks[i],
           ": ",
-          head(object@risk_sets[[i]], 10),
-          " ...\n"
+          nrow(object@risk_sets[[i]]),
+          " subjects.\n",
+          sep = ""
         )
       }
     }
