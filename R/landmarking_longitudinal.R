@@ -40,7 +40,15 @@ setGeneric(
 setMethod(
   "fit_longitudinal",
   "Landmarking",
-  function(x, landmarks, method, formula, dynamic_covariates, cores = getOption("Ncpus", 1L), ...) {
+  function(
+    x,
+    landmarks,
+    method,
+    formula,
+    dynamic_covariates,
+    cores = getOption("Ncpus", 1L),
+    ...
+  ) {
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "lcmm") {
       method <- fit_lcmm_
