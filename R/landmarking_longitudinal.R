@@ -16,7 +16,15 @@
 #' @examples
 setGeneric(
   "fit_longitudinal",
-  function(x, landmarks, method, formula, dynamic_covariates, cores = getOption("Ncpus", 1L), ...) {
+  function(
+    x,
+    landmarks,
+    method,
+    formula,
+    dynamic_covariates,
+    cores = getOption("Ncpus", 1L),
+    ...
+  ) {
     standardGeneric("fit_longitudinal")
   }
 )
