@@ -78,24 +78,17 @@ setMethod(
     `%dopar%` <- foreach::`%dopar%`
 
     if (Sys.info()["sysname"] == "Windows") {
+      # Use PSOCK on Windows
       cl <- parallel::makeCluster(cores, type = "PSOCK")
-      parallel::clusterExport(cl, varlist = c(
-        "x",
-        "landmarks",
-        "dynamic_covariates",
-        "method",
-        "formula",
-        "...",
-        "dplyr::left_join",
-        "dplyr::filter"
-      ))
+      doSNOW::registerDoSNOW(cl)
     } else {
+      # Use FORK on Unix-like systems
       cl <- parallel::makeCluster(cores, type = "FORK")
+      doParallel::registerDoParallel(cl)
     }
 
-
     on.exit(parallel::stopCluster(cl), add = TRUE)
-    doParallel::registerDoParallel(cl)
+
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %dopar%
       {
         # Check that relevant risk set is available
