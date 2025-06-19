@@ -7,7 +7,14 @@
 \S4method{plot}{Landmarking}(x, type = "survival", ...)
 }
 \arguments{
-\item{Landmarking}{An object of class Landmarking.}
+\item{x}{An object of class Landmarking.}
+
+\item{type}{A character string indicating the type of plot to generate.
+Currently, \code{type} must be "survival".  Additional options will be
+supported in the future.}
+
+\item{...}{Additional arguments passed to \code{\link[survminer:ggadjustedcurves]{survminer::ggadjustedcurves()}}
+for plotting survival curves.}
 }
 \description{
 Plots survival curves for the fitted landmarking models.
