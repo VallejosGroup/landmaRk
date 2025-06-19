@@ -1,4 +1,5 @@
 template:
   bootstrap: 5
   bootswatch: "flatly"
+  math-rendering: "mathjax"
 url: "https://vallejosgroup.github.io/landmaRk/"
