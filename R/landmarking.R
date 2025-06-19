@@ -154,17 +154,17 @@ setMethod(
     cat("  Number of observations:", nrow(object@data_static), "\n")
     cat("  Event indicator:", object@event_indicator, "\n")
     cat("  Event time:", object@event_time, "\n")
+
     cat("  Risk sets:", "\n")
     if (length(object@risk_sets) > 0) {
       for (i in seq_along(object@risk_sets)) {
-        cat(
-          "    Landmark ",
-          object@landmarks[i],
-          ": ",
-          nrow(object@risk_sets[[i]]),
-          " subjects.\n",
-          sep = ""
-        )
+        n <- nrow(object@risk_sets[[i]])
+        cat("    Landmark ",
+            object@landmarks[i],
+            ": ",
+            n,
+            if (n == 1) " subject\n" else " subjects\n",
+            sep = "" )
       }
     }
   }
