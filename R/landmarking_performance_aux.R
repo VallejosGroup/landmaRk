@@ -35,7 +35,7 @@
 #' @param method \code{'survival'} if the predictions are survival probabilities
 #'   or \code{'cifs'} if they are cumulative incidence functions
 #'
-#' @references Ahuja K, Schaar M van der. Joint Concordance Index. Published online August 17, 2019. doi:\href{https://doi.org/10.48550/arXiv.1810.11207}{10.48550/arXiv.1810.11207}
+#' @references Ahuja K, Schaar M van der. Joint Concordance Index. Published online August 17, 2019. \doi{10.48550/arXiv.1810.11207}
 
 #'
 #' @return Concordance index value.

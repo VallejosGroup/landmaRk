@@ -61,5 +61,5 @@ N_t == number of subjects with survival time < time point and experience event o
 Tied event times are included
 }
 \references{
-Ahuja K, Schaar M van der. Joint Concordance Index. Published online August 17, 2019. doi:\href{https://doi.org/10.48550/arXiv.1810.11207}{10.48550/arXiv.1810.11207}
+Ahuja K, Schaar M van der. Joint Concordance Index. Published online August 17, 2019. \doi{10.48550/arXiv.1810.11207}
 }
