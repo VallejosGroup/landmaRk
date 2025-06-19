@@ -79,6 +79,16 @@ setMethod(
 
     if (Sys.info()["sysname"] == "Windows") {
       cl <- parallel::makeCluster(cores, type = "PSOCK")
+      parallel::clusterExport(cl, varlist = c(
+        "x",
+        "landmarks",
+        "dynamic_covariates",
+        "method",
+        "formula",
+        "...",
+        "dplyr::left_join",
+        "dplyr::filter"
+      ))
     } else {
       cl <- parallel::makeCluster(cores, type = "FORK")
     }
@@ -116,9 +126,9 @@ setMethod(
           # time-varying covariate and its recording time)
           dataframe <- x@data_dynamic[[dynamic_covariate]] |>
             # Subset with individuals who are at risk only
-            filter(get(x@ids) %in% at_risk_individuals) |>
+            dplyr::filter(get(x@ids) %in% at_risk_individuals) |>
             # Subset with observations prior to landmark time
-            filter(get(x@times) <= landmark) |>
+            dplyr::filter(get(x@times) <= landmark) |>
             # Join with static covariates
             dplyr::left_join(x@data_static, by = x@ids)
           # Fit longitudinal model according to chosen method
