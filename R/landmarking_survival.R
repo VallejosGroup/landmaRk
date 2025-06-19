@@ -73,7 +73,7 @@ setMethod(
       for (window in windows) {
         horizon <- landmarks + window
         # Construct dataset for survival analysis (censor events past horizon time)
-        dataset <- x@data_static[
+        x@survival_datasets[[paste0(landmarks, "-", window)]] <- x@data_static[
           which(x@data_static[, x@event_time] >= landmarks),
         ] |>
           mutate(
@@ -104,8 +104,8 @@ setMethod(
             survival_formula,
             paste(dynamic_covariates, collapse = " + ")
           ))
-          dataset <- cbind(
-            dataset,
+          x@survival_datasets[[paste0(landmarks, "-", window)]] <- cbind(
+            x@survival_datasets[[paste0(landmarks, "-", window)]],
             do.call(
               bind_cols,
               x@longitudinal_predictions[[as.character(landmarks)]]
@@ -116,14 +116,14 @@ setMethod(
         if (is(method)[1] == "character" && method == "coxph") {
           x@survival_fits[[paste0(landmarks, "-", window)]] <- survival::coxph(
             formula,
-            data = dataset,
+            data = x@survival_datasets[[paste0(landmarks, "-", window)]],
             x = TRUE,
             model = TRUE
           )
         } else {
           x@survival_fits[[paste0(landmarks, "-", window)]] <- method(
             formula,
-            data = dataset
+            data = x@survival_datasets[[paste0(landmarks, "-", window)]]
           )
         }
       }
