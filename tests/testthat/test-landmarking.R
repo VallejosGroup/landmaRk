@@ -6,7 +6,14 @@ test_that("Validity checks for Landmarking class work", {
     epileptic,
     ids = "id",
     times = "time",
-    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
     dynamic = c("dose"),
     measurement_name = "value"
   )
@@ -99,5 +106,4 @@ test_that("Validity checks for Landmarking class work", {
     ),
     "@measurements must be a column in every dataframe in @data_dynamic"
   )
-
 })

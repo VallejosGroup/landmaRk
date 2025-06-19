@@ -39,13 +39,15 @@
 #'
 #' @return Concordance index value.
 
-CIndexCRisks <- function(predictions,
-                         time,
-                         cens.code = 0,
-                         status,
-                         cause,
-                         tau,
-                         method = c("survival", "cifs")) {
+CIndexCRisks <- function(
+  predictions,
+  time,
+  cens.code = 0,
+  status,
+  cause,
+  tau,
+  method = c("survival", "cifs")
+) {
   method <- match.arg(method)
 
   censor.status <- ifelse(status == cens.code, 0, 1)
@@ -67,10 +69,16 @@ CIndexCRisks <- function(predictions,
   for (i in 1:n) {
     # print(n)
     A[i, which(time[i] < time)] <- 1
-    B[i, intersect(intersect(
-      which((time[i] >= time)),
-      which(status != cause)
-    ), which(censor.status == 1))] <- 1
+    B[
+      i,
+      intersect(
+        intersect(
+          which((time[i] >= time)),
+          which(status != cause)
+        ),
+        which(censor.status == 1)
+      )
+    ] <- 1
     Q[i, which(predictions[i] > predictions)] <- 1
   }
 
@@ -99,15 +107,10 @@ CIndexCRisks <- function(predictions,
 #' @inheritParams CIndexCRisks
 #' @param tau Time Brier score is evaluated.
 
-BinaryBrierScore <- function(predictions,
-                             time,
-                             status,
-                             tau,
-                             cause) {
+BinaryBrierScore <- function(predictions, time, status, tau, cause) {
   y_true <- ((time <= tau) * (status == cause))
 
   BS <- mean((predictions - y_true)^2)
 
   return(BS)
 }
-

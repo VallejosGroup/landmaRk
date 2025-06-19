@@ -14,7 +14,8 @@
 #' @examples
 fit_lcmm_ <- function(formula, data, mixture, subject, ng, ...) {
   model_init <- lcmm::hlme(formula, data = data, subject = subject, ng = 1)
-  model_fit <- lcmm::hlme(formula,
+  model_fit <- lcmm::hlme(
+    formula,
     data = data,
     mixture = mixture,
     subject = subject,
@@ -51,10 +52,16 @@ predict_lcmm_ <- function(x, newdata, subject, avg = FALSE) {
   mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
   # Allocation of clusters for prediction
   if (nrow(newdata) == nrow(pprob)) {
-    cluster_allocation <- data.frame(id = pprob[, subject], cluster = pprob$class)
+    cluster_allocation <- data.frame(
+      id = pprob[, subject],
+      cluster = pprob$class
+    )
   } else {
     # Create a dataframe for individuals not used in training with the most common cluster
-    pprob.extra <- data.frame(id = setdiff(newdata[, subject], pprob[, subject]), cluster = mode_cluster)
+    pprob.extra <- data.frame(
+      id = setdiff(newdata[, subject], pprob[, subject]),
+      cluster = mode_cluster
+    )
 
     # Compute the column means for the probability matrix (excluding id and class columns)
     prob_means <- colMeans(pprob[, -c(1, 2)])
@@ -83,13 +90,20 @@ predict_lcmm_ <- function(x, newdata, subject, avg = FALSE) {
   if (nrow(predictions$pred) != nrow(newdata)) {
     stop(sprintf(
       "lcmm::predictY produced %d predictions but expected %d. Probable reason: static covariates contain missing data.",
-      nrow(predictions$pred), nrow(newdata)
+      nrow(predictions$pred),
+      nrow(newdata)
     ))
   }
   # Choose correct cluster for prediction
   if (avg == FALSE) {
     #### predictions <- predictions$pred * model.matrix(~as.factor(cluster)-1,data=cluster_allocation)
-    predictions <- rowSums(predictions$pred * model.matrix(~ as.factor(pprob$class) - 1, data = as.data.frame(pprob$class)))
+    predictions <- rowSums(
+      predictions$pred *
+        model.matrix(
+          ~ as.factor(pprob$class) - 1,
+          data = as.data.frame(pprob$class)
+        )
+    )
   } else {
     predictions <- rowSums(predictions$pred * as.matrix(pprob[, -c(1, 2)]))
   }

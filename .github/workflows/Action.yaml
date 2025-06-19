@@ -6,9 +6,32 @@ on:
   schedule:
     - cron:  '40 4 * * 1'
 
-name: "CI"
+name: "CI/CD"
 jobs:
+  format-suggest:
+    name: format-suggest
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install
+        uses: posit-dev/setup-air@v1
+
+      - name: Format
+        run: air format .
+
+      - name: Suggest
+        uses: reviewdog/action-suggester@v1
+        with:
+          level: error
+          fail_level: error
+          tool_name: air
+
   R-CMD-check:
+    if: ${{ always() }}
+    needs: [format-suggest]
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
