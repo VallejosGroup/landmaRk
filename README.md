@@ -7,7 +7,7 @@ sub-models.
 
 | Usage                                                                                                                                                | Release                                                                                                                         | Development                                                                                                                                                                                                                     |
 |------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)                                                        | [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/landmaRk)](https://cran.r-project.org/package=landmaRk)            | [![R build status](https://github.com/VallejosGroup/landmaRk/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/VallejosGroup/landmaRk/actions/workflows/R-CMD-check.yaml)                         |
+| ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)                                                        | [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/landmaRk)](https://cran.r-project.org/package=landmaRk)            | [![R build status](https://github.com/VallejosGroup/landmaRk/actions/workflows/Action.yaml/badge.svg?branch=main)](https://github.com/VallejosGroup/landmaRk/actions/workflows/R-CMD-check.yaml)                         |
 | [![License: GPL-3](https://img.shields.io/badge/License-GPL3-green.svg)](https://opensource.org/license/gpl-3-0)                                     | [![r-universe](https://vallejosgroup.r-universe.dev/badges/landmaRk)](https://vallejosgroup.r-universe.dev/landmaRk)          | [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)  |
 | [![Website](https://img.shields.io/website?url=https%3A%2F%2Fvallejosgroup.github.io%2FlandmaRk%2F)](https://vallejosgroup.github.io/landmaRk/)    |                                                                                                                                 | [![codecov](https://codecov.io/gh/VallejosGroup/landmaRk/graph/badge.svg?token=YUQ6PINJSO)](https://app.codecov.io/gh/VallejosGroup/landmaRk)                                                                                 |
 
@@ -35,7 +35,7 @@ hazards models, nearly any survival model can also be used.
 Whilst packages already exist which implement landmarking, these packages
 implement specific longitudinal and survival models. The aim of `landmaRk` is
 to support a wide array of longitudinal and survival sub-models whilst providing
-a modular system which allows others to incorporate their own models. 
+a modular system allowing others to incorporate their own models. 
 
 ## Installation
 
