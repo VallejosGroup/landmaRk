@@ -76,7 +76,14 @@ setMethod(
       )
     }
     `%dopar%` <- foreach::`%dopar%`
-    cl <- parallel::makeCluster(cores)
+
+    if (Sys.info()["sysname"] == "Windows") {
+      cl <- parallel::makeCluster(cores, type = "PSOCK")
+    } else {
+      cl <- parallel::makeCluster(cores, type = "FORK")
+    }
+
+
     on.exit(parallel::stopCluster(cl), add = TRUE)
     doParallel::registerDoParallel(cl)
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %dopar%
