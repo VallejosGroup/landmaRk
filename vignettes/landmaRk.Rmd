@@ -140,7 +140,7 @@ performance_metrics(
 
 # Landmarking analysis with lme4 + coxph
 
-Now we use the package lme4 to fit a linear mixed model of the time-varying covariate, dose. This first step is followed by fitting a Cox PH submodel using the longitudinal predictions as covariates.
+Now we use the package lme4 to fit a linear mixed model of the time-varying covariate, dose. This first step is followed by fitting a Cox PH sub-model using the longitudinal predictions as covariates.
 
 ```{r}
 landmarking_object <- Landmarking(
@@ -197,7 +197,11 @@ performance_metrics(
 
 # Landmarking analysis with lcmm + coxph
 
-Now we use the package lcmm to fit a latent class mixed model of the time-varying covariate, dose. This first step is followed by fitting a Cox PH submodel using the longitudinal predictions as covariates.
+Now we use the
+[lcmm package](https://cecileproust-lima.github.io/lcmm/index.html) to fit a
+latent class mixed model of the time-varying covariate, dose. This first step is
+followed by fitting a Cox PH sub-model using the longitudinal predictions as
+covariates.
 
 ```{r}
 landmarking_object <- Landmarking(

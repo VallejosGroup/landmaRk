@@ -20,10 +20,11 @@ fit_longitudinal(
 
 \item{landmarks}{A vector of Landmark times.}
 
-\item{method}{A function for fitting a longitudinal data model, whose first
-argument is a formula, and has at least an argument "data".}
+\item{method}{Either "lcmm" or "lme4" or a function for fitting a
+longitudinal data model, where the first argument is a formula, and also
+has a \code{data} argument.}
 
-\item{formula}{A formula to be used in longitudinal submodel fitting.}
+\item{formula}{A formula to be used in longitudinal sub-model fitting.}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.}
@@ -41,4 +42,7 @@ An object of class \code{\link{Landmarking}}.
 \description{
 Fits the specified longitudinal model for the latent processes underlying the
 relevant time-varying covariates, up until the landmarking times
+}
+\seealso{
+\code{\link[lcmm:hlme]{lcmm::hlme()}} and \code{\link[lme4:lmer]{lme4::lmer()}} for additional arguments.
 }

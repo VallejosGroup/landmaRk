@@ -3,10 +3,11 @@
 #' Assess discriminative performance of predictions obtained from a conventional
 #' or competing risks time-to-event model using time-dependent concordance index.
 #'
-#' Uses the proportion of correctly ordered risk pairs for the event \eqn{k},
-#' based on the predicted risk of the event up to time \eqn{\tau}.
+#' Uses the proportion of correctly ordered risk pairs for the event
+#' \eqn{k}, based on the predicted risk of the event up
+#' to time \eqn{\tau}.
 #'
-#' \deqn{{C_k(\tau) = \frac{\sum_{i=1}^N \sum_{j=1}^N (A_{ij} + B_{ij}) \cdot Q_{ij} \cdot N_i^k(\tau)}{\sum_{i=1}^N \sum_{j=1}^N (A_{ij} + B_{ij}) \cdot N_i^k(\tau)}}}
+#' \deqn{C_k(\tau) = \frac{\sum_{i=1}^N \sum_{j=1}^N (A_{ij} + B_{ij}) \cdot Q_{ij} \cdot N_i^k(\tau)}{\sum_{i=1}^N \sum_{j=1}^N (A_{ij} + B_{ij}) \cdot N_i^k(\tau)}}
 #'
 #' A == risk ordering of patients, small time means patient 'i' at higher risk
 #' than patient 'j' experiencing event of interest \eqn{A[i,j] = 0} for tied
@@ -34,7 +35,7 @@
 #' @param method \code{'survival'} if the predictions are survival probabilities
 #'   or \code{'cifs'} if they are cumulative incidence functions
 #'
-#' @references Ahuja K, Schaar M van der. Joint Concordance Index. Published online August 17, 2019. doi:\href{https://doi.org/10.48550/arXiv.1810.11207}{10.48550/arXiv.1810.11207}
+#' @references Ahuja K, Schaar M van der. Joint Concordance Index. Published online August 17, 2019. \doi{10.48550/arXiv.1810.11207}
 
 #'
 #' @return Concordance index value.
@@ -102,8 +103,10 @@ CIndexCRisks <- function(
 #' Computes the Binary Brier Score (BBS) for binary outcomes at a specified
 #' time point \eqn{\tau}.
 #'
-#' The BBS is defined as the mean squared difference between the predicted
-#' probabilities and the true outcome.
+#' The BBS is a measure of the accuracy of probabilistic predictions for binary
+#' outcomes, where the predictions are the predicted probabilities of the event
+#' of interest occurring by time \eqn{\tau}. The BBS is defined as the mean
+#' squared difference between the predicted probabilities and the true outcome.
 #' @inheritParams CIndexCRisks
 #' @param tau Time Brier score is evaluated.
 

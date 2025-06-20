@@ -22,6 +22,8 @@ Computes the Binary Brier Score (BBS) for binary outcomes at a specified
 time point \eqn{\tau}.
 }
 \details{
-The BBS is defined as the mean squared difference between the predicted
-probabilities and the true outcome.
+The BBS is a measure of the accuracy of probabilistic predictions for binary
+outcomes, where the predictions are the predicted probabilities of the event
+of interest occurring by time \eqn{\tau}. The BBS is defined as the mean
+squared difference between the predicted probabilities and the true outcome.
 }
