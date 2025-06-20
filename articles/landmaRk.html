@@ -6,7 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Introduction to the landmaRk package • landmaRk</title>
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
+  window.MathJax = {
+    chtml: {
+      fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
+    }
+  };
+</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -240,7 +246,7 @@ times.</p>
 </h2>
 <p>Now we use the package lme4 to fit a linear mixed model of the
 time-varying covariate, dose. This first step is followed by fitting a
-Cox PH submodel using the longitudinal predictions as covariates.</p>
+Cox PH sub-model using the longitudinal predictions as covariates.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Landmarking.html">Landmarking</a></span><span class="op">(</span></span>
 <span>  data_static <span class="op">=</span> <span class="va">static</span>,</span>
@@ -309,9 +315,10 @@ Cox PH submodel using the longitudinal predictions as covariates.</p>
 <div class="section level2">
 <h2 id="landmarking-analysis-with-lcmm-coxph">Landmarking analysis with lcmm + coxph<a class="anchor" aria-label="anchor" href="#landmarking-analysis-with-lcmm-coxph"></a>
 </h2>
-<p>Now we use the package lcmm to fit a latent class mixed model of the
-time-varying covariate, dose. This first step is followed by fitting a
-Cox PH submodel using the longitudinal predictions as covariates.</p>
+<p>Now we use the <a href="https://cecileproust-lima.github.io/lcmm/index.html" class="external-link">lcmm
+package</a> to fit a latent class mixed model of the time-varying
+covariate, dose. This first step is followed by fitting a Cox PH
+sub-model using the longitudinal predictions as covariates.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Landmarking.html">Landmarking</a></span><span class="op">(</span></span>
 <span>  data_static <span class="op">=</span> <span class="va">static</span>,</span>
