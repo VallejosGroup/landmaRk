@@ -3,6 +3,7 @@
 #' @importFrom methods new is
 #' @importFrom stats as.formula predict model.matrix
 #' @importFrom utils head
+#' @importFrom foreach `%dopar%`
 #' @import dplyr
 ## usethis namespace: end
 #' @docType package
