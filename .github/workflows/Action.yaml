@@ -60,9 +60,6 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
-#      - name: Install package
-#        run: install.packages('devtools'); devtools::install()
-#        shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
