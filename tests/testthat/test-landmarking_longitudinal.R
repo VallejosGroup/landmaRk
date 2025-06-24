@@ -1,4 +1,11 @@
 test_that("LCMM works as expected", {
+
+  if (Sys.info()["sysname"] == "Windows") {
+    #skip("LCMM does not work on Windows due to parallel processing issues.")
+    options("Ncpus" = 1)
+  }
+
+
   set.seed(123)
 
   epileptic_dfs <- split_wide_df(
