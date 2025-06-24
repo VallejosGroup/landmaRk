@@ -61,7 +61,7 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
       - name: Install package
-        run:  if [ '$RUNNER_OS' == 'windows' ]; then
+        run:  if [ '$RUNNER_OS' == 'Windows' ]; then
               RScript -e 'devtools::install()'
               fi
         shell: bash
