@@ -38,7 +38,9 @@ check_lcmm_convergence <- function(model_fit) {
     as.character(model_fit$conv),
     "1" = message("LCMM model converged successfully."),
     "2" = warning("Maximum number of iterations reached without convergence."),
-    "3" = message("Convergence criteria satisfied with a partial Hessian matrix."),
+    "3" = message(
+      "Convergence criteria satisfied with a partial Hessian matrix."
+    ),
     stop("Problem occurred during optimisation of the LCMM model.")
   )
 }
