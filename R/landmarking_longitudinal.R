@@ -61,7 +61,10 @@ setMethod(
     cl <- init_cl(cores)
     on.exit(parallel::stopCluster(cl), add = TRUE)
 
-    x@longitudinal_fits <- foreach::foreach(landmark = landmarks, .packages = c("lme4", "dplyr")) %dopar%
+    x@longitudinal_fits <- foreach::foreach(
+      landmark = landmarks,
+      .packages = c("lme4", "dplyr")
+    ) %dopar%
       {
         check_riskset(x, landmark)
         # Create list for storing model fits for longitudinal analysis
