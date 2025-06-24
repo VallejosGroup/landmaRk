@@ -60,7 +60,13 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+      - name: Install package
+        run:  if [ '$RUNNER_OS' == 'windows' ]; then
+              RScript -e 'devtools::install()'
+              fi
+        shell: bash
       - name: Check
+        run: devtools::install(".")
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
       - name: Archive artifacts
