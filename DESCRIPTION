@@ -31,8 +31,7 @@ Imports:
     lcmm,
     doParallel,
     doSNOW,
-    foreach,
-    future
+    foreach
 Suggests: 
     knitr,
     rmarkdown,
