@@ -62,7 +62,7 @@ setMethod(
     on.exit(parallel::stopCluster(cl), add = TRUE)
 
 
-    if (fda::CRAN & Sys.info()["sysname"] == "Windows") {
+    if (fda::CRAN() & Sys.info()["sysname"] == "Windows") {
       `%doparallel%`  <- foreach::`%do%`
     } else {
       `%doparallel%`  <- foreach::`%dopar%`
