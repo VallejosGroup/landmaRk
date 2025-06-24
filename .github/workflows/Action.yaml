@@ -61,15 +61,11 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
       - name: Check
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
-        shell: Rscript {0}
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v4
-        if: failure()
+        uses: r-lib/actions/check-r-package@v2
         with:
-          name: ${{ matrix.config.os }} (${{ matrix.config.r }}) shiny-test
-          path: tests/testthat/_snaps/
-          retention-days: 5
+          args: 'c("--as-cran")'
+          error-on: '"warning"'
+          check-dir: '"check"'
       - name: Install dependencies
         run: |
           install.packages(c("remotes"))
