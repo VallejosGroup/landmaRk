@@ -136,6 +136,11 @@ performance_metrics(
   windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25)
 )
 
+performance_metrics_cv(
+  landmarking_object,
+  landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+  windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25)
+)
 ```
 
 # Landmarking analysis with lme4 + coxph
