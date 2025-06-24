@@ -61,11 +61,10 @@ setMethod(
     cl <- init_cl(cores)
     on.exit(parallel::stopCluster(cl), add = TRUE)
 
-
     if (fda::CRAN() & Sys.info()["sysname"] == "Windows") {
-      `%doparallel%`  <- foreach::`%do%`
+      `%doparallel%` <- foreach::`%do%`
     } else {
-      `%doparallel%`  <- foreach::`%dopar%`
+      `%doparallel%` <- foreach::`%dopar%`
     }
 
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
