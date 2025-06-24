@@ -66,7 +66,6 @@ jobs:
               fi
         shell: bash
       - name: Check
-        run: devtools::install(".")
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
       - name: Archive artifacts
