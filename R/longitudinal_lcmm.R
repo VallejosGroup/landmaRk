@@ -24,11 +24,27 @@ fit_lcmm_ <- function(formula, data, mixture, subject, ng, ...) {
     ...
   )
 
+  check_lcmm_convergence(model_fit)
+
   model_fit$call$fixed <- formula
   model_fit$call$mixture <- mixture
 
   model_fit
 }
+
+
+check_lcmm_convergence <- function(model_fit) {
+  if (model_fit$conv == 1) {
+    message("LCMM model converged successfully.")
+  } else if (model_fit$conv == 2) {
+    warning("Maximum number of iterations reached without convergence.")
+  } else if (model_fit$conv == 3) {
+    message("Convergence criteria satisfied witha partial Hessian matrix.")
+  } else {
+    stop("Problem occured during optimisation of the LCMM model.")
+  }
+}
+
 
 #' Makes predictions from an LCMM model
 #'
