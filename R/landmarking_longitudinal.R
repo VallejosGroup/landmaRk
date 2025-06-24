@@ -66,7 +66,7 @@ setMethod(
       .packages = c("lme4", "dplyr")
     ) %dopar%
       {
-        check_riskset(x, landmark)
+        landmaRk::check_riskset(x, landmark)
         # Create list for storing model fits for longitudinal analysis
         model_fits <- list()
 
@@ -75,10 +75,10 @@ setMethod(
         # Loop that iterates over all time-varying covariates to fit a longitudinal
         # model for the underlying trajectories
         for (dynamic_covariate in dynamic_covariates) {
-          check_dynamic_covariate(x, dynamic_covariate)
+          landmaRk::check_dynamic_covariate(x, dynamic_covariate)
           # Construct dataset for the longitudinal analysis (static measurements +
           # time-varying covariate and its recording time)
-          dataframe <- construct_data(
+          dataframe <- landmaRk::construct_data(
             x,
             dynamic_covariate,
             at_risk_individuals,
