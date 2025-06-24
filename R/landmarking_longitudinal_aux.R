@@ -98,7 +98,7 @@ construct_data <- function(
 init_cl <- function(cores) {
   if (Sys.info()["sysname"] == "Windows") {
     # Use PSOCK on Windows
-    cl <- future::makeClusterPSOCK (cores)
+    cl <- future::makeClusterPSOCK(cores)
     doSNOW::registerDoSNOW(cl)
   } else {
     # Use FORK on Unix-like systems
