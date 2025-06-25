@@ -43,7 +43,6 @@ check_method_long_predict <- function(method) {
   method
 }
 
-
 check_riskset <- function(x, landmark) {
   # Check that relevant risk set is available
   if (!(landmark %in% x@landmarks)) {
@@ -99,11 +98,7 @@ init_cl <- function(cores) {
   if (Sys.info()["sysname"] == "Windows") {
     # Use PSOCK on Windows
     cl <- parallel::makeCluster(cores, type = "PSOCK")
-    parallel::clusterEvalQ(cl, {
-      check_riskset <- landmaRk:::check_riskset
-      check_dynamic_covariate <- landmaRk:::check_dynamic_covariate
-      construct_data <- landmaRk:::construct_data
-    })
+    doParallel::registerDoParallel(cl)
 
     doSNOW::registerDoSNOW(cl)
   } else {
