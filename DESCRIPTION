@@ -31,7 +31,8 @@ Imports:
     lcmm,
     doParallel,
     doSNOW,
-    foreach
+    foreach,
+    fda
 Suggests: 
     knitr,
     rmarkdown,

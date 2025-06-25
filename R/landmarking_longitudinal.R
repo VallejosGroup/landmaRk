@@ -61,7 +61,13 @@ setMethod(
     cl <- init_cl(cores)
     on.exit(parallel::stopCluster(cl), add = TRUE)
 
-    x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %dopar%
+    if (fda::CRAN() & Sys.info()["sysname"] == "Windows") {
+      `%doparallel%` <- foreach::`%do%`
+    } else {
+      `%doparallel%` <- foreach::`%dopar%`
+    }
+
+    x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
       {
         check_riskset(x, landmark)
         # Create list for storing model fits for longitudinal analysis
