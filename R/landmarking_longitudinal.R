@@ -58,12 +58,11 @@ setMethod(
 
     method <- check_method_long_fit(method)
 
-    cl <- init_cl(cores)
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-
     if (fda::CRAN() & Sys.info()["sysname"] == "Windows") {
       `%doparallel%` <- foreach::`%do%`
     } else {
+      cl <- init_cl(cores)
+      on.exit(parallel::stopCluster(cl), add = TRUE)
       `%doparallel%` <- foreach::`%dopar%`
     }
 
