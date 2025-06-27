@@ -114,7 +114,14 @@ setMethod(
 )
 
 
-performance_metrics_cv <- function(x, landmarks, windows, K = 10, c_index = TRUE, brier = TRUE) {
+performance_metrics_cv <- function(
+  x,
+  landmarks,
+  windows,
+  K = 10,
+  c_index = TRUE,
+  brier = TRUE
+) {
   browser()
   error_str <- NULL
   if (!inherits(x, "Landmarking")) {
@@ -143,7 +150,6 @@ performance_metrics_cv <- function(x, landmarks, windows, K = 10, c_index = TRUE
     # Iterate over every combination of landmark+window
     for (k in 1:K) {
       # Iterate over crossvalidation folds
-
     }
     if (brier == TRUE) {
       brier_list[[paste0(landmark, "-", window)]] <-
@@ -168,7 +174,6 @@ performance_metrics_cv <- function(x, landmarks, windows, K = 10, c_index = TRUE
         )
     }
   }
-
 
   scores <- expand.grid(landmark = landmarks, window = windows)
   brier_list <- list()

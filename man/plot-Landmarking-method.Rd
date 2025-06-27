@@ -2,20 +2,40 @@
 % Please edit documentation in R/landmarking_visualisation.R
 \name{plot,Landmarking-method}
 \alias{plot,Landmarking-method}
-\title{Plots survival curves for the fitted landmarking models.}
+\title{Plots longitudinal trajectories and survival curves for landmarking models.}
 \usage{
-\S4method{plot}{Landmarking}(x, type = "survival", ...)
+\S4method{plot}{Landmarking}(
+  x,
+  type = "survival",
+  id = NULL,
+  landmark = NULL,
+  window = NULL,
+  dynamic_covariate = NULL,
+  avg = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class Landmarking.}
 
-\item{type}{A character string indicating the type of plot to generate.
-Currently, \code{type} must be "survival".  Additional options will be
-supported in the future.}
+\item{type}{A character taking the value 'survival' (survival curves) or
+'longitudinal' (modelled trajectories of dynamic covariates).}
+
+\item{id}{The identifier of the unit whose data will be plotted.}
+
+\item{landmark}{A numeric indicating a landmark time}
+
+\item{window}{A numeric indicating a prediction window}
+
+\item{dynamic_covariate}{A character indicating a dynamic covariate}
+
+\item{avg}{A logical (by default, FALSE) indicating whether LCMM predictions
+are conditioned on the predicted cluster (avg = FALSE) or averaged across
+clusters (avg = TRUE). It is ignored if the longitudinal model is not the LCMM.}
 
 \item{...}{Additional arguments passed to \code{\link[survminer:ggadjustedcurves]{survminer::ggadjustedcurves()}}
 for plotting survival curves.}
 }
 \description{
-Plots survival curves for the fitted landmarking models.
+Plots longitudinal trajectories and survival curves for landmarking models.
 }
