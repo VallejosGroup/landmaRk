@@ -132,7 +132,7 @@ Landmarking <- function(
   # Convert all character static covariates to factor, and raise a message
   if (length(char_columns) > 0) {
     data_static <- data_static |>
-      mutate_if(is.character, as.factor)
+      mutate(across(where(is.character), as.factor))
     message(
       "Static covariates ",
       paste(char_columns, collapse = ", "),
