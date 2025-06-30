@@ -168,7 +168,9 @@ setMethod(
               predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
             } else {
               # Replace NAs with mode if covariate is discrete
-              predictions[is.na(predictions)] <- names(sort(-table(predictions)))[1]
+              predictions[is.na(predictions)] <- names(sort(
+                -table(predictions)
+              ))[1]
             }
           }
         }
@@ -209,7 +211,9 @@ setMethod(
             x@longitudinal_predictions[[as.character(landmarks)]][[
               dynamic_covariate
             ]] <- method(
-              x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
+              x@longitudinal_fits[[as.character(landmarks)]][[
+                dynamic_covariate
+              ]],
               newdata = newdata,
               ...
             )
@@ -226,7 +230,7 @@ setMethod(
             length(x@longitudinal_predictions[[as.character(landmarks)]][[
               dynamic_covariate
             ]]) !=
-            nrow(newdata)
+              nrow(newdata)
           ) {
             stop(paste(
               "Number of predictions for dynamic_covariate",
