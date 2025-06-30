@@ -157,8 +157,8 @@ setMethod(
             left_join(
               x@data_dynamic[[dynamic_covariate]] |>
                 filter(get(x@times) <= landmarks) |>
-                slice_max(time, by = id),
-              by = setNames(x@ids, x@ids)
+                slice_max(get(x@times), by = id),
+              by = stats::setNames(x@ids, x@ids)
             )
           predictions <- predictions |> pull(x@measurements, name = x@ids)
           # Impute NAs
