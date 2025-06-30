@@ -107,3 +107,64 @@ test_that("Validity checks for Landmarking class work", {
     "@measurements must be a column in every dataframe in @data_dynamic"
   )
 })
+
+test_that("Character covariates are converted to factor", {
+  # Data manipulation
+  data(epileptic)
+
+  epileptic$gender <- as.character(epileptic$gender)
+  epileptic$treat <- as.character(epileptic$treat)
+  epileptic$dose <- as.character(epileptic$dose > 2)
+
+  epilectic_dfs <- split_wide_df(
+    epileptic,
+    ids = "id",
+    times = "time",
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
+    dynamic = c("dose"),
+    measurement_name = "value"
+  )
+
+  static <- epilectic_dfs$df_static
+  dynamic <- epilectic_dfs$df_dynamic
+
+  expect_message(
+    x <- Landmarking(
+      data_static = static,
+      data_dynamic = dynamic,
+      event_indicator = "with.status",
+      ids = "id",
+      event_time = "with.time",
+      times = "time",
+      measurements = "value"
+    ),
+    "Static covariates treat, gender were coded as character. Converted to factor."
+  )
+
+  expect_equal(class(x@data_static$treat), "factor")
+  expect_equal(class(x@data_static$gender), "factor")
+
+  dynamic[["dose"]]$value <- as.character(dynamic[["dose"]]$value > 2)
+
+  expect_message(
+    x <- Landmarking(
+      data_static = static,
+      data_dynamic = dynamic,
+      event_indicator = "with.status",
+      ids = "id",
+      event_time = "with.time",
+      times = "time",
+      measurements = "value"
+    ),
+    "Dynamic covariate dose were coded as character. Converted to factor."
+  )
+
+  expect_equal(class(x@data_dynamic[["dose"]]$value), "factor")
+})
