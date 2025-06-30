@@ -133,17 +133,27 @@ Landmarking <- function(
   if (length(char_columns) > 0) {
     data_static <- data_static |>
       mutate_if(is.character, as.factor)
-    message("Static covariates ", paste(char_columns, collapse = ", "),
-          " were coded as character. Converted to factor.")
+    message(
+      "Static covariates ",
+      paste(char_columns, collapse = ", "),
+      " were coded as character. Converted to factor."
+    )
   }
 
   # Find out dynamic covariates of type characters
   for (dynamic_covariate in names(data_dynamic)) {
     if (measurements %in% names(data_dynamic[[dynamic_covariate]])) {
-      if (inherits(data_dynamic[[dynamic_covariate]][, measurements], "character")) {
-        data_dynamic[[dynamic_covariate]][, measurements] <- as.factor(data_dynamic[[dynamic_covariate]][, measurements])
-        message("Dynamic covariate ", dynamic_covariate,
-                " were coded as character. Converted to factor.")
+      if (
+        inherits(data_dynamic[[dynamic_covariate]][, measurements], "character")
+      ) {
+        data_dynamic[[dynamic_covariate]][,
+          measurements
+        ] <- as.factor(data_dynamic[[dynamic_covariate]][, measurements])
+        message(
+          "Dynamic covariate ",
+          dynamic_covariate,
+          " were coded as character. Converted to factor."
+        )
       }
     }
   }
