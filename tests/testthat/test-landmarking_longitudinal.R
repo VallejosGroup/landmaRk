@@ -1,5 +1,6 @@
-test_that("LCMM works as expected", {
+initialise_longitudinal_test_ <- function() {
   set.seed(123)
+  epileptic$dose2 <- as.factor(epileptic$dose > 2)
 
   epileptic_dfs <- split_wide_df(
     epileptic,
@@ -13,7 +14,7 @@ test_that("LCMM works as expected", {
       "gender",
       "learn.dis"
     ),
-    dynamic = c("dose"),
+    dynamic = c("dose", "dose2"),
     measurement_name = "value"
   )
 
@@ -33,7 +34,15 @@ test_that("LCMM works as expected", {
     measurements = "value"
   )
 
-  x <- landmarking_object |>
+
+
+  landmarking_object
+}
+
+test_that("LCMM works as expected", {
+
+  x <- initialise_longitudinal_test_()
+  x <- x |>
     compute_risk_sets(seq(from = 365.25, to = 5 * 365.25, by = 365.25)) |>
     fit_longitudinal(
       landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
@@ -44,7 +53,6 @@ test_that("LCMM works as expected", {
       ng = 2,
       dynamic_covariates = "dose"
     )
-
   expect_error(
     predict_longitudinal(
       x,
@@ -60,3 +68,51 @@ test_that("LCMM works as expected", {
     )
   )
 })
+
+test_that("LOCF works as expected", {
+  # Initialite Landmarking object
+  x <- initialise_longitudinal_test_()
+  x <- x |>
+    compute_risk_sets(seq(from = 365.25, to = 5 * 365.25, by = 365.25))
+  expect_equal( {
+    x <- predict_longitudinal(
+      x,
+      landmarks = 365.25,
+      method = "locf",
+      subject = "id",
+      dynamic_covariates = "dose"
+    )
+    x@longitudinal_predictions[["365.25"]][["dose"]]
+  }, {
+  locf_predictions <- x@data_dynamic[["dose"]] |>
+    dplyr::filter(time <= 365.25) |>
+    dplyr::slice_max(time, by = id)|>
+    dplyr::right_join(data.frame(id = x@risk_sets[["365.25"]]), by = dplyr::join_by(id)) |>
+    dplyr::pull(value, name = id)
+  locf_predictions[is.na(locf_predictions)] <- mean(locf_predictions, na.rm = TRUE)
+  locf_predictions <- locf_predictions[order(as.integer(names(locf_predictions)))]
+  locf_predictions
+  }
+)
+  expect_equal( {
+    x <- predict_longitudinal(
+      x,
+      landmarks = 365.25,
+      method = "locf",
+      subject = "id",
+      dynamic_covariates = "dose2"
+    )
+    x@longitudinal_predictions[["365.25"]][["dose2"]]
+  }, {
+    locf_predictions <- x@data_dynamic[["dose2"]] |>
+      dplyr::filter(time <= 365.25) |>
+      dplyr::slice_max(time, by = id)|>
+      dplyr::right_join(data.frame(id = x@risk_sets[["365.25"]]), by = dplyr::join_by(id)) |>
+      dplyr::pull(value, name = id)
+    locf_predictions[is.na(locf_predictions)] <- names(sort(-table(locf_predictions)))[1]
+    locf_predictions <- locf_predictions[order(as.integer(names(locf_predictions)))]
+    locf_predictions
+  }
+  )
+  })
+

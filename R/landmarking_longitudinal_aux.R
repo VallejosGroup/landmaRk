@@ -32,11 +32,12 @@ check_method_long_predict <- function(method) {
     method <- predict_lcmm_
   } else if (is(method)[1] == "character" && method == "lme4") {
     method <- predict
-  }
-  if (!(is(method)[1] == "function")) {
+  } else if (is(method)[1] == "character" && method == "locf") {
+    method <- "locf"
+  } else if (!(is(method)[1] == "function")) {
     stop(
-      "Argument method",
-      " must be a function",
+      "Argument method must be one of 'lme4', 'lcmm',",
+      " 'locf' or a function",
       "\n"
     )
   }

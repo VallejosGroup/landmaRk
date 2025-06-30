@@ -144,63 +144,76 @@ setMethod(
 
     # Base case for recursion
     if (length(landmarks) == 1) {
+      # Check that relevant risk set is available
       check_riskset(x, landmarks)
-      check_long_fit(x, landmarks)
-
-      # Relevant risk set
-      risk_set <- x@risk_sets[[as.character(landmarks)]]
-      # Create list for storing model predictions, for longitudinal analysis
-      x@longitudinal_predictions[[as.character(landmarks)]] <- list()
-      # Loop that iterates over all time-varying covariates, to fit a longitudinal
-      # model for the underlying trajectories
-      for (dynamic_covariate in names(x@data_dynamic)) {
-        # Check that relevant model fit is available
-        if (
-          !(dynamic_covariate %in%
-            names(x@longitudinal_fits[[as.character(landmarks)]]))
-        ) {
-          warning(
-            "Longitudinal model has not been fit for dynamic covariate ",
-            dynamic_covariate,
-            " at landmark time",
-            landmarks,
-            ". Using Last Observation Carried Forward (LOCF).",
-            "\n"
-          )
-          predictions <- rep(NA, length(risk_set))
-          names(predictions) <- risk_set
-          last_observations <- x@data_dynamic[[dynamic_covariate]] |>
-            filter(get(x@ids) %in% risk_set) |>
-            filter(get(x@times) <= landmarks) |>
-            arrange(get(x@ids), get(x@times)) |>
-            group_by(get(x@ids)) |>
-            filter(row_number() == n()) |>
-            pull(value, name = get(x@ids))
-          predictions[names(last_observations)] <- last_observations
-          if (any(is.na(predictions))) {
-            warning(
-              "Some observations have no measurement available for",
-              "dynamic covariate",
-              dynamic_covariate,
-              "Imputing values."
+      if (inherits(method, "character") && method == "locf") {
+        # If model method is LOCF
+        # Relevant risk set
+        risk_set <- x@risk_sets[[as.character(landmarks)]]
+        for (dynamic_covariate in dynamic_covariates) {
+          predictions <- as.data.frame(risk_set)
+          colnames(predictions) <- x@ids
+          predictions <- predictions |>
+            left_join(
+              x@data_dynamic[[dynamic_covariate]] |>
+                filter(get(x@times) <= landmarks) |>
+                slice_max(time, by = id),
+              by = setNames(x@ids, x@ids)
             )
-            if (inherits(predictions) == "numeric") {
+          predictions <- predictions |> pull(x@measurements, name = x@ids)
+          # Impute NAs
+          if (any(is.na(predictions))) {
+            if (is.numeric(predictions)) {
+              # Replace NAs with mean if covariate is continuous
               predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
             } else {
-              predictions[is.na(predictions)] <- names(sort(
-                -table(predictions)
-              ))[1]
+              # Replace NAs with mode if covariate is discrete
+              predictions[is.na(predictions)] <- names(sort(-table(predictions)))[1]
             }
           }
-          x@longitudinal_predictions[[as.character(landmarks)]][[
-            dynamic_covariate
-          ]] <-
-            predictions
-        } else {
-          # Fit longitudinal model according to chosen method
-          newdata <- x@data_static |>
-            filter(get(x@ids) %in% risk_set)
-          newdata[, x@times] <- landmarks
+        }
+        x@longitudinal_predictions[[as.character(landmarks)]][[
+          dynamic_covariate
+        ]] <- predictions
+      } else {
+        # Check that relevant model fit is available (if model is not LOCF)
+        check_long_fit(x, landmarks)
+
+        # Relevant risk set
+        risk_set <- x@risk_sets[[as.character(landmarks)]]
+        # Create list for storing model predictions, for longitudinal analysis
+        x@longitudinal_predictions[[as.character(landmarks)]] <- list()
+        # Loop that iterates over all time-varying covariates, to fit a longitudinal
+        # model for the underlying trajectories
+        for (dynamic_covariate in names(x@data_dynamic)) {
+          # Check that relevant model fit is available
+          if (
+            !(dynamic_covariate %in%
+              names(x@longitudinal_fits[[as.character(landmarks)]]))
+          ) {
+            stop(
+              "Longitudinal model has not been fit for dynamic covariate ",
+              dynamic_covariate,
+              " at landmark time",
+              landmarks,
+              ". Fit a longitudinal model using fit_longitudinal,",
+              "or use Last Observation Carried Forward (LOCF).",
+              "\n"
+            )
+          } else {
+            # Fit longitudinal model according to chosen method
+            newdata <- x@data_static |>
+              filter(get(x@ids) %in% risk_set)
+            newdata[, x@times] <- landmarks
+
+            x@longitudinal_predictions[[as.character(landmarks)]][[
+              dynamic_covariate
+            ]] <- method(
+              x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
+              newdata = newdata,
+              ...
+            )
+          }
 
           x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
@@ -209,28 +222,20 @@ setMethod(
             newdata = newdata,
             ...
           )
-        }
-
-        x@longitudinal_predictions[[as.character(landmarks)]][[
-          dynamic_covariate
-        ]] <- method(
-          x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-          newdata = newdata,
-          ...
-        )
-        if (
-          length(x@longitudinal_predictions[[as.character(landmarks)]][[
-            dynamic_covariate
-          ]]) !=
+          if (
+            length(x@longitudinal_predictions[[as.character(landmarks)]][[
+              dynamic_covariate
+            ]]) !=
             nrow(newdata)
-        ) {
-          stop(paste(
-            "Number of predictions for dynamic_covariate",
-            dynamic_covariate,
-            "at landmark time",
-            landmarks,
-            "differs from number of observations in the risk set."
-          ))
+          ) {
+            stop(paste(
+              "Number of predictions for dynamic_covariate",
+              dynamic_covariate,
+              "at landmark time",
+              landmarks,
+              "differs from number of observations in the risk set."
+            ))
+          }
         }
       }
     } else {
