@@ -80,11 +80,20 @@ setMethod(
           at_risk_individuals,
           landmark
         )
-      prop_individuals_few_obs <- sum(table(dataframe$id) <= 1)/length(at_risk_individuals)
-        if (sum(table(dataframe$id) <= 1)/length(at_risk_individuals) >= 0.25) {
-          warning(round(prop_individuals_few_obs*100, 2), "% of the individuals have 0",
-                  " or 1 observations at landmark time ", landmark, " for ",
-                  "longitudinal covariate ", dynamic_covariate)
+        prop_individuals_few_obs <- sum(table(dataframe$id) <= 1) /
+          length(at_risk_individuals)
+        if (
+          sum(table(dataframe$id) <= 1) / length(at_risk_individuals) >= 0.25
+        ) {
+          warning(
+            round(prop_individuals_few_obs * 100, 2),
+            "% of the individuals have 0",
+            " or 1 observations at landmark time ",
+            landmark,
+            " for ",
+            "longitudinal covariate ",
+            dynamic_covariate
+          )
         }
       }
     }
