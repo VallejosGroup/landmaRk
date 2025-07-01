@@ -34,39 +34,11 @@ setMethod(
   "Landmarking",
   function(x, formula, landmarks, windows, method, dynamic_covariates = c()) {
     # Check that method is a function with arguments formula, data, ...
-    if (is(method)[1] == "character" && method == "survfit") {
-      method <- survival::survfit
-    } else if (is(method)[1] == "character" && method == "coxph") {
-      method <- "coxph"
-    } else if (!(is(method)[1] == "function")) {
-      stop(
-        "Argument ",
-        method,
-        " must be a function",
-        "\n"
-      )
-    }
-    if (
-      (is(method)[1] == "function") &&
-        !("data" %in% names(as.list(args(method))))
-    ) {
-      stop(
-        "Argument ",
-        method,
-        " must be a function, and data must be an argument to that function",
-        "\n"
-      )
-    }
+    method <- check_method_survival_predict_(method)
     # Check that vectors of landmark times and horizons have the same length
     if (length(landmarks) == 1) {
       # Base case for recursion
-      if (!(landmarks %in% x@landmarks)) {
-        message(
-          "Risk set for landmark time ",
-          landmarks,
-          " has not been computed\n"
-        )
-      }
+      check_riskset_survival_(x, landmarks)
       # Recover risk sets (ids of individuals who are at risk at landmark time)
       at_risk_individuals <- x@risk_sets[[as.character(landmarks)]]
 
@@ -88,22 +60,15 @@ setMethod(
               get(x@event_time) - landmarks
             )
           )
-        # Construct formula for survival analysis
-        survival_formula <- paste0(
-          "survival::Surv(",
-          "event_time",
-          ", ",
-          "event_status",
-          ") ~ "
-        )
-        # Add time-varying covariates to formula and dataset for survival analysis
-        if (length(dynamic_covariates) == 0) {
-          survival_formula <- as.formula(paste0(survival_formula, "1"))
-        } else {
-          survival_formula <- as.formula(paste0(
-            survival_formula,
-            paste(dynamic_covariates, collapse = " + ")
-          ))
+
+        # Check that longitudinal predictions are available at landmark time
+        if (length(dynamic_covariates) > 0) {
+          check_predictions_available_survival_(
+            x,
+            landmarks,
+            dynamic_covariates
+          )
+
           x@survival_datasets[[paste0(landmarks, "-", window)]] <- cbind(
             x@survival_datasets[[paste0(landmarks, "-", window)]],
             do.call(
@@ -112,6 +77,7 @@ setMethod(
             )
           )
         }
+
         # Call to method that performs survival analysis
         if (is(method)[1] == "character" && method == "coxph") {
           x@survival_fits[[paste0(landmarks, "-", window)]] <- survival::coxph(
@@ -208,7 +174,7 @@ setMethod(
         # Check that relevant model fit is available
         if (!(model_name %in% names(x@survival_fits))) {
           stop(
-            "Survival model has not been fit for prediction window",
+            "Survival model has not been fitted for prediction window",
             window,
             " at landmark time",
             landmarks,
