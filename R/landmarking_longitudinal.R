@@ -1,17 +1,26 @@
-#' Fits the specified longitudinal model for the latent processes underlying the
-#' relevant time-varying covariates, up until the landmarking times
+#' Fits the specified longitudinal model for time-varying covariates up to
+#' the landmark times
+#'
+#' @details
+#'   ## Parallel processing
+#'   As the longitudinal model for each landmark time is independent of
+#'   the longitudinal models for other landmark times, parallel processing can
+#'   be used to vastly speed up computation. However, due to issues with
+#'   parallel processing in R, currently only Unix-like operating systems
+#'   are supported by \code{landmaRk}.
 #'
 #' @param x An object of class \code{\link{Landmarking}}.
 #' @param landmarks A vector of Landmark times.
-#' @param method Either "lcmm" or "lme4" or a function for fitting a
-#'   longitudinal data model, where the first argument is a formula, and also
+#' @param method Either \code{"lcmm"} or \code{"lme4"} or a function for fitting
+#'   a longitudinal data model, where the first argument is a formula, and also
 #'   has a \code{data} argument.
 #' @param formula A formula to be used in longitudinal sub-model fitting.
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
-#' @param cores Number of cores/threads to be used for parallel computation.
-#'   Defaults to either \code{options("Ncpus")} if set, or 1 (single threaded)
-#'   otherwise.
+#' @param cores Number of cores/threads to be used for parallel computation on
+#'   Linux and MacOS. Defaults to either \code{options("Ncpus")} if set, or 1
+#'   (single threaded) otherwise. Only single-threaded computation is currently
+#'   supported on Windows.
 #' @param ... Additional arguments passed to the longitudinal model fitting
 #'   function (e.g. number of classes/clusters for lcmm).
 #' @returns An object of class \code{\link{Landmarking}}.
@@ -33,8 +42,16 @@ setGeneric(
   }
 )
 
-#' Fits the specified longitudinal model for the latent processes underlying the
-#' relevant time-varying covariates, up until the landmarking times
+#' Fits the specified longitudinal model for time-varying covariates up to
+#' the landmark times
+#'
+#' @details
+#'   ## Parallel processing
+#'   As the longitudinal model for each landmark time is independent of
+#'   the longitudinal models for other landmark times, parallel processing can
+#'   be used to vastly speed up computation. However, due to issues with
+#'   parallel processing in R, currently only Unix-like operating systems
+#'   are supported by \code{landmaRk}.
 #'
 #' @inheritParams fit_longitudinal
 #' @returns An object of class \code{\link{Landmarking}}.

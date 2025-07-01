@@ -93,11 +93,10 @@ construct_data <- function(
     dplyr::left_join(x@data_static, by = x@ids)
 }
 
-
 # Initialize a cluster for parallel processing based on the operating system
 init_cl <- function(cores) {
-    # Use FORK on Unix-like systems
-    cl <- parallel::makeCluster(cores, type = "FORK")
-    doParallel::registerDoParallel(cl)
+  # Use FORK on Unix-like systems
+  cl <- parallel::makeCluster(cores, type = "FORK")
+  doParallel::registerDoParallel(cl)
   cl
 }
