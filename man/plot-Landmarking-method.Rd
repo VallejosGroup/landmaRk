@@ -18,20 +18,21 @@
 \arguments{
 \item{x}{An object of class Landmarking.}
 
-\item{type}{A character taking the value 'survival' (survival curves) or
-'longitudinal' (modelled trajectories of dynamic covariates).}
+\item{type}{A character taking the value \code{'survival'} (survival curves)
+or \code{'longitudinal'} (model trajectories of dynamic covariates).}
 
-\item{id}{The identifier of the unit whose data will be plotted.}
+\item{id}{The identifier for the unit (subject) whose data will be plotted.}
 
-\item{landmark}{A numeric indicating a landmark time}
+\item{landmark}{Numeric indicating a landmark time}
 
-\item{window}{A numeric indicating a prediction window}
+\item{window}{Numeric indicating a prediction window}
 
 \item{dynamic_covariate}{A character indicating a dynamic covariate}
 
-\item{avg}{A logical (by default, FALSE) indicating whether LCMM predictions
-are conditioned on the predicted cluster (avg = FALSE) or averaged across
-clusters (avg = TRUE). It is ignored if the longitudinal model is not the LCMM.}
+\item{avg}{A logical (by default, \code{FALSE}) indicating whether LCMM
+predictions are conditioned on the predicted cluster (\code{avg = FALSE})
+or averaged across clusters (\code{avg = TRUE}). Ignored if the
+longitudinal model is not an LCMM.}
 
 \item{...}{Additional arguments passed to \code{\link[survminer:ggadjustedcurves]{survminer::ggadjustedcurves()}}
 for plotting survival curves.}
