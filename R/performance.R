@@ -64,7 +64,11 @@ setMethod(
         at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
 
         # Construct dataset for survival analysis (censor events past horizon time)
-        dataset <- x@data_static[at_risk_individuals, ] |>
+
+        dataset <- data.frame(at_risk_individuals)
+        colnames(dataset) <- x@ids
+        dataset <- dataset |>
+          left_join(x@data_static, by = stats::setNames(x@ids, x@ids)) |>
           mutate(
             event_status = ifelse(
               get(x@event_time) > horizon,
