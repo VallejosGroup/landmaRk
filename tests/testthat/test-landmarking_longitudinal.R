@@ -84,17 +84,23 @@ test_that("LOCF works as expected", {
     },
     {
       locf_predictions <- x@data_dynamic[["dose"]] |>
+        # Observations of dose2 before landmark time 365.25
         dplyr::filter(time <= 365.25) |>
+        # Select last observation per individual
         dplyr::slice_max(time, by = id) |>
+        # Join with the risk indices of individuals at risk (risk set)
         dplyr::right_join(
           data.frame(id = x@risk_sets[["365.25"]]),
           by = dplyr::join_by(id)
         ) |>
+        # Select last observation
         dplyr::pull(value, name = id)
+      # Mean imputation for individuals where no observations were made
       locf_predictions[is.na(locf_predictions)] <- mean(
         locf_predictions,
         na.rm = TRUE
       )
+      # Sort observations according to individual id
       locf_predictions <- locf_predictions[order(as.integer(names(
         locf_predictions
       )))]
@@ -113,6 +119,7 @@ test_that("LOCF works as expected", {
       x@longitudinal_predictions[["365.25"]][["dose2"]]
     },
     {
+      # Query last observation per individual as in the previous test
       locf_predictions <- x@data_dynamic[["dose2"]] |>
         dplyr::filter(time <= 365.25) |>
         dplyr::slice_max(time, by = id) |>
@@ -121,6 +128,7 @@ test_that("LOCF works as expected", {
           by = dplyr::join_by(id)
         ) |>
         dplyr::pull(value, name = id)
+      # Mean imputation for individuals where no observations were made
       locf_predictions[is.na(locf_predictions)] <- names(sort(
         -table(locf_predictions)
       ))[1]
