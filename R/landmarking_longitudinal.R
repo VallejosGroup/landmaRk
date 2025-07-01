@@ -82,9 +82,7 @@ setMethod(
         )
         prop_individuals_few_obs <- sum(table(dataframe$id) <= 1) /
           length(at_risk_individuals)
-        if (
-          prop_individuals_few_obs >= 0.25
-        ) {
+        if (prop_individuals_few_obs >= 0.25) {
           warning(
             round(prop_individuals_few_obs * 100, 2),
             "% of the individuals have 0",
