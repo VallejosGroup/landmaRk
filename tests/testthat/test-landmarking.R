@@ -2,7 +2,7 @@ test_that("Validity checks for Landmarking class work", {
   # Data manipulation
   data(epileptic)
 
-  epilectic_dfs <- split_wide_df(
+  epileptic_dfs <- split_wide_df(
     epileptic,
     ids = "id",
     times = "time",
@@ -18,8 +18,8 @@ test_that("Validity checks for Landmarking class work", {
     measurement_name = "value"
   )
 
-  static <- epilectic_dfs$df_static
-  dynamic <- epilectic_dfs$df_dynamic
+  static <- epileptic_dfs$df_static
+  dynamic <- epileptic_dfs$df_dynamic
 
   temp <- dynamic
   names(temp) <- NULL
@@ -116,7 +116,7 @@ test_that("Character covariates are converted to factor", {
   epileptic$treat <- as.character(epileptic$treat)
   epileptic$dose <- as.character(epileptic$dose > 2)
 
-  epilectic_dfs <- split_wide_df(
+  epileptic_dfs <- split_wide_df(
     epileptic,
     ids = "id",
     times = "time",
@@ -132,8 +132,8 @@ test_that("Character covariates are converted to factor", {
     measurement_name = "value"
   )
 
-  static <- epilectic_dfs$df_static
-  dynamic <- epilectic_dfs$df_dynamic
+  static <- epileptic_dfs$df_static
+  dynamic <- epileptic_dfs$df_dynamic
 
   expect_message(
     x <- Landmarking(
