@@ -249,9 +249,10 @@ setMethod(
             )
           } else {
             # Fit longitudinal model according to chosen method
-            newdata <- x@data_static |>
-              filter(get(x@ids) %in% risk_set)
-            newdata[, x@times] <- landmarks
+            newdata <- data.frame(risk_set, landmarks)
+            colnames(newdata) <- c(x@ids, x@times)
+            newdata <- newdata |>
+              left_join(x@data_static, by = stats::setNames(x@ids, x@ids))
 
             x@longitudinal_predictions[[as.character(landmarks)]][[
               dynamic_covariate
