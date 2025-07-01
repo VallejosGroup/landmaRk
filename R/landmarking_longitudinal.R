@@ -276,7 +276,7 @@ setMethod(
             length(x@longitudinal_predictions[[as.character(landmarks)]][[
               dynamic_covariate
             ]]) !=
-            nrow(newdata)
+              nrow(newdata)
           ) {
             stop(paste(
               "Number of predictions for dynamic_covariate",
