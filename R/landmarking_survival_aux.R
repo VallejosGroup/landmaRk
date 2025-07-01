@@ -15,7 +15,7 @@ check_method_survival_predict_ <- function(method) {
 
   if (
     (is(method)[1] == "function") &&
-    !("data" %in% names(as.list(args(method))))
+      !("data" %in% names(as.list(args(method))))
   ) {
     stop(
       "Argument ",
@@ -39,18 +39,32 @@ check_riskset_survival_ <- function(x, landmarks) {
   }
 }
 
-check_predictions_available_survival_ <- function(x, landmarks, dynamic_covariates) {
-
-
+check_predictions_available_survival_ <- function(
+  x,
+  landmarks,
+  dynamic_covariates
+) {
   landmarks <- as.character(landmarks)
-  if (!(landmarks %in% names(x@longitudinal_predictions)))
-    stop("Longitudinal predictions are not available at landmark time ", landmarks, ".")
+  if (!(landmarks %in% names(x@longitudinal_predictions))) {
+    stop(
+      "Longitudinal predictions are not available at landmark time ",
+      landmarks,
+      "."
+    )
+  }
 
   if (length(dynamic_covariates) > 0) {
     for (dynamic_covariate in dynamic_covariates) {
-      if (!(dynamic_covariate %in% names(x@longitudinal_predictions[[landmarks]]))) {
-        stop("Longitudinal predictions for dynamic covariate ", dynamic_covariate,
-             " are not available at landmark time ", landmarks, ".")
+      if (
+        !(dynamic_covariate %in% names(x@longitudinal_predictions[[landmarks]]))
+      ) {
+        stop(
+          "Longitudinal predictions for dynamic covariate ",
+          dynamic_covariate,
+          " are not available at landmark time ",
+          landmarks,
+          "."
+        )
       }
     }
   }

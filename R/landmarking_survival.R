@@ -63,7 +63,11 @@ setMethod(
 
         # Check that longitudinal predictions are available at landmark time
         if (length(dynamic_covariates) > 0) {
-        check_predictions_available_survival_(x, landmarks, dynamic_covariates)
+          check_predictions_available_survival_(
+            x,
+            landmarks,
+            dynamic_covariates
+          )
 
           x@survival_datasets[[paste0(landmarks, "-", window)]] <- cbind(
             x@survival_datasets[[paste0(landmarks, "-", window)]],
@@ -72,7 +76,7 @@ setMethod(
               x@longitudinal_predictions[[as.character(landmarks)]]
             )
           )
-}
+        }
 
         # Call to method that performs survival analysis
         if (is(method)[1] == "character" && method == "coxph") {

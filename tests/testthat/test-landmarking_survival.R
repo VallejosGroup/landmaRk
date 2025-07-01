@@ -45,33 +45,33 @@ test_that("Error handling for fit_survival", {
       dynamic_covariates = c("dose")
     )
 
-
   expect_error(
-    x |> fit_survival(
-      formula = Surv(event_time, event_status) ~
-        treat + age + gender + learn.dis + dose,
-      landmarks = seq(from = 365.25, to = 2 * 365.25, by = 365.25),
-      windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
-      method = "coxph",
-      dynamic_covariates = c("dose2")
-    ),
+    x |>
+      fit_survival(
+        formula = Surv(event_time, event_status) ~
+          treat + age + gender + learn.dis + dose,
+        landmarks = seq(from = 365.25, to = 2 * 365.25, by = 365.25),
+        windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+        method = "coxph",
+        dynamic_covariates = c("dose2")
+      ),
     paste(
       "Longitudinal predictions for dynamic covariate dose2 are not available at landmark time 365.25."
     )
   )
 
   expect_error(
-    x |> fit_survival(
-      formula = Surv(event_time, event_status) ~
-        treat + age + gender + learn.dis + dose,
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-      windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
-      method = "coxph",
-      dynamic_covariates = c("dose")
-    ),
+    x |>
+      fit_survival(
+        formula = Surv(event_time, event_status) ~
+          treat + age + gender + learn.dis + dose,
+        landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+        windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+        method = "coxph",
+        dynamic_covariates = c("dose")
+      ),
     paste(
       "Longitudinal predictions are not available at landmark time 1095.75."
     )
   )
-
 })
