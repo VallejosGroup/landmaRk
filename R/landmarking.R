@@ -138,7 +138,7 @@ Landmarking <- function(
       message(
         "Static covariate",
         paste(char_columns, collapse = ", "),
-        " was coded as character. Converted to factor."
+        " was coded as a character. Converted to factor."
       )
     } else {
       # More than one character column
