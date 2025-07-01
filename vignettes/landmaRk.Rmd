@@ -27,7 +27,7 @@ time-to-event data with time-varying covariates. It allows users to perform
 survival analysis using longitudinal data, fitting models to the time-varying
 covariates, and then using these predictions in survival models.
 
-```{R, echo = FALSE, out.width = "100%", fig.cap="Diagram of the landmaRk package pipeline"}
+```{r pipeline-diagram, echo = FALSE, out.width = "100%", fig.cap="Diagram of the landmaRk package pipeline"}
 knitr::include_graphics(system.file("diagram.svg", package = "landmaRk"))
 ```
 
