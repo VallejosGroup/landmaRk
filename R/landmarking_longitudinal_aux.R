@@ -32,11 +32,12 @@ check_method_long_predict <- function(method) {
     method <- predict_lcmm_
   } else if (is(method)[1] == "character" && method == "lme4") {
     method <- predict
-  }
-  if (!(is(method)[1] == "function")) {
+  } else if (is(method)[1] == "character" && method == "locf") {
+    method <- "locf"
+  } else if (!(is(method)[1] == "function")) {
     stop(
-      "Argument method",
-      " must be a function",
+      "Argument method must be one of 'lme4', 'lcmm',",
+      " 'locf' or a function",
       "\n"
     )
   }
@@ -79,10 +80,10 @@ check_long_fit <- function(x, landmarks) {
 
 # Construct data frame for longitudinal model fitting
 construct_data <- function(
-  x,
-  dynamic_covariate,
-  at_risk_individuals,
-  landmark
+    x,
+    dynamic_covariate,
+    at_risk_individuals,
+    landmark
 ) {
   at_risk_individuals <- data.frame(at_risk_individuals)
   colnames(at_risk_individuals) <- x@ids
@@ -92,33 +93,17 @@ construct_data <- function(
 
   at_risk_individuals |>
     # Subset with individuals who are at risk only
-    left_join(
-      x@data_dynamic[[dynamic_covariate]],
-      by = stats::setNames(x@ids, x@ids)
-    ) |>
+    left_join(x@data_dynamic[[dynamic_covariate]], by = stats::setNames(x@ids, x@ids)) |>
     # Subset with observations prior to landmark time
     dplyr::filter(get(x@times) <= landmark) |>
     # Join with static covariates
     dplyr::left_join(x@data_static, by = x@ids)
 }
 
-
 # Initialize a cluster for parallel processing based on the operating system
 init_cl <- function(cores) {
-  if (Sys.info()["sysname"] == "Windows") {
-    # Use PSOCK on Windows
-    cl <- parallel::makeCluster(cores, type = "PSOCK")
-    parallel::clusterEvalQ(cl, {
-      check_riskset <- landmaRk:::check_riskset
-      check_dynamic_covariate <- landmaRk:::check_dynamic_covariate
-      construct_data <- landmaRk:::construct_data
-    })
-
-    doSNOW::registerDoSNOW(cl)
-  } else {
-    # Use FORK on Unix-like systems
-    cl <- parallel::makeCluster(cores, type = "FORK")
-    doParallel::registerDoParallel(cl)
-  }
+  # Use FORK on Unix-like systems
+  cl <- parallel::makeCluster(cores, type = "FORK")
+  doParallel::registerDoParallel(cl)
   cl
 }
