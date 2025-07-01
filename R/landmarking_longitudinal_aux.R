@@ -96,20 +96,8 @@ construct_data <- function(
 
 # Initialize a cluster for parallel processing based on the operating system
 init_cl <- function(cores) {
-  if (Sys.info()["sysname"] == "Windows") {
-    # Use PSOCK on Windows
-    cl <- parallel::makeCluster(cores, type = "PSOCK")
-    parallel::clusterEvalQ(cl, {
-      check_riskset <- landmaRk:::check_riskset
-      check_dynamic_covariate <- landmaRk:::check_dynamic_covariate
-      construct_data <- landmaRk:::construct_data
-    })
-
-    doSNOW::registerDoSNOW(cl)
-  } else {
     # Use FORK on Unix-like systems
     cl <- parallel::makeCluster(cores, type = "FORK")
     doParallel::registerDoParallel(cl)
-  }
   cl
 }
