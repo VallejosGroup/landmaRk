@@ -145,7 +145,7 @@ test_that("Character covariates are converted to factor", {
       times = "time",
       measurements = "value"
     ),
-    "Static covariates treat, gender were coded as character. Converted to factor."
+    "Static covariates treat, gender were coded as characters. Converted to factors."
   )
 
   expect_equal(class(x@data_static$treat), "factor")
