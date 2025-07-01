@@ -68,7 +68,7 @@ setMethod(
         dataset <- data.frame(at_risk_individuals)
         colnames(dataset) <- x@ids
         dataset <- dataset |>
-          left_join(x@data_static, by =  stats::setNames(x@ids, x@ids)) |>
+          left_join(x@data_static, by = stats::setNames(x@ids, x@ids)) |>
           mutate(
             event_status = ifelse(
               get(x@event_time) > horizon,

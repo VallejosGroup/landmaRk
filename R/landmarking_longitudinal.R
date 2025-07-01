@@ -67,8 +67,8 @@ setMethod(
       `%doparallel%` <- foreach::`%dopar%`
     }
 
-    x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel% {
-
+    x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
+      {
         check_riskset(x, landmark)
         # Create list for storing model fits for longitudinal analysis
         model_fits <- list()

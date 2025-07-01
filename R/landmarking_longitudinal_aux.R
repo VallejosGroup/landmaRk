@@ -84,7 +84,6 @@ construct_data <- function(
   at_risk_individuals,
   landmark
 ) {
-
   at_risk_individuals <- data.frame(at_risk_individuals)
   colnames(at_risk_individuals) <- x@ids
   if (inherits(x@data_dynamic[[dynamic_covariate]], "tbl_df")) {
@@ -93,7 +92,10 @@ construct_data <- function(
 
   at_risk_individuals |>
     # Subset with individuals who are at risk only
-    left_join(x@data_dynamic[[dynamic_covariate]], by = stats::setNames(x@ids, x@ids)) |>
+    left_join(
+      x@data_dynamic[[dynamic_covariate]],
+      by = stats::setNames(x@ids, x@ids)
+    ) |>
     # Subset with observations prior to landmark time
     dplyr::filter(get(x@times) <= landmark) |>
     # Join with static covariates
