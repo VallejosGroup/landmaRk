@@ -67,7 +67,7 @@ test_that("LCMM works as expected", {
 })
 
 test_that("LOCF works as expected", {
-  # Initialite Landmarking object
+  # Initialise Landmarking object
   x <- initialise_longitudinal_test_()
   x <- x |>
     compute_risk_sets(seq(from = 365.25, to = 5 * 365.25, by = 365.25))

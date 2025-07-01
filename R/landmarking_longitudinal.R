@@ -83,7 +83,7 @@ setMethod(
         prop_individuals_few_obs <- sum(table(dataframe$id) <= 1) /
           length(at_risk_individuals)
         if (
-          sum(table(dataframe$id) <= 1) / length(at_risk_individuals) >= 0.25
+          prop_individuals_few_obs >= 0.25
         ) {
           warning(
             round(prop_individuals_few_obs * 100, 2),
@@ -204,10 +204,10 @@ setMethod(
               ))[1]
             }
           }
+          x@longitudinal_predictions[[as.character(landmarks)]][[
+            dynamic_covariate
+          ]] <- predictions
         }
-        x@longitudinal_predictions[[as.character(landmarks)]][[
-          dynamic_covariate
-        ]] <- predictions
       } else {
         # Check that relevant model fit is available (if model is not LOCF)
         check_long_fit(x, landmarks)
