@@ -133,11 +133,21 @@ Landmarking <- function(
   if (length(char_columns) > 0) {
     data_static <- data_static |>
       mutate(across(where(is.character), as.factor))
-    message(
-      "Static covariates ",
-      paste(char_columns, collapse = ", "),
-      " were coded as character. Converted to factor."
-    )
+
+    if (length(char_columns) == 1) {
+      message(
+        "Static covariate",
+        paste(char_columns, collapse = ", "),
+        " was coded as character. Converted to factor."
+      )
+    } else {
+      # More than one character column
+      message(
+        "Static covariates ",
+        paste(char_columns, collapse = ", "),
+        " were coded as characters. Converted to factors."
+      )
+    }
   }
 
   # Find out dynamic covariates of type characters
