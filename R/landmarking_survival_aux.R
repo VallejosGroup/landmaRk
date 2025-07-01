@@ -12,7 +12,6 @@ check_method_survival_predict_ <- function(method) {
       "\n"
     )
   }
-
   if (
     (is(method)[1] == "function") &&
       !("data" %in% names(as.list(args(method))))
@@ -24,7 +23,6 @@ check_method_survival_predict_ <- function(method) {
       "\n"
     )
   }
-
   method
 }
 
