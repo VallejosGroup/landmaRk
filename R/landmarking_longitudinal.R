@@ -67,6 +67,28 @@ setMethod(
       `%doparallel%` <- foreach::`%dopar%`
     }
 
+    # If more than 25% of the individuals have 0 or 1 observations,
+    # raise a warning
+    for (landmark in landmarks) {
+      for (dynamic_covariate in dynamic_covariates) {
+        at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
+        # Construct dataset for the longitudinal analysis (static measurements +
+        # time-varying covariate and its recording time)
+        dataframe <- construct_data(
+          x,
+          dynamic_covariate,
+          at_risk_individuals,
+          landmark
+        )
+      prop_individuals_few_obs <- sum(table(dataframe$id) <= 1)/length(at_risk_individuals)
+        if (sum(table(dataframe$id) <= 1)/length(at_risk_individuals) >= 0.25) {
+          warning(round(prop_individuals_few_obs*100, 2), "% of the individuals have 0",
+                  " or 1 observations at landmark time ", landmark, " for ",
+                  "longitudinal covariate ", dynamic_covariate)
+        }
+      }
+    }
+
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
       {
         check_riskset(x, landmark)

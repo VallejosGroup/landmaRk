@@ -131,3 +131,35 @@ test_that("LOCF works as expected", {
     }
   )
 })
+
+### test_that("longitudinal_fit raises warning for too few observations", {
+###   set.seed(1)
+###   epileptic <- epileptic |> dplyr::filter(time < 368) |> head(20)
+###   epileptic <- epileptic[-c(18, 19), ]
+###   # epileptic <- epileptic |> dplyr::filter(time <= 366)
+### #
+###   # epileptic <- rbind(
+###   #   epileptic |> dplyr::filter(id <= 500),
+###   #   epileptic |> dplyr::filter(id > 500) |> dplyr::slice_max(time, by = id)
+###   # )
+###
+###   x <- initialise_longitudinal_test_()
+###
+###   expect_warning(
+###       x |>
+###         compute_risk_sets(seq(from = 365.25, to = 1 * 365.25, by = 365.25)) |>
+###         fit_longitudinal(
+###           landmarks = seq(from = 365.25, to = 1 * 365.25, by = 365.25),
+###           method = "lcmm",
+###           formula = value ~ treat + age + gender + learn.dis + time,
+###           mixture = ~ treat + age + gender + learn.dis,
+###           subject = "id",
+###           var.time = "time",
+###           ng = 2,
+###           dynamic_covariates = "dose"
+###         ),
+###     paste(
+###       "25% of the individuals have 0 or 1 observations at landmark time 365.25 for longitudinal covariate dose"
+###     )
+###   )
+### })
