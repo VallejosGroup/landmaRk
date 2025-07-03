@@ -8,3 +8,4 @@ devel/
 \_pkgdown.yml
 ^.devcontainer
 ^\.github$
+^cran-comments\.md$
