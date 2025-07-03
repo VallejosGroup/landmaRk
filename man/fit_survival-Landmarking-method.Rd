@@ -11,21 +11,5 @@ times specified by the user}
 An object of class Landmarking.
 }
 \description{
-Fits the specified survival model at the landmark times and up to the horizon
-times specified by the user
-}
-\details{
-\subsection{Mathematical formulation}{
-
-This function estimates the conditional probability of survival to horizon
-\eqn{s+w}, conditioned on having survived to the landmark time, \eqn{s},
-that is
-\deqn{\pi_i(s+w \vert s) = P(T_i > s+w \vert T_i \ge s, \bar{x}_i(s)), }
-where \eqn{i} denotes an individual's index, \eqn{T_i} is the time to event
-outcome for individual \eqn{i} and \eqn{\bar{x}_i(s)} are the covariates
-observed for individual \eqn{i}, including the observed history of dynamic
-covariates.
-
 #' @inheritParams fit_survival
-}
 }
