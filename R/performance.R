@@ -54,7 +54,10 @@ setMethod(
       error_str <- c(error_str, "@brier must be a logical")
     }
     if (length(landmarks) != length(horizons)) {
-      error_str <- c(error_str, "@landmarks and @horizons must be of the same length")
+      error_str <- c(
+        error_str,
+        "@landmarks and @horizons must be of the same length"
+      )
     }
     if (length(error_str) > 0) {
       stop(paste(error_str, collapse = ". "))
@@ -66,50 +69,50 @@ setMethod(
     for (i in seq_along(landmarks)) {
       landmark <- landmarks[i]
       horizon <- horizons[i]
-        at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
+      at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
 
-        # Construct dataset for survival analysis (censor events past horizon time)
-        dataset <- data.frame(at_risk_individuals)
-        colnames(dataset) <- x@ids
-        dataset <- dataset |>
-          left_join(x@data_static, by = stats::setNames(x@ids, x@ids)) |>
-          mutate(
-            event_status = ifelse(
-              get(x@event_time) > horizon,
-              0,
-              get(x@event_indicator)
-            ),
-            event_time = ifelse(
-              get(x@event_time) > horizon,
-              horizon - landmark,
-              get(x@event_time) - landmark
-            )
+      # Construct dataset for survival analysis (censor events past horizon time)
+      dataset <- data.frame(at_risk_individuals)
+      colnames(dataset) <- x@ids
+      dataset <- dataset |>
+        left_join(x@data_static, by = stats::setNames(x@ids, x@ids)) |>
+        mutate(
+          event_status = ifelse(
+            get(x@event_time) > horizon,
+            0,
+            get(x@event_indicator)
+          ),
+          event_time = ifelse(
+            get(x@event_time) > horizon,
+            horizon - landmark,
+            get(x@event_time) - landmark
           )
+        )
 
-        predictions <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
-        if (brier == TRUE) {
-          brier_list[[paste0(landmark, "-", horizon)]] <-
-            .BinaryBrierScore(
-              predictions = predictions,
-              time = dataset$event_time,
-              status = dataset$event_status,
-              tau = horizon,
-              cause = 1
-            )
-        }
-        if (c_index == TRUE) {
-          cindex_list[[paste0(landmark, "-", horizon)]] <-
-            .CIndexCRisks(
-              predictions = predictions,
-              time = dataset$event_time,
-              status = dataset$event_status,
-              tau = horizon,
-              cause = 1,
-              method = "survival",
-              cens.code = 0
-            )
-        }
+      predictions <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
+      if (brier == TRUE) {
+        brier_list[[paste0(landmark, "-", horizon)]] <-
+          .BinaryBrierScore(
+            predictions = predictions,
+            time = dataset$event_time,
+            status = dataset$event_status,
+            tau = horizon,
+            cause = 1
+          )
       }
+      if (c_index == TRUE) {
+        cindex_list[[paste0(landmark, "-", horizon)]] <-
+          .CIndexCRisks(
+            predictions = predictions,
+            time = dataset$event_time,
+            status = dataset$event_status,
+            tau = horizon,
+            cause = 1,
+            method = "survival",
+            cens.code = 0
+          )
+      }
+    }
     if (c_index == TRUE) {
       scores <- cbind(scores, cindex = unlist(cindex_list))
     }

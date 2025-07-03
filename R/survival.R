@@ -67,54 +67,54 @@ setMethod(
       # Recover risk sets (ids of individuals who are at risk at landmark time)
       at_risk_individuals <- x@risk_sets[[as.character(landmarks)]]
 
-        # Construct dataset for survival analysis (censor events past horizon time)
-        x@survival_datasets[[paste0(landmarks, "-", horizons)]] <- x@data_static[
-          which(x@data_static[, x@event_time] >= landmarks),
-        ] |>
-          mutate(
-            event_status = ifelse(
-              get(x@event_time) > horizons,
-              0,
-              get(x@event_indicator)
-            ),
-            event_time = ifelse(
-              get(x@event_time) > horizons,
-              horizons - landmarks,
-              get(x@event_time) - landmarks
-            )
+      # Construct dataset for survival analysis (censor events past horizon time)
+      x@survival_datasets[[paste0(landmarks, "-", horizons)]] <- x@data_static[
+        which(x@data_static[, x@event_time] >= landmarks),
+      ] |>
+        mutate(
+          event_status = ifelse(
+            get(x@event_time) > horizons,
+            0,
+            get(x@event_indicator)
+          ),
+          event_time = ifelse(
+            get(x@event_time) > horizons,
+            horizons - landmarks,
+            get(x@event_time) - landmarks
           )
+        )
 
-        # Check that longitudinal predictions are available at landmark time
-        if (length(dynamic_covariates) > 0) {
-          .check_predictions_available_survival(
-            x,
-            landmarks,
-            dynamic_covariates
-          )
+      # Check that longitudinal predictions are available at landmark time
+      if (length(dynamic_covariates) > 0) {
+        .check_predictions_available_survival(
+          x,
+          landmarks,
+          dynamic_covariates
+        )
 
-          x@survival_datasets[[paste0(landmarks, "-", horizons)]] <- cbind(
-            x@survival_datasets[[paste0(landmarks, "-", horizons)]],
-            do.call(
-              bind_cols,
-              x@longitudinal_predictions[[as.character(landmarks)]]
-            )
+        x@survival_datasets[[paste0(landmarks, "-", horizons)]] <- cbind(
+          x@survival_datasets[[paste0(landmarks, "-", horizons)]],
+          do.call(
+            bind_cols,
+            x@longitudinal_predictions[[as.character(landmarks)]]
           )
-        }
+        )
+      }
 
-        # Call to method that performs survival analysis
-        if (is(method)[1] == "character" && method == "coxph") {
-          x@survival_fits[[paste0(landmarks, "-", horizons)]] <- survival::coxph(
-            formula,
-            data = x@survival_datasets[[paste0(landmarks, "-", horizons)]],
-            x = TRUE,
-            model = TRUE
-          )
-        } else {
-          x@survival_fits[[paste0(landmarks, "-", horizons)]] <- method(
-            formula,
-            data = x@survival_datasets[[paste0(landmarks, "-", horizons)]]
-          )
-        }
+      # Call to method that performs survival analysis
+      if (is(method)[1] == "character" && method == "coxph") {
+        x@survival_fits[[paste0(landmarks, "-", horizons)]] <- survival::coxph(
+          formula,
+          data = x@survival_datasets[[paste0(landmarks, "-", horizons)]],
+          x = TRUE,
+          model = TRUE
+        )
+      } else {
+        x@survival_fits[[paste0(landmarks, "-", horizons)]] <- method(
+          formula,
+          data = x@survival_datasets[[paste0(landmarks, "-", horizons)]]
+        )
+      }
     } else {
       # Recursion
       x <- fit_survival(
@@ -194,22 +194,22 @@ setMethod(
           " has not been computed\n"
         )
       }
-        model_name <- paste0(landmarks, "-", horizons)
-        # Check that relevant model fit is available
-        if (!(model_name %in% names(x@survival_fits))) {
-          stop(
-            "Survival model has not been fitted for horizons",
-            horizons,
-            " at landmark time",
-            landmarks,
-            "\n"
-          )
-        }
-
-        x@survival_predictions[[model_name]] <- method(
-          x@survival_fits[[model_name]],
-          ...
+      model_name <- paste0(landmarks, "-", horizons)
+      # Check that relevant model fit is available
+      if (!(model_name %in% names(x@survival_fits))) {
+        stop(
+          "Survival model has not been fitted for horizons",
+          horizons,
+          " at landmark time",
+          landmarks,
+          "\n"
         )
+      }
+
+      x@survival_predictions[[model_name]] <- method(
+        x@survival_fits[[model_name]],
+        ...
+      )
     } else {
       # Recursion
       x <- predict_survival(x, landmarks[1], horizons[1], method, ...)
