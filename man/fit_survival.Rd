@@ -8,7 +8,7 @@ times specified by the user}
 fit_survival(x, formula, landmarks, windows, method, dynamic_covariates = c())
 }
 \arguments{
-\item{x}{An object of class \code{\link{Landmarking}}.}
+\item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{formula}{A formula to be used in survival sub-model fitting.}
 
@@ -22,7 +22,7 @@ fit_survival(x, formula, landmarks, windows, method, dynamic_covariates = c())
 in the survival model.}
 }
 \value{
-An object of class Landmarking.
+An object of class \code{\link{LandmarkAnalysis}}.
 }
 \description{
 Fits the specified survival model at the landmark times and up to the horizon

@@ -7,7 +7,7 @@
 performance_metrics(x, landmarks, windows, c_index = TRUE, brier = TRUE)
 }
 \arguments{
-\item{x}{An object of class \code{\link{Landmarking}}.}
+\item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{landmarks}{A numeric vector of landmark times.}
 

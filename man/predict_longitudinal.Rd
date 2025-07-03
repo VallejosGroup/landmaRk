@@ -7,7 +7,7 @@
 predict_longitudinal(x, landmarks, method, dynamic_covariates, ...)
 }
 \arguments{
-\item{x}{An object of class \code{\link{Landmarking}}.}
+\item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{landmarks}{A numeric vector of landmark times.}
 
@@ -20,7 +20,7 @@ as the outcome of a longitudinal model.}
 number of classes/clusters for lcmm).}
 }
 \value{
-An object of class \code{\link{Landmarking}}.
+An object of class \code{\link{LandmarkAnalysis}}.
 }
 \description{
 Make predictions for time-varying covariates at specified landmark times

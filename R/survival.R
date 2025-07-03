@@ -1,7 +1,7 @@
 #' Fits the specified survival model at the landmark times and up to the horizon
 #' times specified by the user
 #'
-#' @param x An object of class \code{\link{Landmarking}}.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks Numeric vector of landmark times.
 #' @param formula A formula to be used in survival sub-model fitting.
 #' @param windows Vector of prediction windows determining horizon times.
@@ -9,7 +9,7 @@
 #' @param dynamic_covariates Vector of time-varying covariates to be used
 #' in the survival model.
 #'
-#' @returns An object of class Landmarking.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #'
 #' @examples
@@ -25,13 +25,13 @@ setGeneric(
 #'
 #' @inheritParams fit_survival
 #'
-#' @returns An object of class Landmarking.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #'
 #' @examples
 setMethod(
   "fit_survival",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(x, formula, landmarks, windows, method, dynamic_covariates = c()) {
     # Check that method is a function with arguments formula, data, ...
     method <- check_method_survival_predict_(method)
@@ -118,14 +118,14 @@ setMethod(
 
 #' Make predictions for time-to-event outcomes at specified horizon times
 #'
-#' @param x An object of class \code{\link{Landmarking}}.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
 #' @param windows Vector of prediction windows determining horizon times.
 #' @param method R function that is used to make predictions
 #' @param ... Additional arguments passed to the prediction function (e.g.
 #'   number of classes/clusters for lcmm).
 #'
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #'
 #' @examples
@@ -140,13 +140,13 @@ setGeneric(
 #'
 #' @inheritParams predict_survival
 #'
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #'
 #' @examples
 setMethod(
   "predict_survival",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(x, landmarks, windows, method, ...) {
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "coxph") {

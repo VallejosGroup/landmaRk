@@ -123,7 +123,7 @@ predict_lcmm_ <- function(x, newdata, subject, avg = FALSE) {
   } else {
     predictions <- rowSums(predictions$pred * as.matrix(pprob[, -c(1, 2)]))
   }
-  # Store predictions in Landmarking object
+  # Store predictions in LandmarkAnalysis object
   names(predictions) <- newdata[, subject]
   predictions
 }

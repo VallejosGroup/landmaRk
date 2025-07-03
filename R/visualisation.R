@@ -1,6 +1,6 @@
 #' Plots longitudinal trajectories and survival curves for landmarking models.
 #'
-#' @param x An object of class Landmarking.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param type A character taking the value \code{'survival'} (survival curves)
 #'   or \code{'longitudinal'} (model trajectories of dynamic covariates).
 #' @param id The identifier for the unit (subject) whose data will be plotted.
@@ -20,7 +20,7 @@
 #' @examples
 setMethod(
   "plot",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(
     x,
     type = "survival",

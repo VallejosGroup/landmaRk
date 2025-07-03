@@ -24,7 +24,7 @@ initialise_longitudinal_test_ <- function(epileptic) {
   sample_missing <- sample(seq_len(nrow(static)), nrow(static) * 0.1)
   static[sample_missing, "treat"] <- NA
 
-  landmarking_object <- Landmarking(
+  landmarking_object <- LandmarkAnalysis(
     data_static = static,
     data_dynamic = dynamic,
     event_indicator = "with.status",
@@ -66,7 +66,7 @@ test_that("LCMM works as expected", {
 })
 
 test_that("LOCF works as expected", {
-  # Initialise Landmarking object
+  # Initialise LandmarkAnalysis object
   x <- initialise_longitudinal_test_(epileptic = epileptic)
   x <- x |>
     compute_risk_sets(seq(from = 365.25, to = 5 * 365.25, by = 365.25))
