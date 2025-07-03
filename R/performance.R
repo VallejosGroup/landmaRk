@@ -53,14 +53,19 @@ setMethod(
     if (is(brier)[1] != "logical") {
       error_str <- c(error_str, "@brier must be a logical")
     }
+    if (length(landmarks) != length(horizons)) {
+      error_str <- c(error_str, "@landmarks and @horizons must be of the same length")
+    }
     if (length(error_str) > 0) {
       stop(paste(error_str, collapse = ". "))
     }
-    scores <- expand.grid(landmark = landmarks, horizon = horizons)
+
+    scores <- cbind(landmark = landmarks, horizon = horizons)
     brier_list <- list()
     cindex_list <- list()
-    for (landmark in landmarks) {
-      for (horizon in horizons) {
+    for (i in seq_along(landmarks)) {
+      landmark <- landmarks[i]
+      horizon <- horizons[i]
         at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
 
         # Construct dataset for survival analysis (censor events past horizon time)
@@ -76,8 +81,8 @@ setMethod(
             ),
             event_time = ifelse(
               get(x@event_time) > horizon,
-              horizon - landmarks,
-              get(x@event_time) - landmarks
+              horizon - landmark,
+              get(x@event_time) - landmark
             )
           )
 
@@ -105,7 +110,6 @@ setMethod(
             )
         }
       }
-    }
     if (c_index == TRUE) {
       scores <- cbind(scores, cindex = unlist(cindex_list))
     }
