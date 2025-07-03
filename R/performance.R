@@ -84,7 +84,7 @@ setMethod(
         predictions <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
         if (brier == TRUE) {
           brier_list[[paste0(landmark, "-", horizon)]] <-
-            BinaryBrierScore(
+            .BinaryBrierScore(
               predictions = predictions,
               time = dataset$event_time,
               status = dataset$event_status,
@@ -94,7 +94,7 @@ setMethod(
         }
         if (c_index == TRUE) {
           cindex_list[[paste0(landmark, "-", horizon)]] <-
-            CIndexCRisks(
+            .CIndexCRisks(
               predictions = predictions,
               time = dataset$event_time,
               status = dataset$event_status,

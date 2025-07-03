@@ -12,7 +12,7 @@
 #' @returns An object of class hlme
 #'
 #' @examples
-fit_lcmm_ <- function(formula, data, mixture, subject, ng, ...) {
+.fit_lcmm <- function(formula, data, mixture, subject, ng, ...) {
   model_init <- lcmm::hlme(formula, data = data, subject = subject, ng = 1)
   model_fit <- lcmm::hlme(
     formula,
@@ -24,7 +24,7 @@ fit_lcmm_ <- function(formula, data, mixture, subject, ng, ...) {
     ...
   )
 
-  check_lcmm_convergence(model_fit)
+  .check_lcmm_convergence(model_fit)
 
   model_fit$call$fixed <- formula
   model_fit$call$mixture <- mixture
@@ -33,7 +33,7 @@ fit_lcmm_ <- function(formula, data, mixture, subject, ng, ...) {
 }
 
 
-check_lcmm_convergence <- function(model_fit) {
+.check_lcmm_convergence <- function(model_fit) {
   switch(
     as.character(model_fit$conv),
     "1" = message("LCMM model converged successfully."),
@@ -58,7 +58,7 @@ check_lcmm_convergence <- function(model_fit) {
 #' @returns A vector of predictions.
 #'
 #' @examples
-predict_lcmm_ <- function(x, newdata, subject, avg = FALSE) {
+.predict_lcmm <- function(x, newdata, subject, avg = FALSE) {
   # pprob contains probability of observation belonging to a certain cluster
   # But it is possible that pprob does not contain predictions for some individuals
   # in newdata. That is because those individuals have not been use in training.

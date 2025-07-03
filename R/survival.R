@@ -57,11 +57,11 @@ setMethod(
   "Landmarking",
   function(x, formula, landmarks, horizons, method, dynamic_covariates = c()) {
     # Check that method is a function with arguments formula, data, ...
-    method <- check_method_survival_predict_(method)
+    method <- .check_method_survival_predict(method)
     # Base case for recursion
     if (length(landmarks) == 1) {
       # Base case for recursion
-      check_riskset_survival_(x, landmarks)
+      .check_riskset_survival(x, landmarks)
       # Recover risk sets (ids of individuals who are at risk at landmark time)
       at_risk_individuals <- x@risk_sets[[as.character(landmarks)]]
 
@@ -85,7 +85,7 @@ setMethod(
 
         # Check that longitudinal predictions are available at landmark time
         if (length(dynamic_covariates) > 0) {
-          check_predictions_available_survival_(
+          .check_predictions_available_survival(
             x,
             landmarks,
             dynamic_covariates
