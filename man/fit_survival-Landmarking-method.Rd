@@ -5,21 +5,7 @@
 \title{Fits the specified survival model at the landmark times and up to the horizon
 times specified by the user}
 \usage{
-\S4method{fit_survival}{Landmarking}(x, formula, landmarks, windows, method, dynamic_covariates = c())
-}
-\arguments{
-\item{x}{An object of class \code{\link{Landmarking}}.}
-
-\item{formula}{A formula to be used in survival sub-model fitting.}
-
-\item{landmarks}{Numeric vector of landmark times.}
-
-\item{windows}{Vector of prediction windows determining horizon times.}
-
-\item{method}{Method for survival analysis, either "survfit" or "coxph".}
-
-\item{dynamic_covariates}{Vector of time-varying covariates to be used
-in the survival model.}
+\S4method{fit_survival}{Landmarking}(x, formula, landmarks, horizons, method, dynamic_covariates = c())
 }
 \value{
 An object of class Landmarking.
@@ -27,4 +13,19 @@ An object of class Landmarking.
 \description{
 Fits the specified survival model at the landmark times and up to the horizon
 times specified by the user
+}
+\details{
+\subsection{Mathematical formulation}{
+
+This function estimates the conditional probability of survival to horizon
+\eqn{s+w}, conditioned on having survived to the landmark time, \eqn{s},
+that is
+\deqn{\pi_i(s+w \vert s) = P(T_i > s+w \vert T_i \ge s, \bar{x}_i(s)), }
+where \eqn{i} denotes an individual's index, \eqn{T_i} is the time to event
+outcome for individual \eqn{i} and \eqn{\bar{x}_i(s)} are the covariates
+observed for individual \eqn{i}, including the observed history of dynamic
+covariates.
+
+#' @inheritParams fit_survival
+}
 }

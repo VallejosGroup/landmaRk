@@ -4,14 +4,15 @@
 \alias{predict_survival}
 \title{Make predictions for time-to-event outcomes at specified horizon times}
 \usage{
-predict_survival(x, landmarks, windows, method, ...)
+predict_survival(x, landmarks, horizons, method, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{Landmarking}}.}
 
 \item{landmarks}{A numeric vector of landmark times.}
 
-\item{windows}{Vector of prediction windows determining horizon times.}
+\item{horizons}{Vector of prediction horizons up to when the survival submodel
+is fitted.}
 
 \item{method}{R function that is used to make predictions}
 

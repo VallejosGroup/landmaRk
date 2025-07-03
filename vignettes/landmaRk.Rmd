@@ -120,12 +120,12 @@ landmarking_object <- landmarking_object |>
   fit_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     formula = Surv(event_time, event_status) ~ treat + age + gender + learn.dis,
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 10 * 365.25, to = 10 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c()
   ) |> predict_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 10 * 365.25, to = 10 * 365.25, by = 365.25),
     method = "coxph",
     type = "survival"
   )
@@ -133,7 +133,7 @@ landmarking_object <- landmarking_object |>
 performance_metrics(
   landmarking_object,
   landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-  windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25)
+  horizons = seq(from = 10 * 365.25, to = 10 * 365.25, by = 365.25)
 )
 ```
 
@@ -176,13 +176,13 @@ landmarking_object <- landmarking_object |>
     formula = Surv(event_time, event_status) ~
       treat + age + gender + learn.dis + dose,
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 10 * 365.25, to = 10 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose")
   ) |>
   predict_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 10 * 365.25, to = 10 * 365.25, by = 365.25),
     method = "coxph", 
     type = "survival"
   )
@@ -190,7 +190,7 @@ landmarking_object <- landmarking_object |>
 performance_metrics(
   landmarking_object,
   landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-  windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25)
+  horizons = seq(from = 10 * 365.25, to = 10 * 365.25, by = 365.25)
 )
 ```
 
@@ -237,13 +237,13 @@ landmarking_object <- landmarking_object |>
     formula = Surv(event_time, event_status) ~
       treat + age + gender + learn.dis + dose,
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 10 * 365.25, to = 10 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose")
   ) |> 
   predict_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 10 * 365.25, to = 10 * 365.25, by = 365.25),
     method = "coxph", 
     type = "survival"
   )

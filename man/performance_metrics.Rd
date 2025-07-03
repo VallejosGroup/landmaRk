@@ -4,14 +4,15 @@
 \alias{performance_metrics}
 \title{Performance metrics}
 \usage{
-performance_metrics(x, landmarks, windows, c_index = TRUE, brier = TRUE)
+performance_metrics(x, landmarks, horizons, c_index = TRUE, brier = TRUE)
 }
 \arguments{
 \item{x}{An object of class \code{\link{Landmarking}}.}
 
 \item{landmarks}{A numeric vector of landmark times.}
 
-\item{windows}{A vector of prediction windows determining horizon times.}
+\item{horizons}{Vector of prediction horizons up to when the survival submodel
+is fitted.}
 
 \item{c_index}{A logical. If TRUE (default), C index is reported.}
 
@@ -19,9 +20,9 @@ performance_metrics(x, landmarks, windows, c_index = TRUE, brier = TRUE)
 }
 \value{
 Data frame with performance metrics across the specified landmark
-times and prediction windows.
+times and prediction horizons.
 }
 \description{
 Computes concordance index (c-index) and Brier scores at the specified landmark
-times and prediction windows.
+times and prediction horizons.
 }

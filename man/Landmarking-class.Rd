@@ -44,6 +44,6 @@ submodel.}
 landmark times.}
 
 \item{\code{survival_predictions}}{List of time-to-event predictions for the specified
-landmark times and prediction windows.}
+landmark times and prediction horizons.}
 }}
 
