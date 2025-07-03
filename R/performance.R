@@ -38,7 +38,10 @@ setMethod(
   function(x, landmarks, windows, c_index = TRUE, brier = TRUE) {
     error_str <- NULL
     if (!inherits(x, "LandmarkAnalysis")) {
-      error_str <- c(error_str, "@x must be an object of class LandmarkAnalysis")
+      error_str <- c(
+        error_str,
+        "@x must be an object of class LandmarkAnalysis"
+      )
     }
     if (is(landmarks)[1] != "numeric") {
       error_str <- c(error_str, "@landmarks must be a vector of numeric values")
