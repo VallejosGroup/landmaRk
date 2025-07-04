@@ -73,12 +73,12 @@ setMethod(
   ) {
     landmark <- NULL # Global var
 
-    method <- check_method_long_fit(method)
+    method <- .check_method_long_fit(method)
 
     if (Sys.info()["sysname"] == "Windows") {
       `%doparallel%` <- foreach::`%do%`
     } else {
-      cl <- init_cl(cores)
+      cl <- .init_cl(cores)
       `%doparallel%` <- foreach::`%dopar%`
       on.exit(parallel::stopCluster(cl), add = TRUE)
     }
@@ -90,7 +90,7 @@ setMethod(
         at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
         # Construct dataset for the longitudinal analysis (static measurements +
         # time-varying covariate and its recording time)
-        dataframe <- construct_data(
+        dataframe <- .construct_data(
           x,
           dynamic_covariate,
           at_risk_individuals,
@@ -114,7 +114,7 @@ setMethod(
 
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
       {
-        check_riskset(x, landmark)
+        .check_riskset(x, landmark)
         # Create list for storing model fits for longitudinal analysis
         model_fits <- list()
 
@@ -123,10 +123,10 @@ setMethod(
         # Loop that iterates over all time-varying covariates to fit a longitudinal
         # model for the underlying trajectories
         for (dynamic_covariate in dynamic_covariates) {
-          check_dynamic_covariate(x, dynamic_covariate)
+          .check_dynamic_covariate(x, dynamic_covariate)
           # Construct dataset for the longitudinal analysis (static measurements +
           # time-varying covariate and its recording time)
-          dataframe <- construct_data(
+          dataframe <- .construct_data(
             x,
             dynamic_covariate,
             at_risk_individuals,
@@ -185,12 +185,12 @@ setMethod(
   function(x, landmarks, method, dynamic_covariates, ...) {
     value <- NULL # Global var
 
-    method <- check_method_long_predict(method)
+    method <- .check_method_long_predict(method)
 
     # Base case for recursion
     if (length(landmarks) == 1) {
       # Check that relevant risk set is available
-      check_riskset(x, landmarks)
+      .check_riskset(x, landmarks)
       if (inherits(method, "character") && method == "locf") {
         # If model method is LOCF
         # Relevant risk set
@@ -224,7 +224,7 @@ setMethod(
         }
       } else {
         # Check that relevant model fit is available (if model is not LOCF)
-        check_long_fit(x, landmarks)
+        .check_long_fit(x, landmarks)
 
         # Relevant risk set
         risk_set <- x@risk_sets[[as.character(landmarks)]]

@@ -22,7 +22,7 @@
 #' @slot survival_fits List of survival model fits at each of the specified
 #'   landmark times.
 #' @slot survival_predictions List of time-to-event predictions for the specified
-#'   landmark times and prediction windows.
+#'   landmark times and prediction horizons.
 #'
 #' @export
 setClass(

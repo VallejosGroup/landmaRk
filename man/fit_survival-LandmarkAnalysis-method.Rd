@@ -5,7 +5,7 @@
 \title{Fits the specified survival model at the landmark times and up to the horizon
 times specified by the user}
 \usage{
-\S4method{fit_survival}{LandmarkAnalysis}(x, formula, landmarks, windows, method, dynamic_covariates = c())
+\S4method{fit_survival}{LandmarkAnalysis}(x, formula, landmarks, horizons, method, dynamic_covariates = c())
 }
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
@@ -14,7 +14,8 @@ times specified by the user}
 
 \item{landmarks}{Numeric vector of landmark times.}
 
-\item{windows}{Vector of prediction windows determining horizon times.}
+\item{horizons}{Vector of prediction horizons up to when the survival
+submodel is fitted.}
 
 \item{method}{Method for survival analysis, either "survfit" or "coxph".}
 
@@ -27,4 +28,17 @@ An object of class \code{\link{LandmarkAnalysis}}.
 \description{
 Fits the specified survival model at the landmark times and up to the horizon
 times specified by the user
+}
+\details{
+\subsection{Mathematical formulation}{
+
+This function estimates the conditional probability of survival to horizon
+\eqn{s+w}, conditioned on having survived to the landmark time, \eqn{s},
+that is
+\deqn{\pi_i(s+w \vert s) = P(T_i > s+w \vert T_i \ge s, \bar{x}_i(s)), }
+where \eqn{i} denotes an individual's index, \eqn{T_i} is the time to event
+outcome for individual \eqn{i} and \eqn{\bar{x}_i(s)} are the covariates
+observed for individual \eqn{i}, including the observed history of dynamic
+covariates.
+}
 }

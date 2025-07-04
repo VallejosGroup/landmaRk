@@ -51,7 +51,7 @@ test_that("Error handling for fit_survival", {
         formula = Surv(event_time, event_status) ~
           treat + age + gender + learn.dis + dose,
         landmarks = seq(from = 365.25, to = 2 * 365.25, by = 365.25),
-        windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+        horizons = seq(from = 2 * 365.25, to = 3 * 365.25, by = 365.25),
         method = "coxph",
         dynamic_covariates = c("dose2")
       ),
@@ -66,7 +66,7 @@ test_that("Error handling for fit_survival", {
         formula = Surv(event_time, event_status) ~
           treat + age + gender + learn.dis + dose,
         landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-        windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+        horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
         method = "coxph",
         dynamic_covariates = c("dose")
       ),

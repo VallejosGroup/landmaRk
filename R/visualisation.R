@@ -99,7 +99,7 @@ setMethod(
         )
       }
       # Dataframe in long format with individuals at risk
-      newdata <- construct_data(
+      newdata <- .construct_data(
         x,
         dynamic_covariate = dynamic_covariate,
         x@risk_sets[[as.character(landmark)]],

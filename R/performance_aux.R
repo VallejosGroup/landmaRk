@@ -40,7 +40,7 @@
 #'
 #' @return Concordance index value.
 
-CIndexCRisks <- function(
+.CIndexCRisks <- function(
   predictions,
   time,
   cens.code = 0,
@@ -107,10 +107,10 @@ CIndexCRisks <- function(
 #' outcomes, where the predictions are the predicted probabilities of the event
 #' of interest occurring by time \eqn{\tau}. The BBS is defined as the mean
 #' squared difference between the predicted probabilities and the true outcome.
-#' @inheritParams CIndexCRisks
+#' @inheritParams .CIndexCRisks
 #' @param tau Time Brier score is evaluated.
 
-BinaryBrierScore <- function(predictions, time, status, tau, cause) {
+.BinaryBrierScore <- function(predictions, time, status, tau, cause) {
   y_true <- ((time <= tau) * (status == cause))
 
   BS <- mean((predictions - y_true)^2)

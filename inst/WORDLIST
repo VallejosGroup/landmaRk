@@ -27,6 +27,7 @@ coxph
 df
 doi
 hlme
+inheritParams
 joineR
 kwy
 lcmm
