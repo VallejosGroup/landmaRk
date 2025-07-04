@@ -14,8 +14,8 @@ fit_survival(x, formula, landmarks, horizons, method, dynamic_covariates = c())
 
 \item{landmarks}{Numeric vector of landmark times.}
 
-\item{horizons}{Vector of prediction horizons up to when the survival submodel
-is fitted.}
+\item{horizons}{Vector of prediction horizons up to when the survival
+submodel is fitted.}
 
 \item{method}{Method for survival analysis, either "survfit" or "coxph".}
 
