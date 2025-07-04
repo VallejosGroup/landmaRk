@@ -9,6 +9,4 @@ test_that(".eval_error_str nicely formats multiple errors", {
     .eval_error_str(error_str),
     "Error 1: This is the first error.\nAdditionally, the following errors occurred:\nError 2: This is the second error.\nError 3: This is the third error.\n"
   )
-
-
 })

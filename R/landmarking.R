@@ -284,7 +284,6 @@ setMethod(
 
     .eval_error_str(error_str)
 
-
     if (type == "longitudinal") {
       # Summary of longitudinal submodel fit
       if (
@@ -330,12 +329,14 @@ setMethod(
 
       model_name <- paste0(landmark, "-", horizon)
       if (!(as.character(model_name) %in% names(x@survival_fits))) {
-        error_str <- c(error_str,
-                       (paste0(
-          "No survival submodel has been fitted to landmark-horizon time ",
-          model_name,
-          "\n"
-        )))
+        error_str <- c(
+          error_str,
+          (paste0(
+            "No survival submodel has been fitted to landmark-horizon time ",
+            model_name,
+            "\n"
+          ))
+        )
       }
 
       .eval_error_str(error_str)

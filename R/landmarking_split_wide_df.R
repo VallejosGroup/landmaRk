@@ -19,13 +19,14 @@
 #'
 #' @examples
 split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
-
-  error_str <- .build_error_str(df,
-                               ids,
-                               times,
-                               static,
-                               dynamic,
-                               measurement_name)
+  error_str <- .build_error_str(
+    df,
+    ids,
+    times,
+    static,
+    dynamic,
+    measurement_name
+  )
   .eval_error_str(error_str)
 
   df_static <- df[, c(ids, static)] |>
@@ -43,12 +44,14 @@ split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
   ))
 }
 
-.build_error_str <- function(df,
-                             ids,
-                             times,
-                             static,
-                             dynamic,
-                             measurement_name) {
+.build_error_str <- function(
+  df,
+  ids,
+  times,
+  static,
+  dynamic,
+  measurement_name
+) {
   # Build an error string for the split_wide_df function.
   error_str <- c()
 
@@ -71,12 +74,15 @@ split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
   } else if (!(is(dynamic)[1] == "character")) {
     error_str <- c(error_str, "@dynamic must be a character vector.")
   } else if (!(all(static %in% colnames(df)))) {
-    error_str <- c(error_str,
-                   "all elements of @static must refer to column names in @df.")
+    error_str <- c(
+      error_str,
+      "all elements of @static must refer to column names in @df."
+    )
   } else if (!(all(dynamic %in% colnames(df)))) {
-    error_str <- c(error_str,
-                   paste("all elements of @dynamic must refer to",
-                         "column names in @df."))
+    error_str <- c(
+      error_str,
+      paste("all elements of @dynamic must refer to", "column names in @df.")
+    )
   } else if (!(ids %in% colnames(df))) {
     error_str <- c(error_str, "@ids must be a column name in @df.")
   }
