@@ -213,6 +213,59 @@ setMethod(
   }
 )
 
+setGeneric("summary", function(x, ...) standardGeneric("summary"))
+
+setMethod(
+  f = "summary",
+  signature = "LandmarkAnalysis",
+  definition = function(x, type = NULL, landmark = NULL, horizon = NULL, dynamic_covariate = NULL) {
+    error_str <- NULL
+    if (is.null(x) || !(inherits(x, "LandmarkAnalysis"))) {
+      error_str <- c(error_str, "@x must be an object of class LandmarkAnalysis")
+    }
+    if (is.null(type) || !(type %in% c("longitudinal", "survival"))) {
+      error_str <- c(error_str, "@type must be 'longitudinal' or 'survival'")
+    }
+    if (is.null(landmark) || !(is.numeric(landmark)) || length(landmark) > 1) {
+      error_str <- c(error_str, "@landmark must be numeric")
+    }
+    if (is.null(landmark) || !(is.numeric(landmark)) || length(landmark) > 1) {
+      error_str <- c(error_str, "@landmark must be numeric")
+    }
+    if (length(error_str) > 0) {
+      stop(paste(error_str, collapse = ". "))
+    }
+
+    if (type == "longitudinal") {
+      # Summary of longitudinal submodel fit
+      if (is.null(dynamic_covariate) || !(is.character(dynamic_covariate)) || length(dynamic_covariate) > 1) {
+        error_str <- c(error_str, "@dynamic_covariate must be of type character")
+      }
+      if (!(as.character(landmark) %in% names(x@longitudinal_fits))) {
+        stop(paste("No longitudinal submodel has been fitted to landmark time", landmark))
+      } else if (!(dynamic_covariate %in% names(x@longitudinal_fits[[as.character(landmark)]]))) {
+        stop(paste("No longitudinal submodel has been fitted for dynamic covariate", dynamic_covariate, "to landmark time", landmark))
+      }
+      model_fit <- x@longitudinal_fits[[as.character(landmark)]][[dynamic_covariate]]
+      if (inherits(model_fit, "lmerMod")) {
+        model_fit
+      } else {
+        summary(model_fit)
+      }
+    } else if (type == "survival") {
+      # Summary of survival submodel fit
+      if (is.null(horizon) || !(is.numeric(horizon)) || length(horizon) > 1) {
+        error_str <- c(error_str, "@horizon must be numeric")
+      }
+      model_name <- paste0(landmark, "-", horizon)
+      if (!(as.character(model_name) %in% names(x@survival_fits))) {
+        stop(paste("No survival submodel has been fitted to landmark-horizon times", model_name))
+      }
+      summary(x@longitudinal_fits[[as.character(landmark)]][[dynamic_covariate]])
+    }
+  }
+)
+
 # Accessor for landmarks
 setGeneric("getLandmarks", function(object) standardGeneric("getLandmarks"))
 setMethod("getLandmarks", "LandmarkAnalysis", function(object) object@landmarks)
