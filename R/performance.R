@@ -3,7 +3,7 @@
 #' Computes concordance index (c-index) and Brier scores at the specified landmark
 #' times and prediction horizons.
 #'
-#' @param x An object of class \code{\link{Landmarking}}.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
 #' @param horizons Vector of prediction horizons up to when the survival submodel
 #'   is fitted.
@@ -35,11 +35,14 @@ setGeneric(
 #' @examples
 setMethod(
   "performance_metrics",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(x, landmarks, horizons, c_index = TRUE, brier = TRUE) {
     error_str <- NULL
-    if (!inherits(x, "Landmarking")) {
-      error_str <- c(error_str, "@x must be an object of class Landmarking")
+    if (!inherits(x, "LandmarkAnalysis")) {
+      error_str <- c(
+        error_str,
+        "@x must be an object of class LandmarkAnalysis"
+      )
     }
     if (is(landmarks)[1] != "numeric") {
       error_str <- c(error_str, "@landmarks must be a vector of numeric values")

@@ -7,14 +7,14 @@
 compute_risk_sets(x, landmarks, ...)
 }
 \arguments{
-\item{x}{An object of class \code{\link{Landmarking}}.}
+\item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{landmarks}{Numeric vector of landmark times}
 
 \item{...}{Additional arguments (not used)}
 }
 \value{
-An object of class \code{\link{Landmarking}} including desired risk
+An object of class \code{\link{LandmarkAnalysis}} including desired risk
 sets for the specified landmark times.
 }
 \description{
@@ -22,11 +22,11 @@ Compute the list of individuals at risk at landmark times
 }
 \details{
 A risk set describes all subjects still at risk (i.e., not experienced the
-event of interest or censored) at a given time. In Landmarking, risk sets
+event of interest or censored) at a given time. In \code{\link{LandmarkAnalysis}}, risk sets
 define which subjects should be included in the longitudinal and survival
 sub-models for each landmark time.
 
-The risk sets are stored in the \code{risk_sets} slot of the Landmarking
+The risk sets are stored in the \code{risk_sets} slot of the \code{\link{LandmarkAnalysis}}
 object, where each risk set is a list of indices corresponding to the
 subjects at risk at the respective landmark time.
 }

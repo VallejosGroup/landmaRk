@@ -16,7 +16,7 @@ fit_longitudinal(
 )
 }
 \arguments{
-\item{x}{An object of class \code{\link{Landmarking}}.}
+\item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{landmarks}{A vector of Landmark times.}
 
@@ -38,7 +38,7 @@ supported on Windows.}
 function (e.g. number of classes/clusters for lcmm).}
 }
 \value{
-An object of class \code{\link{Landmarking}}.
+An object of class \code{\link{LandmarkAnalysis}}.
 }
 \description{
 Fits the specified longitudinal model for time-varying covariates up to

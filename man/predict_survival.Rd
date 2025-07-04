@@ -7,7 +7,7 @@
 predict_survival(x, landmarks, horizons, method, ...)
 }
 \arguments{
-\item{x}{An object of class \code{\link{Landmarking}}.}
+\item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{landmarks}{A numeric vector of landmark times.}
 
@@ -20,7 +20,7 @@ is fitted.}
 number of classes/clusters for lcmm).}
 }
 \value{
-An object of class \code{\link{Landmarking}}.
+An object of class \code{\link{LandmarkAnalysis}}.
 }
 \description{
 Make predictions for time-to-event outcomes at specified horizon times

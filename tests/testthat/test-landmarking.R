@@ -1,4 +1,4 @@
-test_that("Validity checks for Landmarking class work", {
+test_that("Validity checks for LandmarkAnalysis class work", {
   # Data manipulation
   data(epileptic)
 
@@ -25,7 +25,7 @@ test_that("Validity checks for Landmarking class work", {
   names(temp) <- NULL
 
   expect_error(
-    Landmarking(
+    LandmarkAnalysis(
       data_static = static,
       data_dynamic = temp,
       event_indicator = "with.status",
@@ -39,7 +39,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: event_indicator column missing from data_static
   expect_error(
-    Landmarking(
+    LandmarkAnalysis(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "missing.column",
@@ -53,7 +53,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: ids column missing from data_static
   expect_error(
-    Landmarking(
+    LandmarkAnalysis(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",
@@ -67,7 +67,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: event_time column missing from data_static
   expect_error(
-    Landmarking(
+    LandmarkAnalysis(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",
@@ -81,7 +81,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: times column missing from data_dynamic
   expect_error(
-    Landmarking(
+    LandmarkAnalysis(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",
@@ -95,7 +95,7 @@ test_that("Validity checks for Landmarking class work", {
 
   # Test: measurements column missing from data_dynamic
   expect_error(
-    Landmarking(
+    LandmarkAnalysis(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",
@@ -136,7 +136,7 @@ test_that("Character covariates are converted to factor", {
   dynamic <- epileptic_dfs$df_dynamic
 
   expect_message(
-    x <- Landmarking(
+    x <- LandmarkAnalysis(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",
@@ -154,7 +154,7 @@ test_that("Character covariates are converted to factor", {
   dynamic[["dose"]]$value <- as.character(dynamic[["dose"]]$value > 2)
 
   expect_message(
-    x <- Landmarking(
+    x <- LandmarkAnalysis(
       data_static = static,
       data_dynamic = dynamic,
       event_indicator = "with.status",
