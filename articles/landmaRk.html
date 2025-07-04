@@ -166,12 +166,12 @@ measurement of the relevant dynamic covariate.</p>
 <span><span class="co">#&gt; 6  1  770  2.67</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="create-landmarking-object">Create Landmarking object<a class="anchor" aria-label="anchor" href="#create-landmarking-object"></a>
+<h2 id="create-object">Create object<a class="anchor" aria-label="anchor" href="#create-object"></a>
 </h2>
-<p>Next step is to create an object of class Landmarking, using the
-helper function of the same name.</p>
+<p>Next step is to create an object of class , using the helper function
+of the same name.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Landmarking.html">Landmarking</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LandmarkAnalysis.html">LandmarkAnalysis</a></span><span class="op">(</span></span>
 <span>  data_static <span class="op">=</span> <span class="va">static</span>,</span>
 <span>  data_dynamic <span class="op">=</span> <span class="va">dynamic</span>,</span>
 <span>  event_indicator <span class="op">=</span> <span class="st">"with.status"</span>,</span>
@@ -207,7 +207,7 @@ times.</p>
 <span>  <span class="fu"><a href="../reference/compute_risk_sets.html">compute_risk_sets</a></span><span class="op">(</span>landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">landmarking_object</span></span>
-<span><span class="co">#&gt; Summary of Landmarking Object:</span></span>
+<span><span class="co">#&gt; Summary of LandmarkAnalysis Object:</span></span>
 <span><span class="co">#&gt;   Landmarks: 365.25 730.5 1095.75 1461 1826.25 </span></span>
 <span><span class="co">#&gt;   Number of observations: 605 </span></span>
 <span><span class="co">#&gt;   Event indicator: with.status </span></span>
@@ -262,7 +262,7 @@ times.</p>
 time-varying covariate, dose. This first step is followed by fitting a
 Cox PH sub-model using the longitudinal predictions as covariates.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Landmarking.html">Landmarking</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LandmarkAnalysis.html">LandmarkAnalysis</a></span><span class="op">(</span></span>
 <span>  data_static <span class="op">=</span> <span class="va">static</span>,</span>
 <span>  data_dynamic <span class="op">=</span> <span class="va">dynamic</span>,</span>
 <span>  event_indicator <span class="op">=</span> <span class="st">"with.status"</span>,</span>
@@ -334,7 +334,7 @@ package</a> to fit a latent class mixed model of the time-varying
 covariate, dose. This first step is followed by fitting a Cox PH
 sub-model using the longitudinal predictions as covariates.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Landmarking.html">Landmarking</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LandmarkAnalysis.html">LandmarkAnalysis</a></span><span class="op">(</span></span>
 <span>  data_static <span class="op">=</span> <span class="va">static</span>,</span>
 <span>  data_dynamic <span class="op">=</span> <span class="va">dynamic</span>,</span>
 <span>  event_indicator <span class="op">=</span> <span class="st">"with.status"</span>,</span>
