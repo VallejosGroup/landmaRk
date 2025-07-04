@@ -85,12 +85,12 @@ dynamic <- epileptic_dfs$df_dynamic
 head(dynamic[["dose"]])
 ```
 
-# Create Landmarking object
+# Create \code{LandmarkAnalysis} object
 
-Next step is to create an object of class Landmarking, using the helper function of the same name.
+Next step is to create an object of class \code{LandmarkAnalysis}, using the helper function of the same name.
 
 ```{r}
-landmarking_object <- Landmarking(
+landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
   event_indicator = "with.status",
@@ -153,7 +153,7 @@ performance_metrics(
 Now we use the package lme4 to fit a linear mixed model of the time-varying covariate, dose. This first step is followed by fitting a Cox PH sub-model using the longitudinal predictions as covariates.
 
 ```{r}
-landmarking_object <- Landmarking(
+landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
   event_indicator = "with.status",
@@ -214,7 +214,7 @@ followed by fitting a Cox PH sub-model using the longitudinal predictions as
 covariates.
 
 ```{r}
-landmarking_object <- Landmarking(
+landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
   event_indicator = "with.status",

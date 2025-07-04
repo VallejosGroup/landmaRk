@@ -9,7 +9,7 @@
 #'   parallel processing in R, currently only Unix-like operating systems
 #'   are supported by \code{landmaRk}.
 #'
-#' @param x An object of class \code{\link{Landmarking}}.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A vector of Landmark times.
 #' @param method Either \code{"lcmm"} or \code{"lme4"} or a function for fitting
 #'   a longitudinal data model, where the first argument is a formula, and also
@@ -23,7 +23,7 @@
 #'   supported on Windows.
 #' @param ... Additional arguments passed to the longitudinal model fitting
 #'   function (e.g. number of classes/clusters for lcmm).
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #' @seealso [lcmm::hlme()] and [lme4::lmer()] for additional arguments.
 #' @examples
@@ -54,14 +54,14 @@ setGeneric(
 #'   are supported by \code{landmaRk}.
 #'
 #' @inheritParams fit_longitudinal
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @seealso [lcmm::hlme()] and [lme4::lmer()] for additional arguments.
 #' @export
 #'
 #' @examples
 setMethod(
   "fit_longitudinal",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(
     x,
     landmarks,
@@ -152,7 +152,7 @@ setMethod(
 
 #' Make predictions for time-varying covariates at specified landmark times
 #'
-#' @param x An object of class \code{\link{Landmarking}}.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
@@ -160,7 +160,7 @@ setMethod(
 #' @param ... Additional arguments passed to the prediction function (e.g.
 #'   number of classes/clusters for lcmm).
 #'
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #'
 #' @examples
@@ -175,13 +175,13 @@ setGeneric(
 #'
 #' @inheritParams predict_longitudinal
 #'
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #'
 #' @examples
 setMethod(
   "predict_longitudinal",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(x, landmarks, method, dynamic_covariates, ...) {
     value <- NULL # Global var
 

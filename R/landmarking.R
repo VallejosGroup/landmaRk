@@ -26,7 +26,7 @@
 #'
 #' @export
 setClass(
-  "Landmarking",
+  "LandmarkAnalysis",
   slots = c(
     landmarks = "numeric",
     data_static = "data.frame",
@@ -45,12 +45,12 @@ setClass(
   )
 )
 
-# Validator for object of class Landmarking
+# Validator for object of class \code{\link{LandmarkAnalysis}}
 #
-# @param object An object of class Landmarking.
+# @param object An object of class \code{\link{LandmarkAnalysis}}.
 #
 # @returns TRUE if the input is valid, else a description of the problem
-setValidity("Landmarking", function(object) {
+setValidity("LandmarkAnalysis", function(object) {
   error_str <- NULL
   if (is.null(names(object@data_dynamic))) {
     error_str <- c(
@@ -116,9 +116,9 @@ setValidity("Landmarking", function(object) {
 #' @param measurements Name of the column indicating measurement values in
 #'   \code{data_dynamic}.
 #'
-#' @returns An object of class Landmarking
+#' @returns An object of class \code{\link{LandmarkAnalysis}}
 #' @export
-Landmarking <- function(
+LandmarkAnalysis <- function(
   data_static,
   data_dynamic,
   event_indicator,
@@ -169,7 +169,7 @@ Landmarking <- function(
   }
 
   new(
-    "Landmarking",
+    "LandmarkAnalysis",
     data_static = data_static,
     data_dynamic = data_dynamic,
     event_indicator = event_indicator,
@@ -185,12 +185,12 @@ Landmarking <- function(
   )
 }
 
-# show method for class "Landmarking"
+# show method for class "\code{\link{LandmarkAnalysis}}"
 setMethod(
   f = "show",
-  signature = "Landmarking",
+  signature = "LandmarkAnalysis",
   definition = function(object) {
-    cat("Summary of Landmarking Object:\n")
+    cat("Summary of LandmarkAnalysis Object:\n")
     cat("  Landmarks:", object@landmarks, "\n")
     cat("  Number of observations:", nrow(object@data_static), "\n")
     cat("  Event indicator:", object@event_indicator, "\n")
@@ -215,42 +215,44 @@ setMethod(
 
 # Accessor for landmarks
 setGeneric("getLandmarks", function(object) standardGeneric("getLandmarks"))
-setMethod("getLandmarks", "Landmarking", function(object) object@landmarks)
+setMethod("getLandmarks", "LandmarkAnalysis", function(object) object@landmarks)
 
 # Accessor for event
 setGeneric("getEvent", function(object) standardGeneric("getEvent"))
-setMethod("getEvent", "Landmarking", function(object) object@event)
+setMethod("getEvent", "LandmarkAnalysis", function(object) object@event)
 
 # Accessor for ids
 setGeneric("getIds", function(object) standardGeneric("getIds"))
-setMethod("getIds", "Landmarking", function(object) object@ids)
+setMethod("getIds", "LandmarkAnalysis", function(object) object@ids)
 
 # Accessor for event_time
 setGeneric("getEventTime", function(object) standardGeneric("getEventTime"))
-setMethod("getEventTime", "Landmarking", function(object) object@event_time)
+setMethod("getEventTime", "LandmarkAnalysis", function(object) {
+  object@event_time
+})
 
 # Accessor for risk_sets
 setGeneric("getRiskSets", function(object) standardGeneric("getRiskSets"))
-setMethod("getRiskSets", "Landmarking", function(object) object@risk_sets)
+setMethod("getRiskSets", "LandmarkAnalysis", function(object) object@risk_sets)
 
 
 #' Compute the list of individuals at risk at landmark times
 #'
-#' @param x An object of class \code{\link{Landmarking}}.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks Numeric vector of landmark times
 #' @param ... Additional arguments (not used)
 #'
-#' @returns An object of class \code{\link{Landmarking}} including desired risk
+#' @returns An object of class \code{\link{LandmarkAnalysis}} including desired risk
 #'   sets for the specified landmark times.
 #' @export
 #'
 #' @details
 #' A risk set describes all subjects still at risk (i.e., not experienced the
-#' event of interest or censored) at a given time. In Landmarking, risk sets
+#' event of interest or censored) at a given time. In \code{\link{LandmarkAnalysis}}, risk sets
 #' define which subjects should be included in the longitudinal and survival
 #' sub-models for each landmark time.
 #'
-#' The risk sets are stored in the \code{risk_sets} slot of the Landmarking
+#' The risk sets are stored in the \code{risk_sets} slot of the \code{\link{LandmarkAnalysis}}
 #' object, where each risk set is a list of indices corresponding to the
 #' subjects at risk at the respective landmark time.
 #'
@@ -265,29 +267,29 @@ setGeneric(
 #'
 #' @inheritParams compute_risk_sets
 #'
-#' @returns An object of class \code{\link{Landmarking}}, including desired risk
+#' @returns An object of class \code{\link{LandmarkAnalysis}}, including desired risk
 #'   sets for the relevant landmark times.
 #' @export
 #'
 #' @details
 #' A risk set describes all subjects still at risk (i.e., not experienced the
-#' event of interest or censored) at a given time. In Landmarking, risk sets
+#' event of interest or censored) at a given time. In \code{\link{LandmarkAnalysis}}, risk sets
 #' define which subjects should be included in the longitudinal and survival
 #' sub-models for each landmark time.
 #'
-#' The risk sets are stored in the \code{risk_sets} slot of the Landmarking
+#' The risk sets are stored in the \code{risk_sets} slot of the \code{\link{LandmarkAnalysis}}
 #' object, where each risk set is a list of indices corresponding to the
 #' subjects at risk at the respective landmark time.
 #'
 #' @examples
-setMethod("compute_risk_sets", "Landmarking", function(x, landmarks, ...) {
+setMethod("compute_risk_sets", "LandmarkAnalysis", function(x, landmarks, ...) {
   if (length(landmarks) == 1) {
     # If the vector of landmark times is of length 1
     if (landmarks %in% x@landmarks) {
       # Risk set for given landmark time is already in memory
       warning("Risk set for landmark time ", landmarks, " already computed")
     }
-    # Add landmark time to the Landmarking object
+    # Add landmark time to the LandmarkAnalysis object
     x@landmarks <- c(x@landmarks, landmarks)
     # Compute risk set for given landmark time
     x@risk_sets[[as.character(landmarks)]] <-
@@ -307,6 +309,6 @@ setGeneric(
 )
 setMethod(
   "getSurvivalFits",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(object) object@survival_fits
 )

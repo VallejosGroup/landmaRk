@@ -20,7 +20,7 @@ test_that("Error handling for fit_survival", {
   static <- epileptic_dfs$df_static
   dynamic <- epileptic_dfs$df_dynamic
 
-  landmarking_object <- Landmarking(
+  landmarking_object <- LandmarkAnalysis(
     data_static = static,
     data_dynamic = dynamic,
     event_indicator = "with.status",
