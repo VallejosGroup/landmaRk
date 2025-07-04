@@ -255,8 +255,13 @@ setGeneric(
 setMethod(
   f = "summary",
   signature = "LandmarkAnalysis",
-  definition = function(x, type = NULL, landmark = NULL, horizon = NULL, dynamic_covariate = NULL) {
-
+  definition = function(
+    x,
+    type = NULL,
+    landmark = NULL,
+    horizon = NULL,
+    dynamic_covariate = NULL
+  ) {
     error_str <- NULL
     if (is.null(type) || !(type %in% c("longitudinal", "survival"))) {
       error_str <- c(error_str, "@type must be 'longitudinal' or 'survival'")
@@ -270,16 +275,41 @@ setMethod(
 
     if (type == "longitudinal") {
       # Summary of longitudinal submodel fit
-      if (is.null(dynamic_covariate) || !(is.character(dynamic_covariate)) || length(dynamic_covariate) > 1) {
-        error_str <- c(error_str, "@dynamic_covariate must be of type character")
+      if (
+        is.null(dynamic_covariate) ||
+          !(is.character(dynamic_covariate)) ||
+          length(dynamic_covariate) > 1
+      ) {
+        error_str <- c(
+          error_str,
+          "@dynamic_covariate must be of type character"
+        )
       }
       if (!(as.character(landmark) %in% names(x@longitudinal_fits))) {
-        stop(paste("No longitudinal submodel has been fitted to landmark time", landmark))
-      } else if (!(dynamic_covariate %in% names(x@longitudinal_fits[[as.character(landmark)]]))) {
-        stop(paste("No longitudinal submodel has been fitted for dynamic covariate", dynamic_covariate, "to landmark time", landmark))
+        stop(paste(
+          "No longitudinal submodel has been fitted to landmark time",
+          landmark
+        ))
+      } else if (
+        !(dynamic_covariate %in%
+          names(x@longitudinal_fits[[as.character(landmark)]]))
+      ) {
+        stop(paste(
+          "No longitudinal submodel has been fitted for dynamic covariate",
+          dynamic_covariate,
+          "to landmark time",
+          landmark
+        ))
       }
-      model_fit <- x@longitudinal_fits[[as.character(landmark)]][[dynamic_covariate]]
-      cat(capture.output(landmarking_object@longitudinal_fits[[as.character(landmark)]][[dynamic_covariate]]), sep = "\n")
+      model_fit <- x@longitudinal_fits[[as.character(landmark)]][[
+        dynamic_covariate
+      ]]
+      cat(
+        capture.output(landmarking_object@longitudinal_fits[[as.character(
+          landmark
+        )]][[dynamic_covariate]]),
+        sep = "\n"
+      )
     } else if (type == "survival") {
       # Summary of survival submodel fit
       if (is.null(horizon) || !(is.numeric(horizon)) || length(horizon) > 1) {
@@ -287,7 +317,10 @@ setMethod(
       }
       model_name <- paste0(landmark, "-", horizon)
       if (!(as.character(model_name) %in% names(x@survival_fits))) {
-        stop(paste("No survival submodel has been fitted to landmark-horizon times", model_name))
+        stop(paste(
+          "No survival submodel has been fitted to landmark-horizon times",
+          model_name
+        ))
       }
       cat(capture.output(x@survival_fits[[model_name]]), sep = "\n")
     }
