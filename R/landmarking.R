@@ -363,7 +363,7 @@ setMethod(
       names(x@survival_predictions),
       paste0(landmark, "-")
     ))
-    if (model_names > 0) {
+    if (length(model_names) > 0) {
       x@survival_predictions[[model_names]] <- NULL
     }
 
