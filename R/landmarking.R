@@ -305,7 +305,7 @@ setMethod(
         dynamic_covariate
       ]]
       cat(
-        capture.output(landmarking_object@longitudinal_fits[[as.character(
+        capture.output(x@longitudinal_fits[[as.character(
           landmark
         )]][[dynamic_covariate]]),
         sep = "\n"
