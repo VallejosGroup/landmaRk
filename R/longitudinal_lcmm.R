@@ -59,12 +59,13 @@
 #'
 #' @examples
 .predict_lcmm <- function(x, newdata, subject, avg = FALSE) {
-  # pprob contains probability of observation belonging to a certain cluster
-  # But it is possible that pprob does not contain predictions for some individuals
-  # in newdata. That is because those individuals have not been use in training.
-  # We will augment pprob using the sample average for individuals not used in
-  # training first, find out the largest cluster.
+  # pprob contains probabilities for subjects belonging to each certain cluster,
+  # However posterior probabilities are unavailable for  individuals noted
+  # included in the model fitting.
+  # We augment pprob using the sample average for individuals not used in
+  # model fitting.
   pprob <- x$pprob
+  # Find the largest cluster
   mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
   # Allocation of clusters for prediction
   if (nrow(newdata) == nrow(pprob)) {
@@ -73,7 +74,7 @@
       cluster = pprob$class
     )
   } else {
-    # Create a dataframe for individuals not used in training with the most common cluster
+    # Assign individuals not included in model fitting to the biggest cluster
     pprob.extra <- data.frame(
       id = setdiff(newdata[, subject], pprob[, subject]),
       cluster = mode_cluster
@@ -95,17 +96,15 @@
     rownames(pprob.extra) <- NULL
     colnames(pprob.extra) <- colnames(pprob)
     pprob <- rbind(pprob, pprob.extra) |> arrange(get(subject))
-    ### cluster_allocation <- rbind(
-    ###   data.frame(id = pprob[,subject], cluster = pprob$class),
-    ###   data.frame(id = setdiff(newdata$patient.id, pprob[,subject]), cluster = mode_cluster)
-    ### ) |> arrange(id) |> select(-id)
   }
-  ### rownames(cluster_allocation) <- newdata$patient.id
-  # Make predictions with lcmm package
+
   predictions <- lcmm::predictY(x, newdata = newdata)
   if (nrow(predictions$pred) != nrow(newdata)) {
     stop(sprintf(
-      "lcmm::predictY produced %d predictions but expected %d. Probable reason: static covariates contain missing data.",
+      paste(
+        "lcmm::predictY produced %d predictions but expected %d predictions.\n",
+        "Probable reason: static covariates contain missing data.\n"
+      ),
       nrow(predictions$pred),
       nrow(newdata)
     ))

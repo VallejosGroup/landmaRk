@@ -68,7 +68,6 @@
   Num <- 0
   Den <- 0
   for (i in 1:n) {
-    # print(n)
     A[i, which(time[i] < time)] <- 1
     B[
       i,

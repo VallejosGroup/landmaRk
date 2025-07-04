@@ -14,8 +14,8 @@
 \item{...}{Additional arguments (not used)}
 }
 \value{
-An object of class \code{\link{LandmarkAnalysis}}, including desired risk
-sets for the relevant landmark times.
+An object of class \code{\link{LandmarkAnalysis}}, including desired
+risk sets for the relevant landmark times.
 }
 \description{
 Compute the list of individuals at risk at landmark times

@@ -144,7 +144,6 @@ setMethod(
       } else if (inherits(longitudinal_fit, "hlme")) {
         # If model was fitted with lcmm, use predictY to make predictions
         predictions <- lcmm::predictY(longitudinal_fit, newdata = newdata)
-        num_clusters <- ncol(predictions$pred)
         if (avg == TRUE) {
           # If averaging over cluster trajectories
           class_probabilities <- longitudinal_fit$pprob |>

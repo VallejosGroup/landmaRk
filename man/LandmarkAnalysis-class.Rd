@@ -43,7 +43,7 @@ submodel.}
 \item{\code{survival_fits}}{List of survival model fits at each of the specified
 landmark times.}
 
-\item{\code{survival_predictions}}{List of time-to-event predictions for the specified
-landmark times and prediction horizons.}
+\item{\code{survival_predictions}}{List of time-to-event predictions for the
+specified landmark times and prediction horizons.}
 }}
 

@@ -65,7 +65,6 @@ setMethod(
       # Base case for recursion
       .check_riskset_survival(x, landmarks)
       # Recover risk sets (ids of individuals who are at risk at landmark time)
-      at_risk_individuals <- x@risk_sets[[as.character(landmarks)]]
 
       # Construct dataset for survival analysis (censor events past horizon time)
       x@survival_datasets[[paste0(landmarks, "-", horizons)]] <- x@data_static[
