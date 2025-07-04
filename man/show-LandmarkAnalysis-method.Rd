@@ -7,7 +7,7 @@
 \S4method{show}{LandmarkAnalysis}(object)
 }
 \arguments{
-\item{LandmarkAnalysis}{}
+\item{object}{An object of class \code{\link{LandmarkAnalysis}}.}
 }
 \description{
 Title

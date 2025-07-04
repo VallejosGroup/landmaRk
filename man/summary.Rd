@@ -9,15 +9,7 @@ summary(x, ...)
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
-\item{type}{If \code{longitudinal}, it summarises the longitudinal submodel.
-If \code{survival}, it summarises the survival submodel.}
-
-\item{landmark}{A numeric indicating the landmark time.}
-
-\item{horizon}{For survival submodels, a numeric indicating the horizon time.}
-
-\item{dynamic_covariate}{For longitudinal submodels, a character indicating
-the dynamic covariate}
+\item{...}{Additional arguments}
 }
 \value{
 A summary of the desired submodel

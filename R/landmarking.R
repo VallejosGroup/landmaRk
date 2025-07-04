@@ -188,7 +188,7 @@ LandmarkAnalysis <- function(
 # show method for class "\code{\link{LandmarkAnalysis}}"
 #' Title
 #'
-#' @param LandmarkAnalysis
+#' @param object An object of class \code{\link{LandmarkAnalysis}}.
 #'
 #' @returns
 #' @export
@@ -225,12 +225,7 @@ setMethod(
 #' Summarises landmarking model fits
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
-#' @param type If \code{longitudinal}, it summarises the longitudinal submodel.
-#'  If \code{survival}, it summarises the survival submodel.
-#' @param landmark A numeric indicating the landmark time.
-#' @param horizon For survival submodels, a numeric indicating the horizon time.
-#' @param dynamic_covariate For longitudinal submodels, a character indicating
-#'  the dynamic covariate
+#' @param ... Additional arguments
 #'
 #' @returns A summary of the desired submodel
 #' @export
@@ -246,6 +241,12 @@ setGeneric(
 #' Title
 #'
 #' @inheritParams summary
+#' @param type If \code{longitudinal}, it summarises the longitudinal submodel.
+#'  If \code{survival}, it summarises the survival submodel.
+#' @param landmark A numeric indicating the landmark time.
+#' @param horizon For survival submodels, a numeric indicating the horizon time.
+#' @param dynamic_covariate For longitudinal submodels, a character indicating
+#'  the dynamic covariate
 #'
 #' @returns A summary of the desired submodel
 #' @export
