@@ -98,7 +98,7 @@ setValidity("LandmarkAnalysis", function(object) {
   if (length(error_str) == 0) {
     return(TRUE)
   } else {
-    return(error_str)
+    .eval_error_str(error_str)
   }
 })
 
@@ -185,7 +185,27 @@ LandmarkAnalysis <- function(
   )
 }
 
-# show method for class "\code{\link{LandmarkAnalysis}}"
+#' Displays an object of class "\code{\link{LandmarkAnalysis}}"
+#'
+#' @param object An object of class \code{\link{LandmarkAnalysis}}.
+#' @param ... Additional arguments
+#'
+#' @export
+#'
+#' @examples
+setGeneric(
+  "show",
+  function(object, ...) standardGeneric("show"),
+  signature = "object"
+)
+
+#' Displays an object of class "\code{\link{LandmarkAnalysis}}"
+#'
+#' @inheritParams show
+#'
+#' @export
+#'
+#' @examples
 setMethod(
   f = "show",
   signature = "LandmarkAnalysis",
@@ -209,6 +229,119 @@ setMethod(
           sep = ""
         )
       }
+    }
+  }
+)
+
+
+#' Summarises landmarking model fits
+#'
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
+#' @param ... Additional arguments
+#'
+#' @returns A summary of the desired submodel
+#' @export
+#'
+#' @examples
+setGeneric(
+  "summary",
+  function(x, ...) standardGeneric("summary"),
+  signature = "x"
+)
+
+
+#' Title
+#'
+#' @inheritParams summary
+#' @param type If \code{longitudinal}, it summarises the longitudinal submodel.
+#'  If \code{survival}, it summarises the survival submodel.
+#' @param landmark A numeric indicating the landmark time.
+#' @param horizon For survival submodels, a numeric indicating the horizon time.
+#' @param dynamic_covariate For longitudinal submodels, a character indicating
+#'  the dynamic covariate
+#'
+#' @returns A summary of the desired submodel
+#' @export
+#'
+#' @examples
+setMethod(
+  f = "summary",
+  signature = "LandmarkAnalysis",
+  definition = function(
+    x,
+    type = NULL,
+    landmark = NULL,
+    horizon = NULL,
+    dynamic_covariate = NULL
+  ) {
+    error_str <- NULL
+    if (is.null(type) || !(type %in% c("longitudinal", "survival"))) {
+      error_str <- c(error_str, "@type must be 'longitudinal' or 'survival'")
+    }
+    if (is.null(landmark) || !(is.numeric(landmark)) || length(landmark) > 1) {
+      error_str <- c(error_str, "@landmark must be numeric")
+    }
+
+    .eval_error_str(error_str)
+
+    if (type == "longitudinal") {
+      # Summary of longitudinal submodel fit
+      if (
+        is.null(dynamic_covariate) ||
+          !(is.character(dynamic_covariate)) ||
+          length(dynamic_covariate) > 1
+      ) {
+        error_str <- c(
+          error_str,
+          "@dynamic_covariate must be of type character"
+        )
+      }
+      if (!(as.character(landmark) %in% names(x@longitudinal_fits))) {
+        stop(paste(
+          "No longitudinal submodel has been fitted to landmark time",
+          landmark
+        ))
+      } else if (
+        !(dynamic_covariate %in%
+          names(x@longitudinal_fits[[as.character(landmark)]]))
+      ) {
+        stop(paste(
+          "No longitudinal submodel has been fitted for dynamic covariate",
+          dynamic_covariate,
+          "to landmark time",
+          landmark
+        ))
+      }
+      model_fit <- x@longitudinal_fits[[as.character(landmark)]][[
+        dynamic_covariate
+      ]]
+      cat(
+        capture.output(x@longitudinal_fits[[as.character(
+          landmark
+        )]][[dynamic_covariate]]),
+        sep = "\n"
+      )
+    } else if (type == "survival") {
+      # Summary of survival submodel fit
+      if (is.null(horizon) || !(is.numeric(horizon)) || length(horizon) > 1) {
+        error_str <- c(error_str, "@horizon must be numeric")
+      }
+
+      model_name <- paste0(landmark, "-", horizon)
+      if (!(as.character(model_name) %in% names(x@survival_fits))) {
+        error_str <- c(
+          error_str,
+          (paste0(
+            "No survival submodel has been fitted to landmark-horizon time ",
+            model_name,
+            "\n"
+          ))
+        )
+      }
+
+      .eval_error_str(error_str)
+
+      cat(capture.output(x@survival_fits[[model_name]]), sep = "\n")
     }
   }
 )
