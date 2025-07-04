@@ -227,7 +227,9 @@ setMethod("getIds", "LandmarkAnalysis", function(object) object@ids)
 
 # Accessor for event_time
 setGeneric("getEventTime", function(object) standardGeneric("getEventTime"))
-setMethod("getEventTime", "LandmarkAnalysis", function(object) object@event_time)
+setMethod("getEventTime", "LandmarkAnalysis", function(object) {
+  object@event_time
+})
 
 # Accessor for risk_sets
 setGeneric("getRiskSets", function(object) standardGeneric("getRiskSets"))
