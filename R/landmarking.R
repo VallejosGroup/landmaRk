@@ -350,24 +350,37 @@ setMethod(
     landmark <- as.character(landmark)
 
     if (!(landmark %in% names(x@risk_sets))) {
-      stop(paste0("The risk set at landmark time ", landmark, " has not been computed."))
+      stop(paste0(
+        "The risk set at landmark time ",
+        landmark,
+        " has not been computed."
+      ))
     }
     message(paste0("Pruning landmark time ", landmark, "."))
 
     # Prune survival predictions
-    model_names <- which(startsWith(names(x@survival_predictions), paste0(landmark, "-")))
+    model_names <- which(startsWith(
+      names(x@survival_predictions),
+      paste0(landmark, "-")
+    ))
     if (model_names > 0) {
       x@survival_predictions[[model_names]] <- NULL
     }
 
     # Prune survival model fits
-    model_names <- which(startsWith(names(x@survival_fits), paste0(landmark, "-")))
+    model_names <- which(startsWith(
+      names(x@survival_fits),
+      paste0(landmark, "-")
+    ))
     if (model_names > 0) {
       x@survival_fits[[model_names]] <- NULL
     }
 
     # Prune survival datasets
-    model_names <- which(startsWith(names(x@survival_datasets), paste0(landmark, "-")))
+    model_names <- which(startsWith(
+      names(x@survival_datasets),
+      paste0(landmark, "-")
+    ))
     if (model_names > 0) {
       x@survival_datasets[[model_names]] <- NULL
     }
@@ -388,6 +401,5 @@ setMethod(
     x@risk_sets[[landmark]] <- NULL
 
     x
-
   }
 )
