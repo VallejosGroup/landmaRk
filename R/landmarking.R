@@ -21,8 +21,8 @@
 #'   submodel.
 #' @slot survival_fits List of survival model fits at each of the specified
 #'   landmark times.
-#' @slot survival_predictions List of time-to-event predictions for the specified
-#'   landmark times and prediction horizons.
+#' @slot survival_predictions List of time-to-event predictions for the
+#'   specified landmark times and prediction horizons.
 #'
 #' @export
 setClass(
@@ -128,7 +128,7 @@ LandmarkAnalysis <- function(
   measurements
 ) {
   # Find out static covariates of type characters
-  char_columns <- names(which(sapply(data_static, class) == 'character'))
+  char_columns <- names(which(sapply(data_static, class) == "character"))
   # Convert all character static covariates to factor, and raise a message
   if (length(char_columns) > 0) {
     data_static <- data_static |>
@@ -242,19 +242,20 @@ setMethod("getRiskSets", "LandmarkAnalysis", function(object) object@risk_sets)
 #' @param landmarks Numeric vector of landmark times
 #' @param ... Additional arguments (not used)
 #'
-#' @returns An object of class \code{\link{LandmarkAnalysis}} including desired risk
-#'   sets for the specified landmark times.
+#' @returns An object of class \code{\link{LandmarkAnalysis}} including desired
+#'   risk sets for the specified landmark times.
 #' @export
 #'
 #' @details
 #' A risk set describes all subjects still at risk (i.e., not experienced the
-#' event of interest or censored) at a given time. In \code{\link{LandmarkAnalysis}}, risk sets
-#' define which subjects should be included in the longitudinal and survival
-#' sub-models for each landmark time.
+#' event of interest or censored) at a given time. In
+#' \code{\link{LandmarkAnalysis}}, risk sets define which subjects should be
+#' included in the longitudinal and survival sub-models for each landmark time.
 #'
-#' The risk sets are stored in the \code{risk_sets} slot of the \code{\link{LandmarkAnalysis}}
-#' object, where each risk set is a list of indices corresponding to the
-#' subjects at risk at the respective landmark time.
+#' The risk sets are stored in the \code{risk_sets} slot of the
+#' \code{\link{LandmarkAnalysis}} object, where each risk set is a list of
+#' indices corresponding to the subjects at risk at the respective landmark
+#' time.
 #'
 #' @examples
 setGeneric(
@@ -267,8 +268,8 @@ setGeneric(
 #'
 #' @inheritParams compute_risk_sets
 #'
-#' @returns An object of class \code{\link{LandmarkAnalysis}}, including desired risk
-#'   sets for the relevant landmark times.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}, including desired
+#'   risk sets for the relevant landmark times.
 #' @export
 #'
 #' @details

@@ -59,8 +59,8 @@ test_that("LCMM works as expected", {
       dynamic_covariates = "dose"
     ),
     paste(
-      "lcmm::predictY produced 387 predictions but expected 430.",
-      "Probable reason: static covariates contain missing data."
+      "lcmm::predictY produced 387 predictions but expected 430 predictions.\n",
+      "Probable reason: static covariates contain missing data.\n"
     )
   )
 })
@@ -143,12 +143,6 @@ test_that("longitudinal_fit raises warning for too few observations", {
   set.seed(1)
   epileptic <- epileptic |> dplyr::filter(time < 368) |> head(20)
   epileptic <- epileptic[-c(18, 19), ]
-  #epileptic <- epileptic |> dplyr::filter(time <= 366)
-
-  # epileptic <- rbind(
-  #   epileptic |> dplyr::filter(id <= 500),
-  #   epileptic |> dplyr::filter(id > 500) |> dplyr::slice_max(time, by = id)
-  # )
 
   x <- initialise_longitudinal_test_(epileptic = epileptic)
 

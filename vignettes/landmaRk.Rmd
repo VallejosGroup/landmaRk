@@ -134,7 +134,8 @@ landmarking_object <- landmarking_object |>
     horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c()
-  ) |> predict_survival(
+  ) |>
+  predict_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
     method = "coxph",
@@ -194,7 +195,7 @@ landmarking_object <- landmarking_object |>
   predict_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
-    method = "coxph", 
+    method = "coxph",
     type = "survival"
   )
 
@@ -251,11 +252,11 @@ landmarking_object <- landmarking_object |>
     horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose")
-  ) |> 
+  ) |>
   predict_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
-    method = "coxph", 
+    method = "coxph",
     type = "survival"
   )
 ```

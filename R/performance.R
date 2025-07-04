@@ -1,12 +1,12 @@
 #' Performance metrics
 #'
-#' Computes concordance index (c-index) and Brier scores at the specified landmark
-#' times and prediction horizons.
+#' Computes concordance index (c-index) and Brier scores at the specified
+#' landmark times and prediction horizons.
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
-#' @param horizons Vector of prediction horizons up to when the survival submodel
-#'   is fitted.
+#' @param horizons Vector of prediction horizons up to when the survival
+#'   submodel is fitted.
 #' @param c_index A logical. If TRUE (default), C index is reported.
 #' @param brier A logical. If TRUE (default), Brier score is reported.
 #'
@@ -24,8 +24,8 @@ setGeneric(
 
 #' Performance metrics
 #'
-#' Computes concordance index (c-index) and Brier scores at the specified landmark
-#' times and prediction horizons.
+#' Computes concordance index (c-index) and Brier scores at the specified
+#' landmark times and prediction horizons.
 #'
 #' @inheritParams performance_metrics
 #'
@@ -74,7 +74,7 @@ setMethod(
       horizon <- horizons[i]
       at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
 
-      # Construct dataset for survival analysis (censor events past horizon time)
+      # Construct survival analysis dataset (censor events past horizon time)
       dataset <- data.frame(at_risk_individuals)
       colnames(dataset) <- x@ids
       dataset <- dataset |>

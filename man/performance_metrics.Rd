@@ -11,8 +11,8 @@ performance_metrics(x, landmarks, horizons, c_index = TRUE, brier = TRUE)
 
 \item{landmarks}{A numeric vector of landmark times.}
 
-\item{horizons}{Vector of prediction horizons up to when the survival submodel
-is fitted.}
+\item{horizons}{Vector of prediction horizons up to when the survival
+submodel is fitted.}
 
 \item{c_index}{A logical. If TRUE (default), C index is reported.}
 
@@ -23,6 +23,6 @@ Data frame with performance metrics across the specified landmark
 times and prediction horizons.
 }
 \description{
-Computes concordance index (c-index) and Brier scores at the specified landmark
-times and prediction horizons.
+Computes concordance index (c-index) and Brier scores at the specified
+landmark times and prediction horizons.
 }
