@@ -7,9 +7,9 @@
 show(object, ...)
 }
 \arguments{
-\item{...}{Additional arguments}
+\item{object}{An object of class \code{\link{LandmarkAnalysis}}.}
 
-\item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
+\item{...}{Additional arguments}
 }
 \description{
 Displays an object of class "\code{\link{LandmarkAnalysis}}"

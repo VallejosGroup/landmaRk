@@ -187,7 +187,7 @@ LandmarkAnalysis <- function(
 
 #' Displays an object of class "\code{\link{LandmarkAnalysis}}"
 #'
-#' @param x An object of class \code{\link{LandmarkAnalysis}}.
+#' @param object An object of class \code{\link{LandmarkAnalysis}}.
 #' @param ... Additional arguments
 #'
 #' @export
@@ -195,7 +195,7 @@ LandmarkAnalysis <- function(
 #' @examples
 setGeneric(
   "show",
-  function(object, ...) standardGeneric("summary"),
+  function(object, ...) standardGeneric("show"),
   signature = "object"
 )
 

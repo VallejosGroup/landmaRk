@@ -6,6 +6,9 @@
 \usage{
 \S4method{show}{LandmarkAnalysis}(object)
 }
+\arguments{
+\item{object}{An object of class \code{\link{LandmarkAnalysis}}.}
+}
 \description{
 Displays an object of class "\code{\link{LandmarkAnalysis}}"
 }
