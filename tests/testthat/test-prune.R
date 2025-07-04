@@ -69,10 +69,14 @@ test_that("Prune method works", {
     "The risk set at landmark time 365.26 has not been computed"
   )
 
-  expect_message({
-  landmarking_object <- prune(
-    landmarking_object,
-    landmark = 365.25)}, "Pruning landmark time 365.25."
+  expect_message(
+    {
+      landmarking_object <- prune(
+        landmarking_object,
+        landmark = 365.25
+      )
+    },
+    "Pruning landmark time 365.25."
   )
 
   expect_length(
