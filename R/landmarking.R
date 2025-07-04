@@ -313,3 +313,81 @@ setMethod(
   "LandmarkAnalysis",
   function(object) object@survival_fits
 )
+
+#' Prunes a landmark time from a \code{\link{LandmarkAnalysis}}, removing
+#' the risk set, longitudinal submodel and survival submodel from the object.
+#'
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
+#' @param ... Additional arguments
+#'
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
+#' @export
+#'
+#' @examples
+setGeneric(
+  "prune",
+  function(x, ...) standardGeneric("prune"),
+  signature = "x"
+)
+
+#' Prunes a landmark time from a \code{\link{LandmarkAnalysis}}, removing
+#' the risk set, longitudinal submodel and survival submodel from the object.
+#'
+#' @inheritParams prune
+#' @param landmark A numeric indicating the landmark time.
+#'
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
+#' @export
+#'
+#' @examples
+setMethod(
+  f = "prune",
+  signature = "LandmarkAnalysis",
+  definition = function(x, landmark = NULL) {
+    if (is.null(landmark) || !is.numeric(landmark) || length(landmark) != 1) {
+      stop("@landmark must be a numeric indicating a landmark time.")
+    }
+    landmark <- as.character(landmark)
+
+    if (!(landmark %in% names(x@risk_sets))) {
+      stop(paste0("The risk set at landmark time ", landmark, " has not been computed."))
+    }
+    message(paste0("Pruning landmark time ", landmark, "."))
+
+    # Prune survival predictions
+    model_names <- which(startsWith(names(x@survival_predictions), paste0(landmark, "-")))
+    if (model_names > 0) {
+      x@survival_predictions[[model_names]] <- NULL
+    }
+
+    # Prune survival model fits
+    model_names <- which(startsWith(names(x@survival_fits), paste0(landmark, "-")))
+    if (model_names > 0) {
+      x@survival_fits[[model_names]] <- NULL
+    }
+
+    # Prune survival datasets
+    model_names <- which(startsWith(names(x@survival_datasets), paste0(landmark, "-")))
+    if (model_names > 0) {
+      x@survival_datasets[[model_names]] <- NULL
+    }
+
+    # Prune longitudinal predictions
+    model_name <- which(names(x@longitudinal_predictions) == landmark)
+    if (model_name > 0) {
+      x@longitudinal_predictions[[model_name]] <- NULL
+    }
+
+    # Prune longitudinal model fits
+    model_name <- which(names(x@longitudinal_fits) == landmark)
+    if (model_name > 0) {
+      x@longitudinal_fits[[model_name]] <- NULL
+    }
+
+    # Prune risk sets
+    x@risk_sets[[landmark]] <- NULL
+
+    x
+
+  }
+)
