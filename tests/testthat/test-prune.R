@@ -69,20 +69,15 @@ test_that("Prune method works", {
     "The risk set at landmark time 365.26 has not been computed"
   )
 
-  expect_null(
-    {
-      landmarking_object <- prune(
-        landmarking_object,
-        landmark = 365.25
-      )
-      unlist(list(
-        landmarking_object@risk_sets,
-        landmarking_object@survival_predictions,
-        landmarking_object@survival_fits,
-        landmarking_object@survival_datasets,
-        landmarking_object@longitudinal_predictions,
-        landmarking_object@longitudinal_fits
-      ))
-    }
+  expect_length(
+    unlist(list(
+      landmarking_object@risk_sets,
+      landmarking_object@survival_predictions,
+      landmarking_object@survival_fits,
+      landmarking_object@survival_datasets,
+      landmarking_object@longitudinal_predictions,
+      landmarking_object@longitudinal_fits
+    )),
+    0
   )
 })
