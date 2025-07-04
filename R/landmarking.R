@@ -185,12 +185,24 @@ LandmarkAnalysis <- function(
   )
 }
 
-# show method for class "\code{\link{LandmarkAnalysis}}"
-#' Title
+#' Displays an object of class "\code{\link{LandmarkAnalysis}}"
 #'
-#' @param object An object of class \code{\link{LandmarkAnalysis}}.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
+#' @param ... Additional arguments
 #'
-#' @returns
+#' @export
+#'
+#' @examples
+setGeneric(
+  "show",
+  function(object, ...) standardGeneric("summary"),
+  signature = "object"
+)
+
+#' Displays an object of class "\code{\link{LandmarkAnalysis}}"
+#'
+#' @inheritParams show
+#'
 #' @export
 #'
 #' @examples
