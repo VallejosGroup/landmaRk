@@ -224,36 +224,29 @@ times.</p>
 <span>  <span class="fu"><a href="../reference/fit_survival.html">fit_survival</a></span><span class="op">(</span></span>
 <span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    formula <span class="op">=</span> <span class="fu">Surv</span><span class="op">(</span><span class="va">event_time</span>, <span class="va">event_status</span><span class="op">)</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span>,</span>
-<span>    windows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/predict_survival.html">predict_survival</a></span><span class="op">(</span></span>
 <span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>    windows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>    type <span class="op">=</span> <span class="st">"survival"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
 <span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
 <span>  <span class="va">landmarking_object</span>,</span>
 <span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>  windows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
+<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;                landmark window    cindex     brier</span></span>
-<span><span class="co">#&gt; 365.25-365.25    365.25 365.25 0.1298831 0.6611129</span></span>
-<span><span class="co">#&gt; 365.25-730.5     730.50 365.25 0.1209897 0.5571556</span></span>
-<span><span class="co">#&gt; 730.5-365.25    1095.75 365.25 0.3015631 0.7660603</span></span>
-<span><span class="co">#&gt; 730.5-730.5     1461.00 365.25 0.1944797 0.6626675</span></span>
-<span><span class="co">#&gt; 1095.75-365.25  1826.25 365.25 0.2382749 0.7905402</span></span>
-<span><span class="co">#&gt; 1095.75-730.5    365.25 730.50 0.1903475 0.6748802</span></span>
-<span><span class="co">#&gt; 1461-365.25      730.50 730.50 0.3918367 0.7898793</span></span>
-<span><span class="co">#&gt; 1461-730.5      1095.75 730.50 0.3975000 0.7563479</span></span>
-<span><span class="co">#&gt; 1826.25-365.25  1461.00 730.50 0.9384615 0.9321694</span></span>
-<span><span class="co">#&gt; 1826.25-730.5   1826.25 730.50 0.9384615 0.9321694</span></span></code></pre></div>
+<span><span class="co">#&gt;                landmark horizon    cindex     brier</span></span>
+<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.1298831 0.6611129</span></span>
+<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.3015631 0.7660603</span></span>
+<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.2382749 0.7905402</span></span>
+<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.3918367 0.7898793</span></span>
+<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9384615 0.9321694</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="landmarking-analysis-with-lme4-coxph">Landmarking analysis with lme4 + coxph<a class="anchor" aria-label="anchor" href="#landmarking-analysis-with-lme4-coxph"></a>
@@ -294,37 +287,30 @@ Cox PH sub-model using the longitudinal predictions as covariates.</p>
 <span>    formula <span class="op">=</span> <span class="fu">Surv</span><span class="op">(</span><span class="va">event_time</span>, <span class="va">event_status</span><span class="op">)</span> <span class="op">~</span></span>
 <span>      <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="va">dose</span>,</span>
 <span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>    windows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/predict_survival.html">predict_survival</a></span><span class="op">(</span></span>
 <span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>    windows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>, </span>
 <span>    type <span class="op">=</span> <span class="st">"survival"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
 <span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
 <span>  <span class="va">landmarking_object</span>,</span>
 <span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>  windows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
+<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;                landmark window    cindex     brier</span></span>
-<span><span class="co">#&gt; 365.25-365.25    365.25 365.25 0.2241851 0.6672443</span></span>
-<span><span class="co">#&gt; 365.25-730.5     730.50 365.25 0.2078055 0.5685027</span></span>
-<span><span class="co">#&gt; 730.5-365.25    1095.75 365.25 0.4266108 0.7758282</span></span>
-<span><span class="co">#&gt; 730.5-730.5     1461.00 365.25 0.3200958 0.6761504</span></span>
-<span><span class="co">#&gt; 1095.75-365.25  1826.25 365.25 0.4021563 0.7967850</span></span>
-<span><span class="co">#&gt; 1095.75-730.5    365.25 730.50 0.2915058 0.6831398</span></span>
-<span><span class="co">#&gt; 1461-365.25      730.50 730.50 0.3959184 0.7907983</span></span>
-<span><span class="co">#&gt; 1461-730.5      1095.75 730.50 0.4112500 0.7590662</span></span>
-<span><span class="co">#&gt; 1826.25-365.25  1461.00 730.50 0.9384615 0.9445921</span></span>
-<span><span class="co">#&gt; 1826.25-730.5   1826.25 730.50 0.9384615 0.9445921</span></span></code></pre></div>
+<span><span class="co">#&gt;                landmark horizon    cindex     brier</span></span>
+<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.2241851 0.6672443</span></span>
+<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.4266108 0.7758282</span></span>
+<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.4021563 0.7967850</span></span>
+<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.3959184 0.7907983</span></span>
+<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9384615 0.9445921</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="landmarking-analysis-with-lcmm-coxph">Landmarking analysis with lcmm + coxph<a class="anchor" aria-label="anchor" href="#landmarking-analysis-with-lcmm-coxph"></a>
@@ -366,18 +352,16 @@ sub-model using the longitudinal predictions as covariates.</p>
 <span>    formula <span class="op">=</span> <span class="fu">Surv</span><span class="op">(</span><span class="va">event_time</span>, <span class="va">event_status</span><span class="op">)</span> <span class="op">~</span></span>
 <span>      <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="va">dose</span>,</span>
 <span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>    windows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/predict_survival.html">predict_survival</a></span><span class="op">(</span></span>
 <span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>    windows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>, </span>
 <span>    type <span class="op">=</span> <span class="st">"survival"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
 <span><span class="co">#&gt; Ran out of iterations and did not converge</span></span></code></pre></div>
 </div>

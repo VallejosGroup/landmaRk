@@ -7,14 +7,15 @@
 <url><loc>https://vallejosgroup.github.io/landmaRk/authors.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/index.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/news/index.html</loc></url>
-<url><loc>https://vallejosgroup.github.io/landmaRk/reference/BinaryBrierScore.html</loc></url>
-<url><loc>https://vallejosgroup.github.io/landmaRk/reference/CIndexCRisks.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/LandmarkAnalysis-class.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/LandmarkAnalysis.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/compute_risk_sets-LandmarkAnalysis-method.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/compute_risk_sets.html</loc></url>
+<url><loc>https://vallejosgroup.github.io/landmaRk/reference/dot-BinaryBrierScore.html</loc></url>
+<url><loc>https://vallejosgroup.github.io/landmaRk/reference/dot-CIndexCRisks.html</loc></url>
+<url><loc>https://vallejosgroup.github.io/landmaRk/reference/dot-fit_lcmm.html</loc></url>
+<url><loc>https://vallejosgroup.github.io/landmaRk/reference/dot-predict_lcmm.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/epileptic.html</loc></url>
-<url><loc>https://vallejosgroup.github.io/landmaRk/reference/fit_lcmm_.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal-LandmarkAnalysis-method.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/fit_survival-LandmarkAnalysis-method.html</loc></url>
@@ -24,7 +25,6 @@
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/performance_metrics-LandmarkAnalysis-method.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/performance_metrics.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/plot-LandmarkAnalysis-method.html</loc></url>
-<url><loc>https://vallejosgroup.github.io/landmaRk/reference/predict_lcmm_.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal-LandmarkAnalysis-method.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/predict_survival-LandmarkAnalysis-method.html</loc></url>
