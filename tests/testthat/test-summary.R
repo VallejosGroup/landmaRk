@@ -61,10 +61,23 @@ test_that("Summary method works", {
       type = "survival"
     )
 
-  expect_output(
-    summary(landmarking_object,
-            type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose"),
-    landmarking_object@longitudinal_fits[["365.25"]][["dose"]]
+  expect_error(
+    summary(landmarking_object, type = "longitudinal", landmark = 365.26, dynamic_covariate = "dose"),
+    "No longitudinal submodel has been fitted to landmark time 365.26"
   )
 
+  expect_error(
+    summary(landmarking_object, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dos"),
+    "No longitudinal submodel has been fitted for dynamic covariate dos to landmark time 365.25"
+  )
+
+  expect_error(
+    summary(landmarking_object, type = "Longitudinal", landmark = 365.25, dynamic_covariate = "dose"),
+    "@type must be 'longitudinal' or 'survival'"
+  )
+
+  expect_error(
+    summary(landmarking_object, type = "survival", landmark = 365.25, horizon = 700),
+    "No survival submodel has been fitted to landmark-horizon times 365.25-700"
+  )
 })
