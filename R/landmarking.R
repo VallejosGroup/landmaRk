@@ -98,7 +98,7 @@ setValidity("LandmarkAnalysis", function(object) {
   if (length(error_str) == 0) {
     return(TRUE)
   } else {
-    return(error_str)
+    .eval_error_str(error_str)
   }
 })
 
@@ -281,9 +281,9 @@ setMethod(
     if (is.null(landmark) || !(is.numeric(landmark)) || length(landmark) > 1) {
       error_str <- c(error_str, "@landmark must be numeric")
     }
-    if (length(error_str) > 0) {
-      stop(paste(error_str, collapse = ". "))
-    }
+
+    .eval_error_str(error_str)
+
 
     if (type == "longitudinal") {
       # Summary of longitudinal submodel fit
@@ -327,13 +327,19 @@ setMethod(
       if (is.null(horizon) || !(is.numeric(horizon)) || length(horizon) > 1) {
         error_str <- c(error_str, "@horizon must be numeric")
       }
+
       model_name <- paste0(landmark, "-", horizon)
       if (!(as.character(model_name) %in% names(x@survival_fits))) {
-        stop(paste(
-          "No survival submodel has been fitted to landmark-horizon times",
-          model_name
-        ))
+        error_str <- c(error_str,
+                       (paste0(
+          "No survival submodel has been fitted to landmark-horizon time ",
+          model_name,
+          "\n"
+        )))
       }
+
+      .eval_error_str(error_str)
+
       cat(capture.output(x@survival_fits[[model_name]]), sep = "\n")
     }
   }

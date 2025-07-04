@@ -98,6 +98,6 @@ test_that("Summary method works", {
       landmark = 365.25,
       horizon = 700
     ),
-    "No survival submodel has been fitted to landmark-horizon times 365.25-700"
+    "No survival submodel has been fitted to landmark-horizon time 365.25-700"
   )
 })

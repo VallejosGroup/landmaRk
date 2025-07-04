@@ -19,31 +19,15 @@
 #'
 #' @examples
 split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
-  if (!is.data.frame(df)) {
-    stop("@df must be a data frame.")
-  } else if (!(is(ids)[1] == "character")) {
-    stop("@ids must be a character.")
-  } else if (length(ids) != 1) {
-    stop("@ids should be of length one.")
-  } else if (!(is(times)[1] == "character")) {
-    stop("@times must be a character.")
-  } else if (length(times) != 1) {
-    stop("@times should be of length one.")
-  } else if (!(is(measurement_name)[1] == "character")) {
-    stop("@measurement_name must be a character.")
-  } else if (length(measurement_name) != 1) {
-    stop("@measurement_name should be of length one.")
-  } else if (!(is(static)[1] == "character")) {
-    stop("@static must be a character vector.")
-  } else if (!(is(dynamic)[1] == "character")) {
-    stop("@dynamic must be a character vector.")
-  } else if (!(all(static %in% colnames(df)))) {
-    stop("all elements of @static must refer to column names in @df.")
-  } else if (!(all(dynamic %in% colnames(df)))) {
-    stop("all elements of @dynamic must refer to column names in @df.")
-  } else if (!(ids %in% colnames(df))) {
-    stop("@ids must be a column name in @df.")
-  }
+
+  error_str <- .build_error_str(df,
+                               ids,
+                               times,
+                               static,
+                               dynamic,
+                               measurement_name)
+  .eval_error_str(error_str)
+
   df_static <- df[, c(ids, static)] |>
     unique()
   df_dynamic <- list()
@@ -57,4 +41,44 @@ split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
     df_static = df_static,
     df_dynamic = df_dynamic
   ))
+}
+
+.build_error_str <- function(df,
+                             ids,
+                             times,
+                             static,
+                             dynamic,
+                             measurement_name) {
+  # Build an error string for the split_wide_df function.
+  error_str <- c()
+
+  if (!is.data.frame(df)) {
+    error_str <- c(error_str, "@df must be a data frame.")
+  } else if (!(is(ids)[1] == "character")) {
+    error_str <- c(error_str, "@ids must be a character.")
+  } else if (length(ids) != 1) {
+    error_str <- c(error_str, "@ids should be of length one.")
+  } else if (!(is(times)[1] == "character")) {
+    error_str <- c(error_str, "@times must be a character.")
+  } else if (length(times) != 1) {
+    error_str <- c(error_str, "@times should be of length one.")
+  } else if (!(is(measurement_name)[1] == "character")) {
+    error_str <- c(error_str, "@measurement_name must be a character.")
+  } else if (length(measurement_name) != 1) {
+    error_str <- c(error_str, "@measurement_name should be of length one.")
+  } else if (!(is(static)[1] == "character")) {
+    error_str <- c(error_str, "@static must be a character vector.")
+  } else if (!(is(dynamic)[1] == "character")) {
+    error_str <- c(error_str, "@dynamic must be a character vector.")
+  } else if (!(all(static %in% colnames(df)))) {
+    error_str <- c(error_str,
+                   "all elements of @static must refer to column names in @df.")
+  } else if (!(all(dynamic %in% colnames(df)))) {
+    error_str <- c(error_str,
+                   paste("all elements of @dynamic must refer to",
+                         "column names in @df."))
+  } else if (!(ids %in% colnames(df))) {
+    error_str <- c(error_str, "@ids must be a column name in @df.")
+  }
+  return(error_str)
 }
