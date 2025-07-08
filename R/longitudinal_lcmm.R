@@ -13,7 +13,7 @@
 #'
 #' @examples
 .fit_lcmm <- function(formula, data, mixture, subject, ng, ...) {
-  model_init <- lcmm::hlme(formula, data = data, subject = subject, ng = 1)
+  model_init <- lcmm::hlme(formula, data = data, subject = subject, ng = 1, ...)
   model_fit <- lcmm::hlme(
     formula,
     data = data,
