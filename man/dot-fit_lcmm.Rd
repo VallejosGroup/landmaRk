@@ -17,15 +17,15 @@
 
 \item{ng}{Number of clusters in the LCMM model}
 
-\item{...}{Additional arguments passed to the \code{\link[lcmm]{hlme}}
+\item{...}{Additional arguments passed to the \code{\link[lcmm]{lcmm}}
 function.}
 }
 \value{
-An object of class hlme
+An object of class lcmm
 }
 \description{
 Fits an LCMM model
 }
 \seealso{
-\code{\link[lcmm:hlme]{lcmm::hlme()}}
+\code{\link[lcmm:lcmm]{lcmm::lcmm()}}
 }

@@ -5,16 +5,16 @@
 #' @param mixture One-sided formula specifying the class-specific fixed effects.
 #' @param subject Name of the column indicating individual ids in data
 #' @param ng Number of clusters in the LCMM model
-#' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
+#' @param ... Additional arguments passed to the \code{\link[lcmm]{lcmm}}
 #'   function.
-#' @seealso  [lcmm::hlme()]
+#' @seealso  [lcmm::lcmm()]
 #'
-#' @returns An object of class hlme
+#' @returns An object of class lcmm
 #'
 #' @examples
 .fit_lcmm <- function(formula, data, mixture, subject, ng, ...) {
-  model_init <- lcmm::hlme(formula, data = data, subject = subject, ng = 1, ...)
-  model_fit <- lcmm::hlme(
+  model_init <- lcmm::lcmm(formula, data = data, subject = subject, ng = 1, ...)
+  model_fit <- lcmm::lcmm(
     formula,
     data = data,
     mixture = mixture,
@@ -48,7 +48,7 @@
 
 #' Makes predictions from an LCMM model
 #'
-#' @param x An object of class \code{\link[lcmm]{hlme}}.
+#' @param x An object of class \code{\link[lcmm]{lcmm}}.
 #' @param newdata A data frame containing static covariates and individual
 #'   IDs
 #' @param subject Name of the column in newdata where individual IDs are stored.
@@ -60,7 +60,7 @@
 #' @examples
 .predict_lcmm <- function(x, newdata, subject, avg = FALSE) {
   # pprob contains probabilities for subjects belonging to each certain cluster,
-  # However posterior probabilities are unavailable for  individuals noted
+  # However posterior probabilities are unavailable for  individuals not
   # included in the model fitting.
   # We augment pprob using the sample average for individuals not used in
   # model fitting.
@@ -98,7 +98,7 @@
     pprob <- rbind(pprob, pprob.extra) |> arrange(get(subject))
   }
 
-  predictions <- lcmm::predictY(x, newdata = newdata)
+  predictions <- lcmm::predictY(x, newdata = newdata, var.time = subject, marg = FALSE)
   if (nrow(predictions$pred) != nrow(newdata)) {
     stop(sprintf(
       paste(
