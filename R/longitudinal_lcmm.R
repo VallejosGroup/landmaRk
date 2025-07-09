@@ -98,7 +98,12 @@
     pprob <- rbind(pprob, pprob.extra) |> arrange(get(subject))
   }
 
-  predictions <- lcmm::predictY(x, newdata = newdata, var.time = subject, marg = FALSE)
+  predictions <- lcmm::predictY(
+    x,
+    newdata = newdata,
+    var.time = subject,
+    marg = FALSE
+  )
   if (nrow(predictions$pred) != nrow(newdata)) {
     stop(sprintf(
       paste(
