@@ -12,12 +12,13 @@
 #' @returns An object of class lcmm
 #'
 #' @examples
-.fit_lcmm <- function(formula, data, mixture, subject, ng, ...) {
-  model_init <- lcmm::lcmm(formula, data = data, subject = subject, ng = 1, ...)
+.fit_lcmm <- function(formula, data, mixture, random, subject, ng, ...) {
+  model_init <- lcmm::lcmm(formula, data = data, random = random, subject = subject, ng = 1, ...)
   model_fit <- lcmm::lcmm(
     formula,
     data = data,
     mixture = mixture,
+    random = random,
     subject = subject,
     ng = ng,
     B = model_init,
@@ -28,6 +29,7 @@
 
   model_fit$call$fixed <- formula
   model_fit$call$mixture <- mixture
+  model_fit$call$random <- random
 
   model_fit
 }
@@ -58,7 +60,7 @@
 #' @returns A vector of predictions.
 #'
 #' @examples
-.predict_lcmm <- function(x, newdata, subject, avg = FALSE) {
+.predict_lcmm <- function(x, newdata, subject, var.time, avg = FALSE) {
   # pprob contains probabilities for subjects belonging to each certain cluster,
   # However posterior probabilities are unavailable for  individuals not
   # included in the model fitting.
@@ -101,7 +103,7 @@
   predictions <- lcmm::predictY(
     x,
     newdata = newdata,
-    var.time = subject,
+    var.time = var.time,
     marg = FALSE
   )
   if (nrow(predictions$pred) != nrow(newdata)) {
