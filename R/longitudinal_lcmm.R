@@ -13,7 +13,14 @@
 #'
 #' @examples
 .fit_lcmm <- function(formula, data, mixture, random, subject, ng, ...) {
-  model_init <- lcmm::lcmm(formula, data = data, random = random, subject = subject, ng = 1, ...)
+  model_init <- lcmm::lcmm(
+    formula,
+    data = data,
+    random = random,
+    subject = subject,
+    ng = 1,
+    ...
+  )
   model_fit <- lcmm::lcmm(
     formula,
     data = data,
