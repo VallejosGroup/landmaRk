@@ -13,6 +13,8 @@
 
 \item{mixture}{One-sided formula specifying the class-specific fixed effects.}
 
+\item{random}{One-sided formula specifying the random effects.}
+
 \item{subject}{Name of the column indicating individual ids in data}
 
 \item{ng}{Number of clusters in the LCMM model}

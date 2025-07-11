@@ -3,6 +3,7 @@
 #' @param formula Two-sided linear formula for the fixed effects in the LCMM.
 #' @param data Data frame with data
 #' @param mixture One-sided formula specifying the class-specific fixed effects.
+#' @param random One-sided formula specifying the random effects.
 #' @param subject Name of the column indicating individual ids in data
 #' @param ng Number of clusters in the LCMM model
 #' @param ... Additional arguments passed to the \code{\link[lcmm]{lcmm}}
