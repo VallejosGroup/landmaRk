@@ -19,7 +19,9 @@
 #'   submodel is fitted.
 #' @param method Method for survival analysis, either "survfit" or "coxph".
 #' @param dynamic_covariates Vector of time-varying covariates to be used
-#' in the survival model.
+#'   in the survival model.
+#' @param include_clusters Boolean indicating whether to propagate cluster
+#'   membership to survival analysis.
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
@@ -27,7 +29,7 @@
 #' @examples
 setGeneric(
   "fit_survival",
-  function(x, formula, landmarks, horizons, method, dynamic_covariates = c()) {
+  function(x, formula, landmarks, horizons, method, dynamic_covariates = c(), include_clusters = FALSE) {
     standardGeneric("fit_survival")
   }
 )
@@ -55,7 +57,7 @@ setGeneric(
 setMethod(
   "fit_survival",
   "LandmarkAnalysis",
-  function(x, formula, landmarks, horizons, method, dynamic_covariates = c()) {
+  function(x, formula, landmarks, horizons, method, dynamic_covariates = c(), include_clusters = FALSE) {
     # Check that method is a function with arguments formula, data, ...
     method <- .check_method_survival_predict(method)
 
@@ -91,13 +93,36 @@ setMethod(
           dynamic_covariates
         )
 
-        x@survival_datasets[[paste0(landmarks, "-", horizons)]] <- cbind(
-          x@survival_datasets[[paste0(landmarks, "-", horizons)]],
-          do.call(
-            bind_cols,
-            x@longitudinal_predictions[[as.character(landmarks)]]
+        # Add predicted values for dynamic covariates to survival training dataset
+        survival_df <- x@survival_datasets[[paste0(landmarks, "-", horizons)]]
+        for (dynamic_covariate in dynamic_covariates) {
+          predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[dynamic_covariate]]
+          survival_df <- bind_cols(
+            survival_df,
+            x@longitudinal_predictions[[as.character(landmarks)]][[dynamic_covariate]]
           )
-        )
+          if (include_clusters == TRUE && inherits(predictions, "data.frame")) {
+            # Include predicted cluster membership in the training dataset and in the survival formula
+            colnames(survival_df)[ncol(survival_df)] <- paste0("cluster_", dynamic_covariate)
+            colnames(survival_df)[ncol(survival_df)-1] <- dynamic_covariate
+          } else {
+            colnames(survival_df)[ncol(survival_df)] <- dynamic_covariate
+          }
+        }
+        x@survival_datasets[[paste0(landmarks, "-", horizons)]] <- survival_df
+      }
+
+      # Include predicted cluster membership in the training dataset and in the survival formula
+      if (length(dynamic_covariates) > 0 && include_clusters == TRUE) {
+        for (dynamic_covariate in dynamic_covariates) {
+          formula <- as.formula(
+            paste(
+              as.character(formula)[2],
+              as.character(formula)[1],
+              paste0(as.character(formula)[3], " + ", paste0("cluster_", dynamic_covariate))
+            )
+          )
+        }
       }
 
       # Call to method that performs survival analysis
@@ -122,7 +147,8 @@ setMethod(
         landmarks[1],
         horizons[1],
         method,
-        dynamic_covariates
+        dynamic_covariates,
+        include_clusters
       )
       x <- fit_survival(
         x,
@@ -130,7 +156,8 @@ setMethod(
         landmarks[-1],
         horizons[-1],
         method,
-        dynamic_covariates
+        dynamic_covariates,
+        include_clusters
       )
     }
     x

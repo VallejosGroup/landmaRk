@@ -272,12 +272,12 @@ setMethod(
             newdata = newdata,
             ...
           )
-          if (
-            length(x@longitudinal_predictions[[as.character(landmarks)]][[
-              dynamic_covariate
-            ]]) !=
-              nrow(newdata)
-          ) {
+          predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[
+            dynamic_covariate
+          ]]
+          # Number of predictions (length if stored in vector or number of rows if stored in matrix)
+          npred <- ifelse(is(predictions, "vector"), length(predictions), nrow(predictions))
+          if (npred != nrow(newdata)) {
             stop(paste(
               "Number of predictions for dynamic_covariate",
               dynamic_covariate,

@@ -5,7 +5,15 @@
 \title{Fits the specified survival model at the landmark times and up to the horizon
 times specified by the user}
 \usage{
-fit_survival(x, formula, landmarks, horizons, method, dynamic_covariates = c())
+fit_survival(
+  x,
+  formula,
+  landmarks,
+  horizons,
+  method,
+  dynamic_covariates = c(),
+  include_clusters = FALSE
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
@@ -21,6 +29,9 @@ submodel is fitted.}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be used
 in the survival model.}
+
+\item{include_clusters}{Boolean indicating whether to propagate cluster
+membership to survival analysis.}
 }
 \value{
 An object of class \code{\link{LandmarkAnalysis}}.

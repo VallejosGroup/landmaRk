@@ -65,11 +65,15 @@
 #' @param var.time Name of the column in newdata where time is recorded.
 #' @param avg Boolean indicating whether to make predictions based on the
 #'   most likely cluster (FALSE, default) or averaging over clusters (TRUE).
+#' @param include_clusters Boolean indicating whether to include
+#'   predicted class allocation in the predictions.
 #'
-#' @returns A vector of predictions.
+#' @returns If \code{include_clusters == FALSE}, a vector of predictions. If
+#'   \code{include_clusters == TRUE}, a vector whose first column includes
+#'   predictions and second column includes predicted class allocation
 #'
 #' @examples
-.predict_lcmm <- function(x, newdata, subject, var.time, avg = FALSE) {
+.predict_lcmm <- function(x, newdata, subject, var.time, avg = FALSE, include_clusters = FALSE) {
   # pprob contains probabilities for subjects belonging to each certain cluster,
   # However posterior probabilities are unavailable for  individuals not
   # included in the model fitting.
@@ -140,5 +144,12 @@
   }
   # Store predictions in LandmarkAnalysis object
   names(predictions) <- newdata[, subject]
+
+  if (include_clusters == TRUE) {
+    predictions <- cbind(predictions, cluster = pprob[, "class"])
+    predictions <- as.data.frame(predictions)
+    predictions$cluster <- as.factor(predictions$cluster)
+  }
+
   predictions
 }
