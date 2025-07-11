@@ -29,7 +29,15 @@
 #' @examples
 setGeneric(
   "fit_survival",
-  function(x, formula, landmarks, horizons, method, dynamic_covariates = c(), include_clusters = FALSE) {
+  function(
+    x,
+    formula,
+    landmarks,
+    horizons,
+    method,
+    dynamic_covariates = c(),
+    include_clusters = FALSE
+  ) {
     standardGeneric("fit_survival")
   }
 )
@@ -57,7 +65,15 @@ setGeneric(
 setMethod(
   "fit_survival",
   "LandmarkAnalysis",
-  function(x, formula, landmarks, horizons, method, dynamic_covariates = c(), include_clusters = FALSE) {
+  function(
+    x,
+    formula,
+    landmarks,
+    horizons,
+    method,
+    dynamic_covariates = c(),
+    include_clusters = FALSE
+  ) {
     # Check that method is a function with arguments formula, data, ...
     method <- .check_method_survival_predict(method)
 
@@ -96,15 +112,22 @@ setMethod(
         # Add predicted values for dynamic covariates to survival training dataset
         survival_df <- x@survival_datasets[[paste0(landmarks, "-", horizons)]]
         for (dynamic_covariate in dynamic_covariates) {
-          predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[dynamic_covariate]]
+          predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[
+            dynamic_covariate
+          ]]
           survival_df <- bind_cols(
             survival_df,
-            x@longitudinal_predictions[[as.character(landmarks)]][[dynamic_covariate]]
+            x@longitudinal_predictions[[as.character(landmarks)]][[
+              dynamic_covariate
+            ]]
           )
           if (include_clusters == TRUE && inherits(predictions, "data.frame")) {
             # Include predicted cluster membership in the training dataset and in the survival formula
-            colnames(survival_df)[ncol(survival_df)] <- paste0("cluster_", dynamic_covariate)
-            colnames(survival_df)[ncol(survival_df)-1] <- dynamic_covariate
+            colnames(survival_df)[ncol(survival_df)] <- paste0(
+              "cluster_",
+              dynamic_covariate
+            )
+            colnames(survival_df)[ncol(survival_df) - 1] <- dynamic_covariate
           } else {
             colnames(survival_df)[ncol(survival_df)] <- dynamic_covariate
           }
@@ -119,7 +142,11 @@ setMethod(
             paste(
               as.character(formula)[2],
               as.character(formula)[1],
-              paste0(as.character(formula)[3], " + ", paste0("cluster_", dynamic_covariate))
+              paste0(
+                as.character(formula)[3],
+                " + ",
+                paste0("cluster_", dynamic_covariate)
+              )
             )
           )
         }

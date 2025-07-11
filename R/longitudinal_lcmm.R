@@ -73,7 +73,14 @@
 #'   predictions and second column includes predicted class allocation
 #'
 #' @examples
-.predict_lcmm <- function(x, newdata, subject, var.time, avg = FALSE, include_clusters = FALSE) {
+.predict_lcmm <- function(
+  x,
+  newdata,
+  subject,
+  var.time,
+  avg = FALSE,
+  include_clusters = FALSE
+) {
   # pprob contains probabilities for subjects belonging to each certain cluster,
   # However posterior probabilities are unavailable for  individuals not
   # included in the model fitting.
