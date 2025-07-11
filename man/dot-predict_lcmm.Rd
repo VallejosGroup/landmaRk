@@ -14,6 +14,8 @@ IDs}
 
 \item{subject}{Name of the column in newdata where individual IDs are stored.}
 
+\item{var.time}{Name of the column in newdata where time is recorded.}
+
 \item{avg}{Boolean indicating whether to make predictions based on the
 most likely cluster (FALSE, default) or averaging over clusters (TRUE).}
 }

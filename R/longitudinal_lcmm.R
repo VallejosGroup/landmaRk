@@ -62,6 +62,7 @@
 #' @param newdata A data frame containing static covariates and individual
 #'   IDs
 #' @param subject Name of the column in newdata where individual IDs are stored.
+#' @param var.time Name of the column in newdata where time is recorded.
 #' @param avg Boolean indicating whether to make predictions based on the
 #'   most likely cluster (FALSE, default) or averaging over clusters (TRUE).
 #'
