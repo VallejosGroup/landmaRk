@@ -55,5 +55,5 @@ are supported by \code{landmaRk}.
 }
 }
 \seealso{
-\code{\link[lcmm:lcmm]{lcmm::lcmm()}} and \code{\link[lme4:lmer]{lme4::lmer()}} for additional arguments.
+\code{\link[lcmm:hlme]{lcmm::hlme()}} and \code{\link[lme4:lmer]{lme4::lmer()}} for additional arguments.
 }

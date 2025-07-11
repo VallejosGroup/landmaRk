@@ -7,13 +7,13 @@
 #' @param ng Number of clusters in the LCMM model
 #' @param ... Additional arguments passed to the \code{\link[lcmm]{lcmm}}
 #'   function.
-#' @seealso  [lcmm::lcmm()]
+#' @seealso  [lcmm::hlme()]
 #'
-#' @returns An object of class lcmm
+#' @returns An object of class hlme
 #'
 #' @examples
 .fit_lcmm <- function(formula, data, mixture, random, subject, ng, ...) {
-  model_init <- lcmm::lcmm(
+  model_init <- lcmm::hlme(
     formula,
     data = data,
     random = random,
@@ -21,7 +21,7 @@
     ng = 1,
     ...
   )
-  model_fit <- lcmm::lcmm(
+  model_fit <- lcmm::hlme(
     formula,
     data = data,
     mixture = mixture,
@@ -57,7 +57,7 @@
 
 #' Makes predictions from an LCMM model
 #'
-#' @param x An object of class \code{\link[lcmm]{lcmm}}.
+#' @param x An object of class \code{\link[lcmm]{hlme}}.
 #' @param newdata A data frame containing static covariates and individual
 #'   IDs
 #' @param subject Name of the column in newdata where individual IDs are stored.
@@ -111,7 +111,7 @@
     x,
     newdata = newdata,
     var.time = var.time,
-    marg = FALSE
+    marg = TRUE
   )
   if (nrow(predictions$pred) != nrow(newdata)) {
     stop(sprintf(

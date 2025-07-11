@@ -232,8 +232,9 @@ landmarking_object <- landmarking_object |>
   fit_longitudinal(
     landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
     method = "lcmm",
-    formula = value ~ treat + age + gender + learn.dis,
-    mixture = ~ treat + age + gender + learn.dis,
+    formula = value ~ treat + age + gender + learn.dis + time,
+    mixture = ~ treat + age + gender + learn.dis + time,
+    random = ~time,
     subject = "id",
     ng = 2,
     dynamic_covariates = c("dose")

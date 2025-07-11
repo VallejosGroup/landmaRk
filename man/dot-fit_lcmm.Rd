@@ -4,7 +4,7 @@
 \alias{.fit_lcmm}
 \title{Fits an LCMM model}
 \usage{
-.fit_lcmm(formula, data, mixture, subject, ng, ...)
+.fit_lcmm(formula, data, mixture, random, subject, ng, ...)
 }
 \arguments{
 \item{formula}{Two-sided linear formula for the fixed effects in the LCMM.}
@@ -21,11 +21,11 @@
 function.}
 }
 \value{
-An object of class lcmm
+An object of class hlme
 }
 \description{
 Fits an LCMM model
 }
 \seealso{
-\code{\link[lcmm:lcmm]{lcmm::lcmm()}}
+\code{\link[lcmm:hlme]{lcmm::hlme()}}
 }

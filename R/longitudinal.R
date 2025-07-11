@@ -25,7 +25,7 @@
 #'   function (e.g. number of classes/clusters for lcmm).
 #' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
-#' @seealso [lcmm::lcmm()] and [lme4::lmer()] for additional arguments.
+#' @seealso [lcmm::hlme()] and [lme4::lmer()] for additional arguments.
 #' @examples
 setGeneric(
   "fit_longitudinal",
@@ -55,7 +55,7 @@ setGeneric(
 #'
 #' @inheritParams fit_longitudinal
 #' @returns An object of class \code{\link{LandmarkAnalysis}}.
-#' @seealso [lcmm::lcmm()] and [lme4::lmer()] for additional arguments.
+#' @seealso [lcmm::hlme()] and [lme4::lmer()] for additional arguments.
 #' @export
 #'
 #' @examples

@@ -4,10 +4,10 @@
 \alias{.predict_lcmm}
 \title{Makes predictions from an LCMM model}
 \usage{
-.predict_lcmm(x, newdata, subject, avg = FALSE)
+.predict_lcmm(x, newdata, subject, var.time, avg = FALSE)
 }
 \arguments{
-\item{x}{An object of class \code{\link[lcmm]{lcmm}}.}
+\item{x}{An object of class \code{\link[lcmm]{hlme}}.}
 
 \item{newdata}{A data frame containing static covariates and individual
 IDs}

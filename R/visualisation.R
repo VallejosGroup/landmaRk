@@ -141,7 +141,7 @@ setMethod(
             ggplot2::aes(get(x@times), !!sym("prediction")),
             data = newdata
           )
-      } else if (inherits(longitudinal_fit, "lcmm")) {
+      } else if (inherits(longitudinal_fit, "hlme")) {
         # If model was fitted with lcmm, use predictY to make predictions
         predictions <- lcmm::predictY(longitudinal_fit, newdata = newdata)
         if (avg == TRUE) {
