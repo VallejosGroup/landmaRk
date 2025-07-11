@@ -43,8 +43,9 @@ test_that("LCMM works as expected", {
     fit_longitudinal(
       landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
       method = "lcmm",
-      formula = value ~ treat + age + gender + learn.dis,
-      mixture = ~ treat + age + gender + learn.dis,
+      formula = value ~ treat + age + gender + learn.dis + time,
+      mixture = ~ treat + age + gender + learn.dis + time,
+      random = ~time,
       subject = "id",
       ng = 2,
       dynamic_covariates = "dose"
@@ -153,7 +154,8 @@ test_that("longitudinal_fit raises warning for too few observations", {
         landmarks = seq(from = 365.25, to = 1 * 365.25, by = 365.25),
         method = "lcmm",
         formula = value ~ treat + age + gender + learn.dis + time,
-        mixture = ~ treat + age + gender + learn.dis,
+        mixture = ~ treat + age + gender + learn.dis + time,
+        random = ~time,
         subject = "id",
         var.time = "time",
         ng = 2,

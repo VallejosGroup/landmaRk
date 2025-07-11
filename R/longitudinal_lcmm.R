@@ -3,21 +3,30 @@
 #' @param formula Two-sided linear formula for the fixed effects in the LCMM.
 #' @param data Data frame with data
 #' @param mixture One-sided formula specifying the class-specific fixed effects.
+#' @param random One-sided formula specifying the random effects.
 #' @param subject Name of the column indicating individual ids in data
 #' @param ng Number of clusters in the LCMM model
-#' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
+#' @param ... Additional arguments passed to the \code{\link[lcmm]{lcmm}}
 #'   function.
 #' @seealso  [lcmm::hlme()]
 #'
 #' @returns An object of class hlme
 #'
 #' @examples
-.fit_lcmm <- function(formula, data, mixture, subject, ng, ...) {
-  model_init <- lcmm::hlme(formula, data = data, subject = subject, ng = 1)
+.fit_lcmm <- function(formula, data, mixture, random, subject, ng, ...) {
+  model_init <- lcmm::hlme(
+    formula,
+    data = data,
+    random = random,
+    subject = subject,
+    ng = 1,
+    ...
+  )
   model_fit <- lcmm::hlme(
     formula,
     data = data,
     mixture = mixture,
+    random = random,
     subject = subject,
     ng = ng,
     B = model_init,
@@ -28,6 +37,7 @@
 
   model_fit$call$fixed <- formula
   model_fit$call$mixture <- mixture
+  model_fit$call$random <- random
 
   model_fit
 }
@@ -52,15 +62,27 @@
 #' @param newdata A data frame containing static covariates and individual
 #'   IDs
 #' @param subject Name of the column in newdata where individual IDs are stored.
+#' @param var.time Name of the column in newdata where time is recorded.
 #' @param avg Boolean indicating whether to make predictions based on the
 #'   most likely cluster (FALSE, default) or averaging over clusters (TRUE).
+#' @param include_clusters Boolean indicating whether to include
+#'   predicted class allocation in the predictions.
 #'
-#' @returns A vector of predictions.
+#' @returns If \code{include_clusters == FALSE}, a vector of predictions. If
+#'   \code{include_clusters == TRUE}, a vector whose first column includes
+#'   predictions and second column includes predicted class allocation
 #'
 #' @examples
-.predict_lcmm <- function(x, newdata, subject, avg = FALSE) {
+.predict_lcmm <- function(
+  x,
+  newdata,
+  subject,
+  var.time,
+  avg = FALSE,
+  include_clusters = FALSE
+) {
   # pprob contains probabilities for subjects belonging to each certain cluster,
-  # However posterior probabilities are unavailable for  individuals noted
+  # However posterior probabilities are unavailable for  individuals not
   # included in the model fitting.
   # We augment pprob using the sample average for individuals not used in
   # model fitting.
@@ -98,7 +120,12 @@
     pprob <- rbind(pprob, pprob.extra) |> arrange(get(subject))
   }
 
-  predictions <- lcmm::predictY(x, newdata = newdata)
+  predictions <- lcmm::predictY(
+    x,
+    newdata = newdata,
+    var.time = var.time,
+    marg = TRUE
+  )
   if (nrow(predictions$pred) != nrow(newdata)) {
     stop(sprintf(
       paste(
@@ -124,5 +151,12 @@
   }
   # Store predictions in LandmarkAnalysis object
   names(predictions) <- newdata[, subject]
+
+  if (include_clusters == TRUE) {
+    predictions <- cbind(predictions, cluster = pprob[, "class"])
+    predictions <- as.data.frame(predictions)
+    predictions$cluster <- as.factor(predictions$cluster)
+  }
+
   predictions
 }

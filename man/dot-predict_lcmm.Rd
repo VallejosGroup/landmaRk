@@ -4,7 +4,14 @@
 \alias{.predict_lcmm}
 \title{Makes predictions from an LCMM model}
 \usage{
-.predict_lcmm(x, newdata, subject, avg = FALSE)
+.predict_lcmm(
+  x,
+  newdata,
+  subject,
+  var.time,
+  avg = FALSE,
+  include_clusters = FALSE
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link[lcmm]{hlme}}.}
@@ -14,11 +21,18 @@ IDs}
 
 \item{subject}{Name of the column in newdata where individual IDs are stored.}
 
+\item{var.time}{Name of the column in newdata where time is recorded.}
+
 \item{avg}{Boolean indicating whether to make predictions based on the
 most likely cluster (FALSE, default) or averaging over clusters (TRUE).}
+
+\item{include_clusters}{Boolean indicating whether to include
+predicted class allocation in the predictions.}
 }
 \value{
-A vector of predictions.
+If \code{include_clusters == FALSE}, a vector of predictions. If
+\code{include_clusters == TRUE}, a vector whose first column includes
+predictions and second column includes predicted class allocation
 }
 \description{
 Makes predictions from an LCMM model
