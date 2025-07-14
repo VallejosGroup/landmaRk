@@ -201,7 +201,9 @@ test_that("Prune individuals from risk set works", {
     times = "time",
     measurements = "value"
   ) |>
-    compute_risk_sets(landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25))
+    compute_risk_sets(
+      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
+    )
 
   expect_message(
     x |> prune_risk_sets(365.25, c(600, 601)),
@@ -213,8 +215,10 @@ test_that("Prune individuals from risk set works", {
     "A total of  3 in @individuals are not in the risk set for landmark time 365.25"
   )
 
-  expect_equal(suppressWarnings(prune_risk_sets(x, 365.25, c(603, 604, 605))@risk_sets[["365.25"]]),
-               setdiff(x@risk_sets[["365.25"]], c(603, 604, 605))
-               )
-
+  expect_equal(
+    suppressWarnings(prune_risk_sets(x, 365.25, c(603, 604, 605))@risk_sets[[
+      "365.25"
+    ]]),
+    setdiff(x@risk_sets[["365.25"]], c(603, 604, 605))
+  )
 })
