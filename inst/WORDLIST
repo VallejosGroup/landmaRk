@@ -6,6 +6,7 @@ EMEH
 Kharusi
 Kolamunnage
 LCMM
+LME
 LOCF
 LTG
 LandmarkAnalysis
@@ -26,8 +27,8 @@ codecov
 coxph
 df
 doi
+ge
 hlme
-inheritParams
 joineR
 kwy
 lcmm

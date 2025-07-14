@@ -195,7 +195,7 @@ this case, `"coxph"`.
 - `dynamic_covariates`: Vector of names of the dynamic covariates to be used. 
 In this baseline analysis, the vector is empty. 
 
-Then, we can make predictions using the funciton `predict_survival`. Arguments
+Then, we can make predictions using the function `predict_survival`. Arguments
 `method`, `landmarks` and `horizons`are as above. 
 
 ```{r}
