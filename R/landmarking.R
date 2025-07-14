@@ -188,7 +188,6 @@ LandmarkAnalysis <- function(
 #' Displays an object of class "\code{\link{LandmarkAnalysis}}"
 #'
 #' @param object An object of class \code{\link{LandmarkAnalysis}}.
-#' @param ... Additional arguments
 #'
 #' @export
 #'
