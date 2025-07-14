@@ -168,3 +168,53 @@ test_that("Character covariates are converted to factor", {
 
   expect_equal(class(x@data_dynamic[["dose"]]$value), "factor")
 })
+
+test_that("Prune individuals from risk set works", {
+  # Data manipulation
+  data(epileptic)
+
+  epileptic_dfs <- split_wide_df(
+    epileptic,
+    ids = "id",
+    times = "time",
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
+    dynamic = c("dose"),
+    measurement_name = "value"
+  )
+
+  static <- epileptic_dfs$df_static
+  dynamic <- epileptic_dfs$df_dynamic
+
+  x <- LandmarkAnalysis(
+    data_static = static,
+    data_dynamic = dynamic,
+    event_indicator = "with.status",
+    ids = "id",
+    event_time = "with.time",
+    times = "time",
+    measurements = "value"
+  ) |>
+    compute_risk_sets(landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25))
+
+  expect_message(
+    x |> prune_risk_sets(365.25, c(600, 601)),
+    "Removing 2 individuals from risk set for landmark time 365.25"
+  )
+
+  expect_warning(
+    x |> prune_risk_sets(365.25, c(603, 604, 605)),
+    "A total of  3 in @individuals are not in the risk set for landmark time 365.25"
+  )
+
+  expect_equal(suppressWarnings(prune_risk_sets(x, 365.25, c(603, 604, 605))@risk_sets[["365.25"]]),
+               setdiff(x@risk_sets[["365.25"]], c(603, 604, 605))
+               )
+
+})

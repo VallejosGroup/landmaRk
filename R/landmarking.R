@@ -407,6 +407,68 @@ setMethod("compute_risk_sets", "LandmarkAnalysis", function(x, landmarks, ...) {
   x
 })
 
+#' Prune a set of individuals from a risk set
+#'
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
+#' @param landmark a landmark time
+#' @param individuals Vector of individuals to be pruned from
+#'
+#' @returns An object of class \code{\link{LandmarkAnalysis}} after having
+#'   pruned the individuals indicated in \code{individuals} from the risk set
+#'   at landmark time \code{landmark}.
+#' @export
+#'
+#' @examples
+setGeneric(
+  "prune_risk_sets",
+  function(x, landmark, individuals) standardGeneric("prune_risk_sets")
+)
+
+
+#' Prune a set of individuals from a risk set
+#'
+#' @inheritParams prune_risk_sets
+#'
+#' @returns An object of class \code{\link{LandmarkAnalysis}} after having
+#'   pruned the individuals indicated in \code{individuals} from the risk set
+#'   at landmark time \code{landmark}.
+#' @export
+#'
+#' @examples
+setMethod("prune_risk_sets", "LandmarkAnalysis", function(x, landmark, individuals) {
+  error_str <- NULL
+
+  if (!is.numeric(landmark) || length(landmark) != 1) {
+    error_str <- c(error_str, "@landmark must be a numeric, indicating a landmark time")
+  } else if (!(as.character(landmark) %in% names(x@risk_sets))) {
+    error_str <- c(error_str, paste("Risk set not available for landmark time", landmark))
+  }
+
+  if (length(error_str) > 0) {
+    .eval_error_str(error_str)
+  }
+
+  landmark <- as.character(landmark)
+
+
+  # Calculate intersection between risk set and individuals to prune, and
+  # work out the new risk set without those individuals.
+  pruned_individuals <- intersect(x@risk_sets[[landmark]], individuals)
+
+  if (length(pruned_individuals) > 0) {
+    message(paste("Removing", length(pruned_individuals), "individuals from risk set for landmark time", landmark))
+    x@risk_sets[[landmark]] <- setdiff(x@risk_sets[[landmark]], pruned_individuals)
+  }
+
+  # If any of the individuals to prune is not in risk, raise a warning
+  if (length(pruned_individuals) < length(individuals)) {
+    warning(paste("A total of ", length(individuals)-length(pruned_individuals), "in @individuals are not in the risk set for landmark time", landmark))
+  }
+
+  x
+})
+
+
 # Accessor for survival fits
 setGeneric(
   "getSurvivalFits",
