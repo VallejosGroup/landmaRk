@@ -24,25 +24,36 @@ time-to-event data with time-varying covariates. It allows users to perform
 survival analysis using longitudinal data, fitting models to the time-varying
 covariates, and then using these predictions in survival models.
 
-Given a time-to-event outcome $T_i$, a landmark time $s$ and a time horizon $s + w$, the goal of a landmarking analysis is to estimate 
+Given a time-to-event outcome $T_i$, a landmark time $s$ and a time horizon 
+$s + w$, the goal of a landmarking analysis is to estimate 
 $$
 \pi_i(s+w \vert s) = P(T_i > s+w \vert T_i \ge s, X_i(s)), 
 $$
-where $X_i(s)$ denotes a vector of covariates which may include time-varying covariates.
+where $X_i(s)$ denotes a vector of covariates which may include time-varying 
+covariates.
 
 A landmarking analysis of time-to-event data has two components:
 
-- First, model the longitudinal trajectories of dynamic covariates, $X_i(t)$. Then use, the fitted model to make a prediction for $X_i(s)$, $\hat{X}_i(s)$, at the landmark time, $s$.
+- First, model the longitudinal trajectories of dynamic covariates, $X_i(t)$. 
+Then use, the fitted model to make a prediction for $X_i(s)$, $\hat{X}_i(s)$, 
+at the landmark time, $s$.
 
-- Second, fit a survival model of the time-to-event outcome, conditioning on the predicted value for $X_i(s)$, and potentially on additional static and dynamic covariates. 
+- Second, fit a survival model of the time-to-event outcome, conditioning on the
+predicted value for $X_i(s)$, and potentially on additional static and dynamic 
+covariates. 
 
-The `landmaRk` package allows users to use the following method for the first component:
-- Last Observation Carried Forward (LOCF), using the last measurement for $X_i$ recorded prior to $s$ as our prediction, $\hat{X}_i(s)$.
+The `landmaRk` package allows users to use the following method for the first 
+component:
+
+- Last Observation Carried Forward (LOCF), using the last measurement for $X_i$
+recorded prior to $s$ as our prediction, $\hat{X}_i(s)$.
+
 - Linear mixed-effect (LME) model, as implemented in the `lme4` package.
+
 - Latent class mixed model (LCMM), as implemented in the `lcmm` package.
 
-For the second component, at present the `landmaRk` package supports Cox proportional hazard models
-as implemented in the `survival`package. 
+For the second component, at present the `landmaRk` package supports Cox
+proportional hazard models as implemented in the `survival`package. 
 
 Additionally, the `landmaRk` package provides a modular system allowing making 
 it possible to incorporate additional models both for the longitudinal and the 
@@ -65,7 +76,9 @@ library(tidyverse)
 ```
 
 # Example: epileptic data
-In this vignette, we use the dataset epileptic to perform landmarking analysis of time-to-event data with time-varying covariates. Here is the structure of the dataset.
+In this vignette, we use the dataset epileptic to perform landmarking analysis 
+of time-to-event data with time-varying covariates. Here is the structure of 
+the dataset.
 
 ```{r}
 data("epileptic")
@@ -122,7 +135,8 @@ head(dynamic[["dose"]])
 ```
 
 
-We can now create an object of class `LandmarkAnalysis`, using the helper function of the same name.
+We can now create an object of class `LandmarkAnalysis`, using the helper 
+function of the same name.
 
 ```{r}
 landmarking_object <- LandmarkAnalysis(
@@ -140,17 +154,23 @@ Arguments to the helper function are the following:
 
 -   data_static and data_dynamic: the two datasets that were just created.
 
--   event_indicator: name of the column that indicates the censoring indicator in the static dataset.
+-   event_indicator: name of the column that indicates the censoring indicator 
+in the static dataset.
 
--   dynamic_covariates: array column names in the dynamic dataset indicating time-varying covariates.
+-   dynamic_covariates: array column names in the dynamic dataset indicating 
+time-varying covariates.
 
 -   ids: name of the column that identifies patients in both datasets.
 
--   event_time: name of the column that identifies time of event/censoring in the static dataset.
+-   event_time: name of the column that identifies time of event/censoring 
+in the static dataset.
 
 # Baseline survival analysis (without time-varying covariates)
 
-First, we perform a survival without time-varying covariates. We can use this as a baseline to evaluate the performance of a subsequent landmark analysis with such covariates. First step is to establish the landmark times, and to work out the risk sets at each of those landmark times.
+First, we perform a survival without time-varying covariates. We can use this 
+as a baseline to evaluate the performance of a subsequent landmark analysis 
+with such covariates. First step is to establish the landmark times, and to 
+work out the risk sets at each of those landmark times.
 
 ```{r}
 landmarking_object <- landmarking_object |>
@@ -159,7 +179,8 @@ landmarking_object <- landmarking_object |>
 landmarking_object
 ```
 
-Now we use the function `fit_survival` to fit the survival model. We specify the following arguments:
+Now we use the function `fit_survival` to fit the survival model. We specify 
+the following arguments:
 
 - `landmarks`: Vector of landmark times at which the model will be fitted.
 
@@ -212,7 +233,9 @@ performance_metrics(
 
 # Landmarking analysis with lme4 + coxph
 
-Now we use the package lme4 to fit a linear mixed model of the time-varying covariate, dose. This first step is followed by fitting a Cox PH sub-model using the longitudinal predictions as covariates.
+Now we use the package lme4 to fit a linear mixed model of the time-varying 
+covariate, dose. This first step is followed by fitting a Cox PH sub-model 
+using the longitudinal predictions as covariates.
 
 ```{r}
 landmarking_object <- LandmarkAnalysis(
