@@ -344,6 +344,9 @@ setMethod("getRiskSets", "LandmarkAnalysis", function(object) object@risk_sets)
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks Numeric vector of landmark times
+#' @param .warn_when_less_than Integer indicating that a warning will be raised
+#' when the number of observations prior to a landmark time is less than that
+#' integer for certain individuals.
 #' @param ... Additional arguments (not used)
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}} including desired
@@ -364,7 +367,7 @@ setMethod("getRiskSets", "LandmarkAnalysis", function(object) object@risk_sets)
 #' @examples
 setGeneric(
   "compute_risk_sets",
-  function(x, landmarks, ...) standardGeneric("compute_risk_sets")
+  function(x, landmarks, .warn_when_less_than = 0, ...) standardGeneric("compute_risk_sets")
 )
 
 
@@ -387,7 +390,7 @@ setGeneric(
 #' subjects at risk at the respective landmark time.
 #'
 #' @examples
-setMethod("compute_risk_sets", "LandmarkAnalysis", function(x, landmarks, ...) {
+setMethod("compute_risk_sets", "LandmarkAnalysis", function(x, landmarks, .warn_when_less_than = 0, ...) {
   if (length(landmarks) == 1) {
     # If the vector of landmark times is of length 1
     if (landmarks %in% x@landmarks) {
@@ -399,10 +402,38 @@ setMethod("compute_risk_sets", "LandmarkAnalysis", function(x, landmarks, ...) {
     # Compute risk set for given landmark time
     x@risk_sets[[as.character(landmarks)]] <-
       x@data_static[which(x@data_static[, x@event_time] >= landmarks), x@ids]
+
+    # Now raise a warning if there are individuals with less than
+    # @.warn_when_less_than observations prior to landmark time
+    if (.warn_when_less_than > 1) {
+      for (dynamic_covariate in names(x@data_dynamic)) {
+        ids_few_observations <- x@data_dynamic[[dynamic_covariate]] |>
+          # Filter observations prior to landmark time
+          filter(get(x@times) <= landmarks) |>
+          # Group by individual id
+          group_by(get(x@ids)) |>
+          # Work out number of observations per individual
+          summarise(n = n()) |>
+          # Select individuals with less than @.warn_when_less_than observations
+          filter(n < .warn_when_less_than) |>
+          # Extract vector with individual ids
+          pull(`get(x@ids)`)
+
+        if (length(ids_few_observations) > 0) {
+          warning(paste0("The following individuals have less than ", .warn_when_less_than,
+                  " observations recorded prior to landmark time ", landmarks,
+                  " for dynamic covariate ", dynamic_covariate, ": ",
+                  paste(ids_few_observations, collapse = ", ")))
+        }
+      }
+    }
+    x@data_dynamic[["dose"]] |> filter(get(x@times) <= landmarks) |> group_by(get(x@ids)) |> summarise(n = n()) |> filter(n < .warn_when_less_than) |> pull(`get(x@ids)`)
+
+
   } else {
     # Recursion to compute risk sets one-by-one
-    x <- compute_risk_sets(x, landmarks[1])
-    x <- compute_risk_sets(x, landmarks[-1])
+    x <- compute_risk_sets(x, landmarks[1], .warn_when_less_than)
+    x <- compute_risk_sets(x, landmarks[-1], .warn_when_less_than)
   }
   x
 })

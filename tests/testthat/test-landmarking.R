@@ -222,3 +222,47 @@ test_that("Prune individuals from risk set works", {
     setdiff(x@risk_sets[["365.25"]], c(603, 604, 605))
   )
 })
+
+test_that("Warning is raised with few observations per individual", {
+  # Data manipulation
+  data(epileptic)
+
+  epileptic <- epileptic |> filter(id < 10)
+  epileptic_dfs <- split_wide_df(
+    epileptic,
+    ids = "id",
+    times = "time",
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
+    dynamic = c("dose"),
+    measurement_name = "value"
+  )
+
+  static <- epileptic_dfs$df_static
+  dynamic <- epileptic_dfs$df_dynamic
+
+  x <- LandmarkAnalysis(
+    data_static = static,
+    data_dynamic = dynamic,
+    event_indicator = "with.status",
+    ids = "id",
+    event_time = "with.time",
+    times = "time",
+    measurements = "value"
+  )
+
+  expect_warning(
+    x |> compute_risk_sets(
+      landmarks = 365.25,
+      .warn_when_less_than = 2
+    ),
+    "The following individuals have less than 2 observations recorded prior to landmark time 365.25 for dynamic covariate dose: 7"
+  )
+
+})

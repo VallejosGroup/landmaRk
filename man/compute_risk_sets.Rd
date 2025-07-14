@@ -4,12 +4,16 @@
 \alias{compute_risk_sets}
 \title{Compute the list of individuals at risk at landmark times}
 \usage{
-compute_risk_sets(x, landmarks, ...)
+compute_risk_sets(x, landmarks, .warn_when_less_than = 0, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{landmarks}{Numeric vector of landmark times}
+
+\item{.warn_when_less_than}{Integer indicating that a warning will be raised
+when the number of observations prior to a landmark time is less than that
+integer for certain individuals.}
 
 \item{...}{Additional arguments (not used)}
 }
