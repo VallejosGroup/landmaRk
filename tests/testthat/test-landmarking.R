@@ -258,11 +258,11 @@ test_that("Warning is raised with few observations per individual", {
   )
 
   expect_warning(
-    x |> compute_risk_sets(
-      landmarks = 365.25,
-      .warn_when_less_than = 2
-    ),
+    x |>
+      compute_risk_sets(
+        landmarks = 365.25,
+        .warn_when_less_than = 2
+      ),
     "The following individuals have less than 2 observations recorded prior to landmark time 365.25 for dynamic covariate dose: 7"
   )
-
 })
