@@ -2,7 +2,7 @@
 ## usethis namespace: start
 #' @import dplyr
 #' @importFrom foreach `%dopar%`
-#' @importFrom methods new is
+#' @importFrom methods new is show
 #' @importFrom stats as.formula predict model.matrix
 #' @importFrom utils capture.output
 #' @importFrom utils head

@@ -188,20 +188,6 @@ LandmarkAnalysis <- function(
 #' Displays an object of class "\code{\link{LandmarkAnalysis}}"
 #'
 #' @param object An object of class \code{\link{LandmarkAnalysis}}.
-#' @param ... Additional arguments
-#'
-#' @export
-#'
-#' @examples
-setGeneric(
-  "show",
-  function(object, ...) standardGeneric("show"),
-  signature = "object"
-)
-
-#' Displays an object of class "\code{\link{LandmarkAnalysis}}"
-#'
-#' @inheritParams show
 #'
 #' @export
 #'
@@ -233,26 +219,9 @@ setMethod(
   }
 )
 
-
-#' Summarises landmarking model fits
+#' Summarise a LandmarkAnalysis object
 #'
-#' @param x An object of class \code{\link{LandmarkAnalysis}}.
-#' @param ... Additional arguments
-#'
-#' @returns A summary of the desired submodel
-#' @export
-#'
-#' @examples
-setGeneric(
-  "summary",
-  function(x, ...) standardGeneric("summary"),
-  signature = "x"
-)
-
-
-#' Title
-#'
-#' @inheritParams summary
+#' @param object An object of class \code{\link{LandmarkAnalysis}}.
 #' @param type If \code{longitudinal}, it summarises the longitudinal submodel.
 #'  If \code{survival}, it summarises the survival submodel.
 #' @param landmark A numeric indicating the landmark time.
@@ -265,12 +234,14 @@ setGeneric(
 #'
 #' @examples
 setMethod(
-  f = "summary",
-  signature = "LandmarkAnalysis",
-  definition = function(
-    x,
-    type = NULL,
-    landmark = NULL,
+  "summary",
+  signature(
+    object = "LandmarkAnalysis"
+  ),
+  function(
+    object,
+    type = c("longitudinal", "survival"),
+    landmark,
     horizon = NULL,
     dynamic_covariate = NULL
   ) {
@@ -296,14 +267,14 @@ setMethod(
           "@dynamic_covariate must be of type character"
         )
       }
-      if (!(as.character(landmark) %in% names(x@longitudinal_fits))) {
+      if (!(as.character(landmark) %in% names(object@longitudinal_fits))) {
         stop(paste(
           "No longitudinal submodel has been fitted to landmark time",
           landmark
         ))
       } else if (
         !(dynamic_covariate %in%
-          names(x@longitudinal_fits[[as.character(landmark)]]))
+          names(object@longitudinal_fits[[as.character(landmark)]]))
       ) {
         stop(paste(
           "No longitudinal submodel has been fitted for dynamic covariate",
@@ -312,11 +283,11 @@ setMethod(
           landmark
         ))
       }
-      model_fit <- x@longitudinal_fits[[as.character(landmark)]][[
+      model_fit <- object@longitudinal_fits[[as.character(landmark)]][[
         dynamic_covariate
       ]]
       cat(
-        capture.output(x@longitudinal_fits[[as.character(
+        capture.output(object@longitudinal_fits[[as.character(
           landmark
         )]][[dynamic_covariate]]),
         sep = "\n"
@@ -328,7 +299,7 @@ setMethod(
       }
 
       model_name <- paste0(landmark, "-", horizon)
-      if (!(as.character(model_name) %in% names(x@survival_fits))) {
+      if (!(as.character(model_name) %in% names(object@survival_fits))) {
         error_str <- c(
           error_str,
           (paste0(
@@ -341,7 +312,7 @@ setMethod(
 
       .eval_error_str(error_str)
 
-      cat(capture.output(x@survival_fits[[model_name]]), sep = "\n")
+      cat(capture.output(object@survival_fits[[model_name]]), sep = "\n")
     }
   }
 )
@@ -373,6 +344,9 @@ setMethod("getRiskSets", "LandmarkAnalysis", function(object) object@risk_sets)
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks Numeric vector of landmark times
+#' @param .warn_when_less_than Integer indicating that a warning will be raised
+#' when the number of observations prior to a landmark time is less than that
+#' integer for certain individuals.
 #' @param ... Additional arguments (not used)
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}} including desired
@@ -393,7 +367,9 @@ setMethod("getRiskSets", "LandmarkAnalysis", function(object) object@risk_sets)
 #' @examples
 setGeneric(
   "compute_risk_sets",
-  function(x, landmarks, ...) standardGeneric("compute_risk_sets")
+  function(x, landmarks, .warn_when_less_than = 0, ...) {
+    standardGeneric("compute_risk_sets")
+  }
 )
 
 
@@ -416,25 +392,145 @@ setGeneric(
 #' subjects at risk at the respective landmark time.
 #'
 #' @examples
-setMethod("compute_risk_sets", "LandmarkAnalysis", function(x, landmarks, ...) {
-  if (length(landmarks) == 1) {
-    # If the vector of landmark times is of length 1
-    if (landmarks %in% x@landmarks) {
-      # Risk set for given landmark time is already in memory
-      warning("Risk set for landmark time ", landmarks, " already computed")
+setMethod(
+  "compute_risk_sets",
+  "LandmarkAnalysis",
+  function(x, landmarks, .warn_when_less_than = 0, ...) {
+    `get(x@ids)` <- NULL # Global assignment to avoid R CMD check warning
+    if (length(landmarks) == 1) {
+      # If the vector of landmark times is of length 1
+      if (landmarks %in% x@landmarks) {
+        # Risk set for given landmark time is already in memory
+        warning("Risk set for landmark time ", landmarks, " already computed")
+      }
+      # Add landmark time to the LandmarkAnalysis object
+      x@landmarks <- c(x@landmarks, landmarks)
+      # Compute risk set for given landmark time
+      x@risk_sets[[as.character(landmarks)]] <-
+        x@data_static[which(x@data_static[, x@event_time] >= landmarks), x@ids]
+
+      # Now raise a warning if there are individuals with less than
+      # @.warn_when_less_than observations prior to landmark time
+      if (.warn_when_less_than > 1) {
+        for (dynamic_covariate in names(x@data_dynamic)) {
+          ids_few_observations <- x@data_dynamic[[dynamic_covariate]] |>
+            # Filter observations prior to landmark time
+            filter(.data[[x@times]] <= landmarks) |>
+            # Group by individual id
+            group_by(get(x@ids)) |>
+            # Work out number of observations per individual
+            summarise(n = n()) |>
+            # Select individuals with less than @.warn_when_less_than observations
+            filter(n < .warn_when_less_than) |>
+            # Extract vector with individual ids
+            pull(`get(x@ids)`)
+
+          if (length(ids_few_observations) > 0) {
+            warning(paste0(
+              "The following individuals have less than ",
+              .warn_when_less_than,
+              " observations recorded prior to landmark time ",
+              landmarks,
+              " for dynamic covariate ",
+              dynamic_covariate,
+              ": ",
+              paste(ids_few_observations, collapse = ", ")
+            ))
+          }
+        }
+      }
+    } else {
+      # Recursion to compute risk sets one-by-one
+      x <- compute_risk_sets(x, landmarks[1], .warn_when_less_than)
+      x <- compute_risk_sets(x, landmarks[-1], .warn_when_less_than)
     }
-    # Add landmark time to the LandmarkAnalysis object
-    x@landmarks <- c(x@landmarks, landmarks)
-    # Compute risk set for given landmark time
-    x@risk_sets[[as.character(landmarks)]] <-
-      x@data_static[which(x@data_static[, x@event_time] >= landmarks), x@ids]
-  } else {
-    # Recursion to compute risk sets one-by-one
-    x <- compute_risk_sets(x, landmarks[1])
-    x <- compute_risk_sets(x, landmarks[-1])
+    x
   }
-  x
-})
+)
+
+#' Prune a set of individuals from a risk set
+#'
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
+#' @param landmark a landmark time
+#' @param individuals Vector of individuals to be pruned from
+#'
+#' @returns An object of class \code{\link{LandmarkAnalysis}} after having
+#'   pruned the individuals indicated in \code{individuals} from the risk set
+#'   at landmark time \code{landmark}.
+#' @export
+#'
+#' @examples
+setGeneric(
+  "prune_risk_sets",
+  function(x, landmark, individuals) standardGeneric("prune_risk_sets")
+)
+
+
+#' Prune a set of individuals from a risk set
+#'
+#' @inheritParams prune_risk_sets
+#'
+#' @returns An object of class \code{\link{LandmarkAnalysis}} after having
+#'   pruned the individuals indicated in \code{individuals} from the risk set
+#'   at landmark time \code{landmark}.
+#' @export
+#'
+#' @examples
+setMethod(
+  "prune_risk_sets",
+  "LandmarkAnalysis",
+  function(x, landmark, individuals) {
+    error_str <- NULL
+
+    if (!is.numeric(landmark) || length(landmark) != 1) {
+      error_str <- c(
+        error_str,
+        "@landmark must be a numeric, indicating a landmark time"
+      )
+    } else if (!(as.character(landmark) %in% names(x@risk_sets))) {
+      error_str <- c(
+        error_str,
+        paste("Risk set not available for landmark time", landmark)
+      )
+    }
+
+    if (length(error_str) > 0) {
+      .eval_error_str(error_str)
+    }
+
+    landmark <- as.character(landmark)
+
+    # Calculate intersection between risk set and individuals to prune, and
+    # work out the new risk set without those individuals.
+    pruned_individuals <- intersect(x@risk_sets[[landmark]], individuals)
+
+    if (length(pruned_individuals) > 0) {
+      message(paste(
+        "Removing",
+        length(pruned_individuals),
+        "individuals from risk set for landmark time",
+        landmark
+      ))
+      x@risk_sets[[landmark]] <- setdiff(
+        x@risk_sets[[landmark]],
+        pruned_individuals
+      )
+    }
+
+    # If any of the individuals to prune is not in risk, raise a warning
+    if (length(pruned_individuals) < length(individuals)) {
+      warning(paste(
+        "A total of ",
+        length(individuals) - length(pruned_individuals),
+        "in @individuals are not in the risk set for landmark time",
+        landmark
+      ))
+    }
+
+    x
+  }
+)
+
 
 # Accessor for survival fits
 setGeneric(

@@ -265,19 +265,16 @@ setMethod(
             )
           }
 
-          x@longitudinal_predictions[[as.character(landmarks)]][[
+          predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
-          ]] <- method(
-            x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-            newdata = newdata,
-            ...
+          ]]
+          # Number of predictions (length if stored in vector or number of rows if stored in matrix)
+          npred <- ifelse(
+            is.null(dim(predictions)),
+            length(predictions),
+            nrow(predictions)
           )
-          if (
-            length(x@longitudinal_predictions[[as.character(landmarks)]][[
-              dynamic_covariate
-            ]]) !=
-              nrow(newdata)
-          ) {
+          if (npred != nrow(newdata)) {
             stop(paste(
               "Number of predictions for dynamic_covariate",
               dynamic_covariate,

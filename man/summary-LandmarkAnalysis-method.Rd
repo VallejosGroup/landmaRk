@@ -2,18 +2,18 @@
 % Please edit documentation in R/landmarking.R
 \name{summary,LandmarkAnalysis-method}
 \alias{summary,LandmarkAnalysis-method}
-\title{Title}
+\title{Summarise a LandmarkAnalysis object}
 \usage{
 \S4method{summary}{LandmarkAnalysis}(
-  x,
-  type = NULL,
-  landmark = NULL,
+  object,
+  type = c("longitudinal", "survival"),
+  landmark,
   horizon = NULL,
   dynamic_covariate = NULL
 )
 }
 \arguments{
-\item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
+\item{object}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{type}{If \code{longitudinal}, it summarises the longitudinal submodel.
 If \code{survival}, it summarises the survival submodel.}
@@ -29,5 +29,5 @@ the dynamic covariate}
 A summary of the desired submodel
 }
 \description{
-Title
+Summarise a LandmarkAnalysis object
 }
