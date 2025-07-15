@@ -94,11 +94,12 @@
   # If there are individuals in newdata that had not been used in model fitting,
   # we augment pprob imputing the sample average in those individuals
   if (nrow(newdata) != nrow(pprob)) {
-    warning(paste0(
+    warning(
       "Individuals ",
       paste(setdiff(newdata[, subject], pprob[, subject]), collapse = ", "),
-      "have not been used in LCMM model fitting. Imputing values for those individuals"
-    ))
+      ", have not been used in LCMM model fitting. ","
+      Imputing values for those individuals"
+    )
     # Assign individuals not included in model fitting to the biggest cluster
     pprob.extra <- data.frame(
       id = setdiff(newdata[, subject], pprob[, subject]),
