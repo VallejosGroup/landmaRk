@@ -117,9 +117,7 @@ setMethod(
           ]]
           survival_df <- bind_cols(
             survival_df,
-            x@longitudinal_predictions[[as.character(landmarks)]][[
-              dynamic_covariate
-            ]]
+            predictions
           )
           if (include_clusters && inherits(predictions, "data.frame")) {
             # Include predicted cluster membership in the training dataset and in the survival formula

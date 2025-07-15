@@ -414,7 +414,7 @@ setMethod(
         for (dynamic_covariate in names(x@data_dynamic)) {
           ids_few_observations <- x@data_dynamic[[dynamic_covariate]] |>
             # Filter observations prior to landmark time
-            filter(get(x@times) <= landmarks) |>
+            filter(.data[[x@times]] <= landmarks) |>
             # Group by individual id
             group_by(get(x@ids)) |>
             # Work out number of observations per individual
