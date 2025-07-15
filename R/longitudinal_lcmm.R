@@ -89,13 +89,11 @@
   pprob <- x$pprob
   # Find the largest cluster
   mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
-  # Allocation of clusters for prediction
-  if (nrow(newdata) == nrow(pprob)) {
-    cluster_allocation <- data.frame(
-      id = pprob[, subject],
-      cluster = pprob$class
-    )
-  } else {
+  # If there are individuals in newdata that had not been used in model fitting,
+  # we augment pprob imputing the sample average in those individuals
+  if (nrow(newdata) != nrow(pprob)) {
+    warning(paste0("Individuals ", paste(setdiff(newdata[, subject], pprob[, subject]), collapse = ", "),
+                    "have not been used in LCMM model fitting. Imputing values for those individuals"))
     # Assign individuals not included in model fitting to the biggest cluster
     pprob.extra <- data.frame(
       id = setdiff(newdata[, subject], pprob[, subject]),

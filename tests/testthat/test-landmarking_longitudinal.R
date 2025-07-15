@@ -167,3 +167,61 @@ test_that("longitudinal_fit raises warning for too few observations", {
     )
   )
 })
+
+test_that("predict_longitudinal works correctly with lcmm", {
+  set.seed(1)
+
+  data("epileptic")
+
+  epileptic_dfs <- split_wide_df(
+    epileptic,
+    ids = "id",
+    times = "time",
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
+    dynamic = c("dose"),
+    measurement_name = "value"
+  )
+
+  static <- epileptic_dfs$df_static
+  dynamic <- epileptic_dfs$df_dynamic
+
+  x <- LandmarkAnalysis(
+    data_static = static,
+    data_dynamic = dynamic,
+    event_indicator = "with.status",
+    ids = "id",
+    event_time = "with.time",
+    times = "time",
+    measurements = "value"
+  )
+  x <- x |> compute_risk_sets(365.25)
+
+  expect_warning(
+    x |> fit_longitudinal(
+      landmarks = 365.25,
+      method = "lcmm",
+      formula = value ~ treat + age + gender + learn.dis + time,
+      mixture = ~ treat + age + gender + learn.dis + time,
+      random = ~time,
+      subject = "id",
+      var.time = "time",
+      ng = 2,
+      dynamic_covariates = "dose"
+    ) |> predict_longitudinal(
+      landmarks = 365.25,
+      method = "lcmm",
+      subject = "id",
+      var.time = "time",
+      avg = FALSE,
+      dynamic_covariates = "dose"
+    ),
+    "Individuals 28, 389, 473have not been used in LCMM model fitting. Imputing values for those individuals"
+  )
+})

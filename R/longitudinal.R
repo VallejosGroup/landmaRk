@@ -265,13 +265,6 @@ setMethod(
             )
           }
 
-          x@longitudinal_predictions[[as.character(landmarks)]][[
-            dynamic_covariate
-          ]] <- method(
-            x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-            newdata = newdata,
-            ...
-          )
           predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
           ]]
