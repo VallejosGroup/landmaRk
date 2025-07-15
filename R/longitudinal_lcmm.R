@@ -98,8 +98,7 @@
       "Individuals ",
       paste(setdiff(newdata[, subject], pprob[, subject]), collapse = ", "),
       ", have not been used in LCMM model fitting. ",
-      "
-      Imputing values for those individuals"
+      "Imputing values for those individuals"
     )
     # Assign individuals not included in model fitting to the biggest cluster
     pprob.extra <- data.frame(

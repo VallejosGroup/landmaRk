@@ -396,6 +396,7 @@ setMethod(
   "compute_risk_sets",
   "LandmarkAnalysis",
   function(x, landmarks, .warn_when_less_than = 0, ...) {
+    `get(x@ids)` <- NULL # Global assignment to avoid R CMD check warning
     if (length(landmarks) == 1) {
       # If the vector of landmark times is of length 1
       if (landmarks %in% x@landmarks) {
