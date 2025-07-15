@@ -437,13 +437,7 @@ setMethod(
             ))
           }
         }
-      }
-      x@data_dynamic[["dose"]] |>
-        filter(get(x@times) <= landmarks) |>
-        group_by(get(x@ids)) |>
-        summarise(n = n()) |>
-        filter(n < .warn_when_less_than) |>
-        pull(`get(x@ids)`)
+    }
     } else {
       # Recursion to compute risk sets one-by-one
       x <- compute_risk_sets(x, landmarks[1], .warn_when_less_than)
