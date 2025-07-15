@@ -6,10 +6,10 @@
 #' @param random One-sided formula specifying the random effects.
 #' @param subject Name of the column indicating individual ids in data
 #' @param ng Number of clusters in the LCMM model
-#' @param ... Additional arguments passed to the \code{\link[lcmm]{lcmm}}
+#' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
 #'   function.
 #' @seealso  [lcmm::hlme()]
-#'
+#' @noRd
 #' @returns An object of class hlme
 #'
 #' @examples
@@ -71,6 +71,8 @@
 #' @returns If \code{include_clusters == FALSE}, a vector of predictions. If
 #'   \code{include_clusters == TRUE}, a vector whose first column includes
 #'   predictions and second column includes predicted class allocation
+#'
+#' @noRd
 #'
 #' @examples
 .predict_lcmm <- function(
@@ -150,7 +152,8 @@
   # Store predictions in LandmarkAnalysis object
   names(predictions) <- newdata[, subject]
 
-  if (include_clusters == TRUE) {
+  if (include_clusters) {
+    # Append class labels
     predictions <- cbind(predictions, cluster = pprob[, "class"])
     predictions <- as.data.frame(predictions)
     predictions$cluster <- as.factor(predictions$cluster)
