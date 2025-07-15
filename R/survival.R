@@ -121,7 +121,7 @@ setMethod(
               dynamic_covariate
             ]]
           )
-          if (include_clusters == TRUE && inherits(predictions, "data.frame")) {
+          if (include_clusters && inherits(predictions, "data.frame")) {
             # Include predicted cluster membership in the training dataset and in the survival formula
             colnames(survival_df)[ncol(survival_df)] <- paste0(
               "cluster_",

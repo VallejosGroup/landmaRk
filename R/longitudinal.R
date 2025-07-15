@@ -277,7 +277,7 @@ setMethod(
           ]]
           # Number of predictions (length if stored in vector or number of rows if stored in matrix)
           npred <- ifelse(
-            is(predictions, "vector"),
+            is.null(dim(predictions)),
             length(predictions),
             nrow(predictions)
           )
