@@ -143,7 +143,6 @@
   }
   # Choose correct cluster for prediction
   if (avg == FALSE) {
-    #### predictions <- predictions$pred * model.matrix(~as.factor(cluster)-1,data=cluster_allocation)
     predictions <- rowSums(
       predictions$pred *
         model.matrix(

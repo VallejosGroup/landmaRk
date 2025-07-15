@@ -251,7 +251,7 @@ landmarking_object <- LandmarkAnalysis(
 landmarking_object <- landmarking_object |>
   compute_risk_sets(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
-)
+  )
 ```
 
 Provided with the risk sets, now the pipeline has the following four steps:
