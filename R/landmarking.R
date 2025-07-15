@@ -437,7 +437,7 @@ setMethod(
             ))
           }
         }
-    }
+      }
     } else {
       # Recursion to compute risk sets one-by-one
       x <- compute_risk_sets(x, landmarks[1], .warn_when_less_than)
