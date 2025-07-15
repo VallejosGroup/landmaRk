@@ -13,8 +13,6 @@
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/compute_risk_sets.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/dot-BinaryBrierScore.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/dot-CIndexCRisks.html</loc></url>
-<url><loc>https://vallejosgroup.github.io/landmaRk/reference/dot-fit_lcmm.html</loc></url>
-<url><loc>https://vallejosgroup.github.io/landmaRk/reference/dot-predict_lcmm.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/epileptic.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal-LandmarkAnalysis-method.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal.html</loc></url>
@@ -31,10 +29,10 @@
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/predict_survival.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/prune-LandmarkAnalysis-method.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/prune.html</loc></url>
+<url><loc>https://vallejosgroup.github.io/landmaRk/reference/prune_risk_sets-LandmarkAnalysis-method.html</loc></url>
+<url><loc>https://vallejosgroup.github.io/landmaRk/reference/prune_risk_sets.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/show-LandmarkAnalysis-method.html</loc></url>
-<url><loc>https://vallejosgroup.github.io/landmaRk/reference/show.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/split_wide_df.html</loc></url>
 <url><loc>https://vallejosgroup.github.io/landmaRk/reference/summary-LandmarkAnalysis-method.html</loc></url>
-<url><loc>https://vallejosgroup.github.io/landmaRk/reference/summary.html</loc></url>
 </urlset>
 

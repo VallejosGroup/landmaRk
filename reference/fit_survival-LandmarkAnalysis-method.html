@@ -49,7 +49,15 @@ times specified by the user</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for class 'LandmarkAnalysis'</span></span>
-<span><span class="fu"><a href="fit_survival.html">fit_survival</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">formula</span>, <span class="va">landmarks</span>, <span class="va">horizons</span>, <span class="va">method</span>, dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="fit_survival.html">fit_survival</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">formula</span>,</span>
+<span>  <span class="va">landmarks</span>,</span>
+<span>  <span class="va">horizons</span>,</span>
+<span>  <span class="va">method</span>,</span>
+<span>  dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  include_clusters <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -80,6 +88,11 @@ submodel is fitted.</p></dd>
 <dt id="arg-dynamic-covariates">dynamic_covariates<a class="anchor" aria-label="anchor" href="#arg-dynamic-covariates"></a></dt>
 <dd><p>Vector of time-varying covariates to be used
 in the survival model.</p></dd>
+
+
+<dt id="arg-include-clusters">include_clusters<a class="anchor" aria-label="anchor" href="#arg-include-clusters"></a></dt>
+<dd><p>Boolean indicating whether to propagate cluster
+membership to survival analysis.</p></dd>
 
 </dl></div>
     <div class="section level2">
