@@ -154,7 +154,8 @@
   # Store predictions in LandmarkAnalysis object
   names(predictions) <- newdata[, subject]
 
-  if (include_clusters == TRUE) {
+  if (include_clusters) {
+    # Append class labels
     predictions <- cbind(predictions, cluster = pprob[, "class"])
     predictions <- as.data.frame(predictions)
     predictions$cluster <- as.factor(predictions$cluster)
