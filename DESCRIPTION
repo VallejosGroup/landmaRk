@@ -42,7 +42,7 @@ Suggests:
     joineR,
     survminer
 Remotes:
-    CecileProust-Lima/lcmm
+    CecileProust-Lima/lcmm@v1.9.7
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 LazyData: true
