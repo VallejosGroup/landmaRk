@@ -22,7 +22,7 @@ jobs:
         uses: posit-dev/setup-air@v1
 
       - name: Format
-        run: air format .
+        run: air format R vignettes tests
 
       - name: Suggest
         uses: reviewdog/action-suggester@v1
