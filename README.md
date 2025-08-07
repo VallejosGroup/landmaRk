@@ -5,11 +5,11 @@ sub-models.
 
 <!-- badges: start -->
 
-| Usage                                                                                                                                                | Release                                                                                                                         | Development                                                                                                                                                                                                                     |
-|------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)                                                        | [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/landmaRk)](https://cran.r-project.org/package=landmaRk)            | [![R build status](https://github.com/VallejosGroup/landmaRk/actions/workflows/Action.yaml/badge.svg?branch=main)](https://github.com/VallejosGroup/landmaRk/actions/workflows/Action.yaml)                         |
-| [![License: GPL-3](https://img.shields.io/badge/License-GPL3-green.svg)](https://opensource.org/license/gpl-3-0)                                     | [![r-universe](https://vallejosgroup.r-universe.dev/badges/landmaRk)](https://vallejosgroup.r-universe.dev/landmaRk)          | [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)  |
-| [![Website](https://img.shields.io/website?url=https%3A%2F%2Fvallejosgroup.github.io%2FlandmaRk%2F)](https://vallejosgroup.github.io/landmaRk/)    |                                                                                                                                 | [![codecov](https://codecov.io/gh/VallejosGroup/landmaRk/graph/badge.svg?token=YUQ6PINJSO)](https://app.codecov.io/gh/VallejosGroup/landmaRk)                                                                                 |
+| Usage | Release | Development |
+|-------|---------|-------------|
+| ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white) | [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/landmaRk)](https://cran.r-project.org/package=landmaRk) | [![R build status](https://github.com/VallejosGroup/landmaRk/actions/workflows/Action.yaml/badge.svg?branch=main)](https://github.com/VallejosGroup/landmaRk/actions/workflows/Action.yaml) |
+| [![License: GPL-3](https://img.shields.io/badge/License-GPL3-green.svg)](https://opensource.org/license/gpl-3-0) | [![r-universe](https://vallejosgroup.r-universe.dev/badges/landmaRk)](https://vallejosgroup.r-universe.dev/landmaRk) | [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) |
+| [![Website](https://img.shields.io/website?url=https%3A%2F%2Fvallejosgroup.github.io%2FlandmaRk%2F)](https://vallejosgroup.github.io/landmaRk/) |  | [![codecov](https://codecov.io/gh/VallejosGroup/landmaRk/graph/badge.svg?token=YUQ6PINJSO)](https://app.codecov.io/gh/VallejosGroup/landmaRk) |
 
 <!-- badges: end -->
 
@@ -39,8 +39,14 @@ a modular system allowing others to incorporate their own models.
 
 ## Installation
 
-We are planning to release the package on CRAN once the software is mature. For
-now, you can get a CRAN-like experience by installing from our r-universe 
+The easiest way to install the package is from CRAN, which can be done in R
+via
+
+``` R
+install.packages("landmaRk")
+```
+
+The development version of the package can be installed via our r-universe 
 
 ``` R
 install.packages("landmaRk",
