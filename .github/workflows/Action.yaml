@@ -15,12 +15,14 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Install
         uses: posit-dev/setup-air@v1
 
       - name: Format
-        run: air format .
+        run: air format R vignettes tests
 
       - name: Suggest
         uses: reviewdog/action-suggester@v1
@@ -56,6 +58,9 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
         with:
           pandoc-version: '2.7.3' # The pandoc version to download (if necessary) and use.
+      - name: Install lcmm
+        run: install.packages("devtools"); devtools::install("lcmm")
+        shell: Rscript {0}
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
