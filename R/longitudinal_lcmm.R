@@ -111,19 +111,23 @@
   predictions_step1 <- t(sapply(
     in_train_set,
     function(individual) {
-      return(lcmm::predictY(
-        x,
-        newdata = newdata |> filter(get(subject) == individual),
-        predRE = predRE |> filter(get(subject) == individual)
-      )$pred)
+      return(
+        lcmm::predictY(
+          x,
+          newdata = newdata |> filter(get(subject) == individual),
+          predRE = predRE |> filter(get(subject) == individual)
+        )$pred
+      )
     }
   ))
 
   predictions_step1 <- as.data.frame(predictions_step1)
   predictions_step1[, subject] <- in_train_set
   predictions_step1 <- predictions_step1 |> relocate(subject)
-  colnames(predictions_step1) <- c(subject, paste0("Ypred_class", 1:(ncol(predictions_step1)-1)))
-
+  colnames(predictions_step1) <- c(
+    subject,
+    paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
+  )
 
   # Step 1d. Estimate most likely cluster, and cluster allocation probabilities,
   # for individuals in the training set
@@ -139,12 +143,15 @@
 
   # Step 2b. Find class-specific predictions for individuals outwith the training set.
   if (length(not_in_train_set) > 0) {
-  predictions_step2 <- lcmm::predictY(x, newdata = newdata |>
-                                        filter(!(get(subject) %in% in_train_set)))$pred
-  predictions_step2 <- as.data.frame(predictions_step2)
-  predictions_step2[, subject] <- not_in_train_set
-  predictions_step2 <- predictions_step2 |> relocate(subject)
-}
+    predictions_step2 <- lcmm::predictY(
+      x,
+      newdata = newdata |>
+        filter(!(get(subject) %in% in_train_set))
+    )$pred
+    predictions_step2 <- as.data.frame(predictions_step2)
+    predictions_step2[, subject] <- not_in_train_set
+    predictions_step2 <- predictions_step2 |> relocate(subject)
+  }
 
   # pprob contains probabilities for subjects belonging to each certain cluster,
   # However posterior probabilities are unavailable for  individuals not
@@ -185,27 +192,25 @@
     rownames(pprob.extra) <- NULL
     colnames(pprob.extra) <- colnames(pprob)
 
-
     pprob <- rbind(pprob, pprob.extra) |> arrange(get(subject))
-
-
   }
 
   if (length(not_in_train_set) > 0) {
-  predictions <- rbind(
-    predictions_step1,
-    predictions_step2
-  ) |> arrange(get(subject))
+    predictions <- rbind(
+      predictions_step1,
+      predictions_step2
+    ) |>
+      arrange(get(subject))
   } else {
     predictions <- predictions_step1
-}
+  }
   # If avg == TRUE, we return an average weighted according to cluster
   # probabilities. If avg == FALSE, we return the prediction according to the
   # most likely cluster
   if (avg) {
     predictions <- rowSums(
       as.matrix(predictions[, -1]) *
-        as.matrix(pprob[, -c(1,2)])
+        as.matrix(pprob[, -c(1, 2)])
     )
   } else {
     predictions <- rowSums(
@@ -216,9 +221,6 @@
         )
     )
   }
-
-
-
 
   # Store predictions in LandmarkAnalysis object
   names(predictions) <- newdata[, subject]
