@@ -24,7 +24,7 @@ initialise_longitudinal_test_ <- function(epileptic) {
   sample_missing <- sample(seq_len(nrow(static)), nrow(static) * 0.1)
   static[sample_missing, "treat"] <- NA
 
-  landmarking_object <- Landmarking(
+  landmarking_object <- LandmarkAnalysis(
     data_static = static,
     data_dynamic = dynamic,
     event_indicator = "with.status",
@@ -43,8 +43,9 @@ test_that("LCMM works as expected", {
     fit_longitudinal(
       landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
       method = "lcmm",
-      formula = value ~ treat + age + gender + learn.dis,
-      mixture = ~ treat + age + gender + learn.dis,
+      formula = value ~ treat + age + gender + learn.dis + time,
+      mixture = ~ treat + age + gender + learn.dis + time,
+      random = ~time,
       subject = "id",
       ng = 2,
       dynamic_covariates = "dose"
@@ -59,14 +60,14 @@ test_that("LCMM works as expected", {
       dynamic_covariates = "dose"
     ),
     paste(
-      "lcmm::predictY produced 387 predictions but expected 430.",
-      "Probable reason: static covariates contain missing data."
+      "lcmm::predictY produced 387 predictions but expected 430 predictions.\n",
+      "Probable reason: static covariates contain missing data.\n"
     )
   )
 })
 
 test_that("LOCF works as expected", {
-  # Initialise Landmarking object
+  # Initialise LandmarkAnalysis object
   x <- initialise_longitudinal_test_(epileptic = epileptic)
   x <- x |>
     compute_risk_sets(seq(from = 365.25, to = 5 * 365.25, by = 365.25))
@@ -143,12 +144,6 @@ test_that("longitudinal_fit raises warning for too few observations", {
   set.seed(1)
   epileptic <- epileptic |> dplyr::filter(time < 368) |> head(20)
   epileptic <- epileptic[-c(18, 19), ]
-  #epileptic <- epileptic |> dplyr::filter(time <= 366)
-
-  # epileptic <- rbind(
-  #   epileptic |> dplyr::filter(id <= 500),
-  #   epileptic |> dplyr::filter(id > 500) |> dplyr::slice_max(time, by = id)
-  # )
 
   x <- initialise_longitudinal_test_(epileptic = epileptic)
 
@@ -159,7 +154,8 @@ test_that("longitudinal_fit raises warning for too few observations", {
         landmarks = seq(from = 365.25, to = 1 * 365.25, by = 365.25),
         method = "lcmm",
         formula = value ~ treat + age + gender + learn.dis + time,
-        mixture = ~ treat + age + gender + learn.dis,
+        mixture = ~ treat + age + gender + learn.dis + time,
+        random = ~time,
         subject = "id",
         var.time = "time",
         ng = 2,
@@ -169,5 +165,65 @@ test_that("longitudinal_fit raises warning for too few observations", {
       "25% of the individuals have 0 or 1 observations at landmark time 365.25",
       "for longitudinal covariate dose"
     )
+  )
+})
+
+test_that("predict_longitudinal works correctly with lcmm", {
+  set.seed(1)
+
+  data("epileptic")
+
+  epileptic_dfs <- split_wide_df(
+    epileptic,
+    ids = "id",
+    times = "time",
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
+    dynamic = c("dose"),
+    measurement_name = "value"
+  )
+
+  static <- epileptic_dfs$df_static
+  dynamic <- epileptic_dfs$df_dynamic
+
+  x <- LandmarkAnalysis(
+    data_static = static,
+    data_dynamic = dynamic,
+    event_indicator = "with.status",
+    ids = "id",
+    event_time = "with.time",
+    times = "time",
+    measurements = "value"
+  )
+  x <- x |> compute_risk_sets(365.25)
+
+  expect_warning(
+    x |>
+      fit_longitudinal(
+        landmarks = 365.25,
+        method = "lcmm",
+        formula = value ~ treat + age + gender + learn.dis + time,
+        mixture = ~ treat + age + gender + learn.dis + time,
+        random = ~time,
+        subject = "id",
+        var.time = "time",
+        ng = 2,
+        dynamic_covariates = "dose"
+      ) |>
+      predict_longitudinal(
+        landmarks = 365.25,
+        method = "lcmm",
+        subject = "id",
+        var.time = "time",
+        avg = FALSE,
+        dynamic_covariates = "dose"
+      ),
+    "Individuals 28, 389, 473, have not been used in LCMM model fitting. Imputing values for those individuals"
   )
 })

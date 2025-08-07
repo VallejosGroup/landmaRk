@@ -1,6 +1,6 @@
 #' Plots longitudinal trajectories and survival curves for landmarking models.
 #'
-#' @param x An object of class Landmarking.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param type A character taking the value \code{'survival'} (survival curves)
 #'   or \code{'longitudinal'} (model trajectories of dynamic covariates).
 #' @param id The identifier for the unit (subject) whose data will be plotted.
@@ -20,7 +20,7 @@
 #' @examples
 setMethod(
   "plot",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(
     x,
     type = "survival",
@@ -99,7 +99,7 @@ setMethod(
         )
       }
       # Dataframe in long format with individuals at risk
-      newdata <- construct_data(
+      newdata <- .construct_data(
         x,
         dynamic_covariate = dynamic_covariate,
         x@risk_sets[[as.character(landmark)]],
@@ -144,7 +144,6 @@ setMethod(
       } else if (inherits(longitudinal_fit, "hlme")) {
         # If model was fitted with lcmm, use predictY to make predictions
         predictions <- lcmm::predictY(longitudinal_fit, newdata = newdata)
-        num_clusters <- ncol(predictions$pred)
         if (avg == TRUE) {
           # If averaging over cluster trajectories
           class_probabilities <- longitudinal_fit$pprob |>

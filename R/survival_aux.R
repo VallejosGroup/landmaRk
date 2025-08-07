@@ -1,5 +1,5 @@
 # Check that method is coxph, survfit or a function with argument data, ...
-check_method_survival_predict_ <- function(method) {
+.check_method_survival_predict <- function(method) {
   if (is(method)[1] == "character" && method == "survfit") {
     method <- survival::survfit
   } else if (is(method)[1] == "character" && method == "coxph") {
@@ -27,7 +27,7 @@ check_method_survival_predict_ <- function(method) {
 }
 
 # Check risk set is available
-check_riskset_survival_ <- function(x, landmarks) {
+.check_riskset_survival <- function(x, landmarks) {
   if (!(landmarks %in% x@landmarks)) {
     stop(
       "Risk set for landmark time ",
@@ -37,7 +37,7 @@ check_riskset_survival_ <- function(x, landmarks) {
   }
 }
 
-check_predictions_available_survival_ <- function(
+.check_predictions_available_survival <- function(
   x,
   landmarks,
   dynamic_covariates

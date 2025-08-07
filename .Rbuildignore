@@ -9,3 +9,5 @@ devel/
 ^.devcontainer
 ^\.github$
 ^cran-comments\.md$
+CODE_OF_CONDUCT.md
+codecov.yml

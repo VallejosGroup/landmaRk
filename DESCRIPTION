@@ -30,7 +30,8 @@ Imports:
     survival,
     lcmm,
     doParallel,
-    foreach
+    foreach,
+    utils
 Suggests: 
     knitr,
     rmarkdown,
