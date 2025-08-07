@@ -4,29 +4,34 @@
 \alias{compute_risk_sets}
 \title{Compute the list of individuals at risk at landmark times}
 \usage{
-compute_risk_sets(x, landmarks, ...)
+compute_risk_sets(x, landmarks, .warn_when_less_than = 0, ...)
 }
 \arguments{
-\item{x}{An object of class \code{\link{Landmarking}}.}
+\item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{landmarks}{Numeric vector of landmark times}
+
+\item{.warn_when_less_than}{Integer indicating that a warning will be raised
+when the number of observations prior to a landmark time is less than that
+integer for certain individuals.}
 
 \item{...}{Additional arguments (not used)}
 }
 \value{
-An object of class \code{\link{Landmarking}} including desired risk
-sets for the specified landmark times.
+An object of class \code{\link{LandmarkAnalysis}} including desired
+risk sets for the specified landmark times.
 }
 \description{
 Compute the list of individuals at risk at landmark times
 }
 \details{
 A risk set describes all subjects still at risk (i.e., not experienced the
-event of interest or censored) at a given time. In Landmarking, risk sets
-define which subjects should be included in the longitudinal and survival
-sub-models for each landmark time.
+event of interest or censored) at a given time. In
+\code{\link{LandmarkAnalysis}}, risk sets define which subjects should be
+included in the longitudinal and survival sub-models for each landmark time.
 
-The risk sets are stored in the \code{risk_sets} slot of the Landmarking
-object, where each risk set is a list of indices corresponding to the
-subjects at risk at the respective landmark time.
+The risk sets are stored in the \code{risk_sets} slot of the
+\code{\link{LandmarkAnalysis}} object, where each risk set is a list of
+indices corresponding to the subjects at risk at the respective landmark
+time.
 }

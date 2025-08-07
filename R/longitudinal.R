@@ -9,7 +9,7 @@
 #'   parallel processing in R, currently only Unix-like operating systems
 #'   are supported by \code{landmaRk}.
 #'
-#' @param x An object of class \code{\link{Landmarking}}.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A vector of Landmark times.
 #' @param method Either \code{"lcmm"} or \code{"lme4"} or a function for fitting
 #'   a longitudinal data model, where the first argument is a formula, and also
@@ -23,7 +23,7 @@
 #'   supported on Windows.
 #' @param ... Additional arguments passed to the longitudinal model fitting
 #'   function (e.g. number of classes/clusters for lcmm).
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #' @seealso [lcmm::hlme()] and [lme4::lmer()] for additional arguments.
 #' @examples
@@ -54,14 +54,14 @@ setGeneric(
 #'   are supported by \code{landmaRk}.
 #'
 #' @inheritParams fit_longitudinal
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @seealso [lcmm::hlme()] and [lme4::lmer()] for additional arguments.
 #' @export
 #'
 #' @examples
 setMethod(
   "fit_longitudinal",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(
     x,
     landmarks,
@@ -73,12 +73,12 @@ setMethod(
   ) {
     landmark <- NULL # Global var
 
-    method <- check_method_long_fit(method)
+    method <- .check_method_long_fit(method)
 
     if (Sys.info()["sysname"] == "Windows") {
       `%doparallel%` <- foreach::`%do%`
     } else {
-      cl <- init_cl(cores)
+      cl <- .init_cl(cores)
       `%doparallel%` <- foreach::`%dopar%`
       on.exit(parallel::stopCluster(cl), add = TRUE)
     }
@@ -90,7 +90,7 @@ setMethod(
         at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
         # Construct dataset for the longitudinal analysis (static measurements +
         # time-varying covariate and its recording time)
-        dataframe <- construct_data(
+        dataframe <- .construct_data(
           x,
           dynamic_covariate,
           at_risk_individuals,
@@ -114,7 +114,7 @@ setMethod(
 
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
       {
-        check_riskset(x, landmark)
+        .check_riskset(x, landmark)
         # Create list for storing model fits for longitudinal analysis
         model_fits <- list()
 
@@ -123,10 +123,10 @@ setMethod(
         # Loop that iterates over all time-varying covariates to fit a longitudinal
         # model for the underlying trajectories
         for (dynamic_covariate in dynamic_covariates) {
-          check_dynamic_covariate(x, dynamic_covariate)
+          .check_dynamic_covariate(x, dynamic_covariate)
           # Construct dataset for the longitudinal analysis (static measurements +
           # time-varying covariate and its recording time)
-          dataframe <- construct_data(
+          dataframe <- .construct_data(
             x,
             dynamic_covariate,
             at_risk_individuals,
@@ -152,7 +152,7 @@ setMethod(
 
 #' Make predictions for time-varying covariates at specified landmark times
 #'
-#' @param x An object of class \code{\link{Landmarking}}.
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
@@ -160,7 +160,7 @@ setMethod(
 #' @param ... Additional arguments passed to the prediction function (e.g.
 #'   number of classes/clusters for lcmm).
 #'
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #'
 #' @examples
@@ -175,22 +175,22 @@ setGeneric(
 #'
 #' @inheritParams predict_longitudinal
 #'
-#' @returns An object of class \code{\link{Landmarking}}.
+#' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
 #'
 #' @examples
 setMethod(
   "predict_longitudinal",
-  "Landmarking",
+  "LandmarkAnalysis",
   function(x, landmarks, method, dynamic_covariates, ...) {
     value <- NULL # Global var
 
-    method <- check_method_long_predict(method)
+    method <- .check_method_long_predict(method)
 
     # Base case for recursion
     if (length(landmarks) == 1) {
       # Check that relevant risk set is available
-      check_riskset(x, landmarks)
+      .check_riskset(x, landmarks)
       if (inherits(method, "character") && method == "locf") {
         # If model method is LOCF
         # Relevant risk set
@@ -224,7 +224,7 @@ setMethod(
         }
       } else {
         # Check that relevant model fit is available (if model is not LOCF)
-        check_long_fit(x, landmarks)
+        .check_long_fit(x, landmarks)
 
         # Relevant risk set
         risk_set <- x@risk_sets[[as.character(landmarks)]]
@@ -265,19 +265,16 @@ setMethod(
             )
           }
 
-          x@longitudinal_predictions[[as.character(landmarks)]][[
+          predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
-          ]] <- method(
-            x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-            newdata = newdata,
-            ...
+          ]]
+          # Number of predictions (length if stored in vector or number of rows if stored in matrix)
+          npred <- ifelse(
+            is.null(dim(predictions)),
+            length(predictions),
+            nrow(predictions)
           )
-          if (
-            length(x@longitudinal_predictions[[as.character(landmarks)]][[
-              dynamic_covariate
-            ]]) !=
-              nrow(newdata)
-          ) {
+          if (npred != nrow(newdata)) {
             stop(paste(
               "Number of predictions for dynamic_covariate",
               dynamic_covariate,

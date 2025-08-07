@@ -14,15 +14,71 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-set.seed(123)
-library(tidyverse)
-library(landmaRk)
+
+
+
+# Overview
+
+The landmaRk package provides a framework for landmarking analysis of
+time-to-event data with time-varying covariates. It allows users to perform
+survival analysis using longitudinal data, fitting models to the time-varying
+covariates, and then using these predictions in survival models.
+
+Given a time-to-event outcome $T_i$, a landmark time $s$ and a time horizon 
+$s + w$, the goal of a landmarking analysis is to estimate 
+$$
+\pi_i(s+w \vert s) = P(T_i > s+w \vert T_i \ge s, X_i(s)), 
+$$
+where $X_i(s)$ denotes a vector of covariates which may include time-varying 
+covariates.
+
+A landmarking analysis of time-to-event data has two components:
+
+- First, model the longitudinal trajectories of dynamic covariates, $X_i(t)$. 
+Then use, the fitted model to make a prediction for $X_i(s)$, $\hat{X}_i(s)$, 
+at the landmark time, $s$.
+
+- Second, fit a survival model of the time-to-event outcome, conditioning on the
+predicted value for $X_i(s)$, and potentially on additional static and dynamic 
+covariates. 
+
+The `landmaRk` package allows users to use the following method for the first 
+component:
+
+- Last Observation Carried Forward (LOCF), using the last measurement for $X_i$
+recorded prior to $s$ as our prediction, $\hat{X}_i(s)$.
+
+- Linear mixed-effect (LME) model, as implemented in the `lme4` package.
+
+- Latent class mixed model (LCMM), as implemented in the `lcmm` package.
+
+For the second component, at present the `landmaRk` package supports Cox
+proportional hazard models as implemented in the `survival`package. 
+
+Additionally, the `landmaRk` package provides a modular system allowing making 
+it possible to incorporate additional models both for the longitudinal and the 
+survival components
+
+
+
+```{r pipeline-diagram, echo = FALSE, out.width = "100%", fig.cap="Diagram of the landmaRk package pipeline"}
+knitr::include_graphics(system.file("diagram.svg", package = "landmaRk"))
 ```
+
 
 # Setup
 
-In this vignette, we use the dataset epileptic to perform landmarking analysis of time-to-event data with time-varying covariates. Here is the structure of the dataset.
+In addition to the `landmaRk` package, we will also use `tidyverse`. 
+```{r setup}
+set.seed(123)
+library(landmaRk)
+library(tidyverse)
+```
+
+# Example: epileptic data
+In this vignette, we use the dataset epileptic to perform landmarking analysis 
+of time-to-event data with time-varying covariates. Here is the structure of 
+the dataset.
 
 ```{r}
 data("epileptic")
@@ -43,13 +99,17 @@ The dataset contains the following variables:
 
 -   treat, age, gender, learn.dis: static (baseline) covariates
 
-The first step is to split the dataset into two, one containing static 
+# Initialising the landmarking analysis
+
+First, we split the dataset into two, one containing static 
 covariates, event time and indicator of event/censoring, and another one 
 containing dynamic covariates. To that end, we use the function split_wide_df.
 That function returns a named list with the following elements:
+
 - Under the name df_static, a dataframe containing static  covariates, event 
 time and indicator of event/censoring.
-- Under the name df_dynamic, a named list of dataframes, associating dynamic 
+
+- Under the name df_dynamic, a named list of dataframes, mapping dynamic 
 covariates to dataframes in long format containing longitudinal measurement of 
 the relevant dynamic covariate.
 
@@ -74,12 +134,12 @@ dynamic <- epileptic_dfs$df_dynamic
 head(dynamic[["dose"]])
 ```
 
-# Create Landmarking object
 
-Next step is to create an object of class Landmarking, using the helper function of the same name.
+We can now create an object of class `LandmarkAnalysis`, using the helper 
+function of the same name.
 
 ```{r}
-landmarking_object <- Landmarking(
+landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
   event_indicator = "with.status",
@@ -94,17 +154,23 @@ Arguments to the helper function are the following:
 
 -   data_static and data_dynamic: the two datasets that were just created.
 
--   event_indicator: name of the column that indicates the censoring indicator in the static dataset.
+-   event_indicator: name of the column that indicates the censoring indicator 
+in the static dataset.
 
--   dynamic_covariates: array column names in the dynamic dataset indicating time-varying covariates.
+-   dynamic_covariates: array column names in the dynamic dataset indicating 
+time-varying covariates.
 
 -   ids: name of the column that identifies patients in both datasets.
 
--   event_time: name of the column that identifies time of event/censoring in the static dataset.
+-   event_time: name of the column that identifies time of event/censoring 
+in the static dataset.
 
 # Baseline survival analysis (without time-varying covariates)
 
-First, we perform a survival without time-varying covariates. We can use this as a baseline to evaluate the performance of a subsequent landmark analysis with such covariates. First step is to establish the landmark times, and to work out the risk sets at each of those landmark times.
+First, we perform a survival without time-varying covariates. We can use this 
+as a baseline to evaluate the performance of a subsequent landmark analysis 
+with such covariates. First step is to establish the landmark times, and to 
+work out the risk sets at each of those landmark times.
 
 ```{r}
 landmarking_object <- landmarking_object |>
@@ -113,36 +179,66 @@ landmarking_object <- landmarking_object |>
 landmarking_object
 ```
 
-Now we call the function fit_survival to fit the survival model.
+Now we use the function `fit_survival` to fit the survival model. We specify 
+the following arguments:
+
+- `landmarks`: Vector of landmark times at which the model will be fitted.
+
+- `formula`: Two-sided formula object specifying the survival process. Because
+we are fitting the baseline model, we include static covariates only.
+
+- `horizons`: Vector of time horizons up to when the model will be fitted. The 
+vectors of landmarks and time horizons must be of the same length.
+- `method`: Method for the survival component of the landmarking analysis. In 
+this case, `"coxph"`.
+
+- `dynamic_covariates`: Vector of names of the dynamic covariates to be used. 
+In this baseline analysis, the vector is empty. 
+
+Then, we can make predictions using the function `predict_survival`. Arguments
+`method`, `landmarks` and `horizons`are as above. 
 
 ```{r}
 landmarking_object <- landmarking_object |>
   fit_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     formula = Surv(event_time, event_status) ~ treat + age + gender + learn.dis,
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c()
-  ) |> predict_survival(
+  ) |>
+  predict_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
     method = "coxph",
     type = "survival"
   )
+```
 
+To display the results, one can use the method `summary`, specifying 
+`type = "survival"`, in addition to a landmark and a horizon. 
+```{r}
+summary(landmarking_object, type = "survival", landmark = 365.25, horizon = 730.5)
+```
+
+Now the `performance_metrics` function can be used to calculate 
+(for now, in-sample) performance metrics. 
+```{r}
 performance_metrics(
   landmarking_object,
   landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-  windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25)
+  horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25)
 )
 ```
 
 # Landmarking analysis with lme4 + coxph
 
-Now we use the package lme4 to fit a linear mixed model of the time-varying covariate, dose. This first step is followed by fitting a Cox PH sub-model using the longitudinal predictions as covariates.
+Now we use the package lme4 to fit a linear mixed model of the time-varying 
+covariate, dose. This first step is followed by fitting a Cox PH sub-model 
+using the longitudinal predictions as covariates.
 
 ```{r}
-landmarking_object <- Landmarking(
+landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
   event_indicator = "with.status",
@@ -157,6 +253,20 @@ landmarking_object <- landmarking_object |>
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
   )
 ```
+
+Provided with the risk sets, now the pipeline has the following four steps:
+
+- Fit the longitudinal model with `fit_longitudinal`,
+specifying `method = "lme4"`, and the `formula`
+as it would be passed to `lme4::lmer()`. One also needs to specify a vector of
+`landmarks` and a vector of dynamic covariates, `dynamic_covariates = c("dose")`.
+
+- Make predictions with `predict_longitudinal`, specifying `method = "lme4"`.
+
+- Fit the survival submodel with `fit_survival`, like in the baseline model section,
+but specifying the vector of dynamic covariates, `dynamic_covariates = c("dose")`.
+
+- Make predictions with the survival submodel, like in the baseline model section.
 
 ```{r}
 landmarking_object <- landmarking_object |>
@@ -176,21 +286,34 @@ landmarking_object <- landmarking_object |>
     formula = Surv(event_time, event_status) ~
       treat + age + gender + learn.dis + dose,
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose")
   ) |>
   predict_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
-    method = "coxph", 
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+    method = "coxph",
     type = "survival"
   )
+```
 
+As before, one can also use the function `summary` to display the results.
+
+```{r}
+summary(landmarking_object, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
+```
+
+```{r}
+summary(landmarking_object, type = "survival", landmark = 365.25, horizon = 730.5)
+```
+
+Here are the performance metrics: 
+```{r}
 performance_metrics(
   landmarking_object,
   landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-  windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25)
+  horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25)
 )
 ```
 
@@ -202,8 +325,22 @@ latent class mixed model of the time-varying covariate, dose. This first step is
 followed by fitting a Cox PH sub-model using the longitudinal predictions as
 covariates.
 
+The pipeline is identical to that of the lme4+coxph model. However, this time
+one has to specify `method = "lcmm"` when calling `fit_longitudinal`, 
+in addition to the arguments that will be passed on to `lcmm::hlme()`, namely
+
+- `formula`: a two-sided formula of the fixed effects.
+
+- `mixture`: a one-sided formula of the class-specific fixed effects.
+
+- `random`: a one-sided formula specifying the random effects.
+
+- `subject`: name of the column specifying the subject IDs. 
+
+- `ng`: the number of clusters in the LCMM model.
+
 ```{r}
-landmarking_object <- Landmarking(
+landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
   event_indicator = "with.status",
@@ -220,8 +357,9 @@ landmarking_object <- landmarking_object |>
   fit_longitudinal(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
     method = "lcmm",
-    formula = value ~ treat + age + gender + learn.dis,
-    mixture = ~ treat + age + gender + learn.dis,
+    formula = value ~ treat + age + gender + learn.dis + time,
+    mixture = ~ treat + age + gender + learn.dis + time,
+    random = ~time,
     subject = "id",
     ng = 2,
     dynamic_covariates = c("dose")
@@ -231,20 +369,38 @@ landmarking_object <- landmarking_object |>
     method = "lcmm",
     subject = "id",
     avg = FALSE,
+    include_clusters = TRUE,
     dynamic_covariates = c("dose")
   ) |>
   fit_survival(
     formula = Surv(event_time, event_status) ~
       treat + age + gender + learn.dis + dose,
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
     method = "coxph",
-    dynamic_covariates = c("dose")
-  ) |> 
+    dynamic_covariates = c("dose"),
+    include_clusters = TRUE
+  ) |>
   predict_survival(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    windows = seq(from = 1 * 365.25, to = 2 * 365.25, by = 365.25),
-    method = "coxph", 
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+    method = "coxph",
     type = "survival"
   )
+```
+
+```{r}
+summary(landmarking_object, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
+```
+
+```{r}
+summary(landmarking_object, type = "survival", landmark = 365.25, horizon = 730.5)
+```
+
+```{r}
+performance_metrics(
+  landmarking_object,
+  landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+  horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25)
+)
 ```
