@@ -370,6 +370,7 @@ landmarking_object <- landmarking_object |>
     subject = "id",
     avg = FALSE,
     include_clusters = TRUE,
+    var.time = "time",
     dynamic_covariates = c("dose")
   ) |>
   fit_survival(
