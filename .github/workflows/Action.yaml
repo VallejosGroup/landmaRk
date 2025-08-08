@@ -60,11 +60,10 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
         with:
           pandoc-version: '2.7.3' # The pandoc version to download (if necessary) and use.
-      - name: Install lcmm 
-        shell: Rscript {0}
-        run: |
-          install.packages("devtools", repos = "https://cloud.r-project.org")
-          devtools::install("lcmm")
+          
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: local::./lcmm
 
       - name: Check
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
