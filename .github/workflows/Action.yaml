@@ -72,7 +72,8 @@ jobs:
       - name: Install lcmm package from local submodule
         shell: Rscript {0}
         run: |
-          install.packages("./lcmm", repos = NULL, type = "source")
+          path <- normalizePath("lcmm", winslash = "/")
+          install.packages(path, repos = NULL, type = "source")
       - name: Install your package
         shell: Rscript {0}
         run: |
