@@ -484,9 +484,9 @@ model.</p></li>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="va">landmarking_object</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/compute_risk_sets.html">compute_risk_sets</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/compute_risk_sets.html">compute_risk_sets</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fit_longitudinal.html">fit_longitudinal</a></span><span class="op">(</span></span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"lcmm"</span>,</span>
 <span>    formula <span class="op">=</span> <span class="va">value</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="va">time</span>,</span>
 <span>    mixture <span class="op">=</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="va">time</span>,</span>
@@ -496,25 +496,26 @@ model.</p></li>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/predict_longitudinal.html">predict_longitudinal</a></span><span class="op">(</span></span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"lcmm"</span>,</span>
 <span>    subject <span class="op">=</span> <span class="st">"id"</span>,</span>
 <span>    avg <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    include_clusters <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    var.time <span class="op">=</span> <span class="st">"time"</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fit_survival.html">fit_survival</a></span><span class="op">(</span></span>
 <span>    formula <span class="op">=</span> <span class="fu">Surv</span><span class="op">(</span><span class="va">event_time</span>, <span class="va">event_status</span><span class="op">)</span> <span class="op">~</span></span>
 <span>      <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="va">dose</span>,</span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span>
 <span>    include_clusters <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/predict_survival.html">predict_survival</a></span><span class="op">(</span></span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>    type <span class="op">=</span> <span class="st">"survival"</span></span>
 <span>  <span class="op">)</span></span>
@@ -525,9 +526,7 @@ model.</p></li>
 <span><span class="co">#&gt; Warning in</span></span>
 <span><span class="co">#&gt; method(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]], :</span></span>
 <span><span class="co">#&gt; Individuals 28, 389, 473, have not been used in LCMM model fitting. Imputing</span></span>
-<span><span class="co">#&gt; values for those individuals</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span></code></pre></div>
+<span><span class="co">#&gt; values for those individuals</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"longitudinal"</span>, landmark <span class="op">=</span> <span class="fl">365.25</span>, dynamic_covariate <span class="op">=</span> <span class="st">"dose"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Heterogenous linear mixed model </span></span>
@@ -535,10 +534,10 @@ model.</p></li>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; lcmm::hlme(fixed = value ~ treat + age + gender + learn.dis + </span></span>
 <span><span class="co">#&gt;     time, mixture = ~treat + age + gender + learn.dis + time, </span></span>
-<span><span class="co">#&gt;     random = ~time, subject = subject, ng = ng, data = data)</span></span>
+<span><span class="co">#&gt;     random = ~time, subject = "id", ng = 2, returndata = TRUE)</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; Statistical Model: </span></span>
-<span><span class="co">#&gt;      Dataset: data </span></span>
+<span><span class="co">#&gt;      Dataset: NULL </span></span>
 <span><span class="co">#&gt;      Number of subjects: 427 </span></span>
 <span><span class="co">#&gt;      Number of observations: 1074 </span></span>
 <span><span class="co">#&gt;      Number of latent classes: 2 </span></span>
@@ -564,27 +563,26 @@ model.</p></li>
 <span><span class="co">#&gt;     "-", horizons)]], model = TRUE, x = TRUE)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                    coef exp(coef)  se(coef)      z     p</span></span>
-<span><span class="co">#&gt; treatLTG       0.174872  1.191094  0.306343  0.571 0.568</span></span>
-<span><span class="co">#&gt; age           -0.009513  0.990532  0.007563 -1.258 0.208</span></span>
-<span><span class="co">#&gt; genderM        0.202417  1.224359  0.298031  0.679 0.497</span></span>
-<span><span class="co">#&gt; learn.disYes  -0.786516  0.455429  0.744706 -1.056 0.291</span></span>
-<span><span class="co">#&gt; dose           0.399606  1.491236  0.726136  0.550 0.582</span></span>
-<span><span class="co">#&gt; cluster_dose2 -0.334471  0.715716  2.084202 -0.160 0.873</span></span>
+<span><span class="co">#&gt; treatLTG       0.130641  1.139559  0.272382  0.480 0.631</span></span>
+<span><span class="co">#&gt; age           -0.009708  0.990339  0.007683 -1.264 0.206</span></span>
+<span><span class="co">#&gt; genderM        0.226267  1.253910  0.276259  0.819 0.413</span></span>
+<span><span class="co">#&gt; learn.disYes  -0.827358  0.437203  0.737026 -1.123 0.262</span></span>
+<span><span class="co">#&gt; dose           0.226753  1.254520  0.209346  1.083 0.279</span></span>
+<span><span class="co">#&gt; cluster_dose2  0.133665  1.143010  0.693173  0.193 0.847</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Likelihood ratio test=9.5  on 6 df, p=0.1473</span></span>
+<span><span class="co">#&gt; Likelihood ratio test=10.36  on 6 df, p=0.1104</span></span>
 <span><span class="co">#&gt; n= 430, number of events= 57</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
 <span>  <span class="va">landmarking_object</span>,</span>
-<span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
+<span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.1913909 0.6653314</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.4959970 0.7834451</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.3919137 0.7958950</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.3986395 0.7917427</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9538462 0.9473859</span></span></code></pre></div>
+<span><span class="co">#&gt;               landmark horizon    cindex     brier</span></span>
+<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.1939288 0.6657487</span></span>
+<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.4433854 0.7834579</span></span>
+<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.4237197 0.7973544</span></span>
+<span><span class="co">#&gt; 1461-1826.25   1461.00 1826.25 0.4136054 0.7920773</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
