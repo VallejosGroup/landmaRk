@@ -63,8 +63,7 @@ jobs:
       - name: Initialise and update git submodules
         run: git submodule update --init --recursive
       - name: Install lcmm
-        run: install.packages("devtools"); devtools::install("lcmm")
-        shell: Rscript {0}
+        run: R CMD INSTALL ./lcmm
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
