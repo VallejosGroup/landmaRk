@@ -69,11 +69,13 @@ jobs:
           install.packages(c("mvtnorm", "spacefillr", "marqLevAlg", "doParallel", "numDeriv"),
                            repos = "https://cloud.r-project.org")
 
-      - name: Install lcmm package from local submodule
+      - name: Install lcmm package (cross-platform)
         shell: Rscript {0}
         run: |
-          path <- normalizePath("lcmm", winslash = "/")
+          path <- normalizePath("lcmm")
+          message("Installing lcmm from: ", path)
           install.packages(path, repos = NULL, type = "source")
+
       - name: Install your package
         shell: Rscript {0}
         run: |
