@@ -68,22 +68,19 @@ jobs:
           install.packages(c("mvtnorm", "spacefillr", "marqLevAlg", "doParallel", "numDeriv"),
                            repos = "https://cloud.r-project.org")
           system("R CMD INSTALL ./lcmm")
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck
-          needs: check
-      - name: Install dependencies and your package
-        shell: Rscript {0}
-        run: |
-          install.packages(c("remotes", "devtools"), repos = "https://cloud.r-project.org")
-          remotes::install_deps(dependencies = TRUE)
-          devtools::install(dependencies = TRUE)
       
-      - name: Debug fit_survival function
+      - name: Install your package
         shell: Rscript {0}
         run: |
-          print(packageVersion("landmaRk"))
-          print(args(landmaRk::fit_survival))
+          install.packages(c("devtools"), repos = "https://cloud.r-project.org")
+          devtools::install(dependencies = TRUE)
+
+      - name: Debug predictRE and predictY
+        shell: Rscript {0}
+        run: |
+          print(packageVersion("lcmm"))
+          print(args(lcmm::predictRE))
+          print(args(lcmm::predictY))
       - name: Check
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
