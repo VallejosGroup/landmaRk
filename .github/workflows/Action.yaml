@@ -60,9 +60,10 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
         with:
           pandoc-version: '2.7.3' # The pandoc version to download (if necessary) and use.
-          
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache-version: 2
           extra-packages: local::./lcmm
 
       - name: Check
