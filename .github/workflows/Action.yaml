@@ -63,8 +63,9 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache: false 
           cache-version: 2
-          extra-packages: local::./lcmm
+          extra-packages: local::./lcmm,any::rcmdcheck
 
       - name: Check
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
