@@ -70,6 +70,7 @@ jobs:
 
       - name: Install lcmm package
         run: R CMD INSTALL ./lcmm
+        shell: bash
       - name: Install your package
         shell: Rscript {0}
         run: |
