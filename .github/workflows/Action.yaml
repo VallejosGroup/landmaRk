@@ -62,12 +62,12 @@ jobs:
           pandoc-version: '2.7.3' # The pandoc version to download (if necessary) and use.
       - name: Initialise and update git submodules
         run: git submodule update --init --recursive
-      - name: Install lcmm dependencies
-        run: |
-          install.packages(c("mvtnorm", "spacefillr", "marqLevAlg", "doParallel", "numDeriv"), repos = "https://cloud.r-project.org")
+      - name: Install lcmm dependencies and package
         shell: Rscript {0}
-      - name: Install lcmm
-        run: R CMD INSTALL ./lcmm
+        run: |
+          install.packages(c("mvtnorm", "spacefillr", "marqLevAlg", "doParallel", "numDeriv"),
+                           repos = "https://cloud.r-project.org")
+          system("R CMD INSTALL ./lcmm")
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
