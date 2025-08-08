@@ -69,9 +69,10 @@ jobs:
           install.packages(c("mvtnorm", "spacefillr", "marqLevAlg", "doParallel", "numDeriv"),
                            repos = "https://cloud.r-project.org")
 
-      - name: Install lcmm package
-        run: R CMD INSTALL ./lcmm
-        shell: bash
+      - name: Install lcmm package from local submodule
+        shell: Rscript {0}
+        run: |
+          install.packages("./lcmm", repos = NULL, type = "source")
       - name: Install your package
         shell: Rscript {0}
         run: |
