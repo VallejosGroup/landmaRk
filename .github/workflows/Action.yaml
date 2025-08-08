@@ -63,9 +63,9 @@ jobs:
       - name: Initialise and update git submodules
         run: git submodule update --init --recursive
       - name: Install lcmm dependencies
-          run: |
-            install.packages(c("mvtnorm", "spacefillr", "marqLevAlg", "doParallel", "numDeriv"), repos = "https://cloud.r-project.org")
-          shell: Rscript {0}
+        run: |
+          install.packages(c("mvtnorm", "spacefillr", "marqLevAlg", "doParallel", "numDeriv"), repos = "https://cloud.r-project.org")
+        shell: Rscript {0}
       - name: Install lcmm
         run: R CMD INSTALL ./lcmm
       - uses: r-lib/actions/setup-r-dependencies@v2
