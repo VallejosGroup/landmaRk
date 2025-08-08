@@ -60,7 +60,7 @@ test_that("LCMM works as expected", {
       dynamic_covariates = "dose"
     ),
     paste(
-      "lcmm::predictY produced 387 predictions but expected 430 predictions.\n",
+      "lcmm::predictRE produced 384 predictions but expected 427 predictions.\n",
       "Probable reason: static covariates contain missing data.\n"
     )
   )

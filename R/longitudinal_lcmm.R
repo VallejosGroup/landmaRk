@@ -30,6 +30,7 @@
     subject = subject,
     ng = ng,
     B = model_init,
+    returndata = TRUE,
     ...
   )
 
@@ -38,6 +39,10 @@
   model_fit$call$fixed <- formula
   model_fit$call$mixture <- mixture
   model_fit$call$random <- random
+  model_fit$call$subject <- subject
+  model_fit$call$ng <- ng
+  model_fit$call$data <- data
+  model_fit$call$B <- model_init
 
   model_fit
 }
@@ -83,6 +88,71 @@
   avg = FALSE,
   include_clusters = FALSE
 ) {
+  # Step 1. we make predictions for individuals in the training set.
+
+  # Step 1a. We estimate the random effects for individuals in the training set
+  x$call[[1]] <- expr(hlme)
+  predRE <- lcmm::predictRE(x, x$data, subject = subject, classpredRE = TRUE)
+
+  # Step 1b. Find ids of individuals in the training set
+  in_train_set <- unique(x$data[, subject])
+  if (length(unique(predRE[, subject])) != length(in_train_set)) {
+    stop(sprintf(
+      paste(
+        "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
+        "Probable reason: static covariates contain missing data.\n"
+      ),
+      length(unique(predRE[, subject])),
+      length(in_train_set)
+    ))
+  }
+
+  # Step 1c. Find class-specific predictions for individuals in the training set.
+  predictions_step1 <- t(sapply(
+    in_train_set,
+    function(individual) {
+      return(
+        lcmm::predictY(
+          x,
+          newdata = newdata |> filter(get(subject) == individual),
+          predRE = predRE |> filter(get(subject) == individual)
+        )$pred
+      )
+    }
+  ))
+
+  predictions_step1 <- as.data.frame(predictions_step1)
+  predictions_step1[, subject] <- in_train_set
+  predictions_step1 <- predictions_step1 |> relocate(subject)
+  colnames(predictions_step1) <- c(
+    subject,
+    paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
+  )
+
+  # Step 1d. Estimate most likely cluster, and cluster allocation probabilities,
+  # for individuals in the training set
+  predicted_class_step1 <- lcmm::predictClass(x, x$data)
+
+  # Step 2. we make predictions for individuals outwith the training set.
+
+  # Step 2a. Find ids of individuals outwith the training set
+  not_in_train_set <- setdiff(
+    unique(newdata[, subject]),
+    in_train_set
+  )
+
+  # Step 2b. Find class-specific predictions for individuals outwith the training set.
+  if (length(not_in_train_set) > 0) {
+    predictions_step2 <- lcmm::predictY(
+      x,
+      newdata = newdata |>
+        filter(!(get(subject) %in% in_train_set))
+    )$pred
+    predictions_step2 <- as.data.frame(predictions_step2)
+    predictions_step2[, subject] <- not_in_train_set
+    predictions_step2 <- predictions_step2 |> relocate(subject)
+  }
+
   # pprob contains probabilities for subjects belonging to each certain cluster,
   # However posterior probabilities are unavailable for  individuals not
   # included in the model fitting.
@@ -121,37 +191,37 @@
     # Reset row names and column names to match the original pprob structure
     rownames(pprob.extra) <- NULL
     colnames(pprob.extra) <- colnames(pprob)
+
     pprob <- rbind(pprob, pprob.extra) |> arrange(get(subject))
   }
 
-  predictions <- lcmm::predictY(
-    x,
-    newdata = newdata,
-    var.time = var.time,
-    marg = TRUE
-  )
-  if (nrow(predictions$pred) != nrow(newdata)) {
-    stop(sprintf(
-      paste(
-        "lcmm::predictY produced %d predictions but expected %d predictions.\n",
-        "Probable reason: static covariates contain missing data.\n"
-      ),
-      nrow(predictions$pred),
-      nrow(newdata)
-    ))
+  if (length(not_in_train_set) > 0) {
+    predictions <- rbind(
+      predictions_step1,
+      predictions_step2
+    ) |>
+      arrange(get(subject))
+  } else {
+    predictions <- predictions_step1
   }
-  # Choose correct cluster for prediction
-  if (avg == FALSE) {
+  # If avg == TRUE, we return an average weighted according to cluster
+  # probabilities. If avg == FALSE, we return the prediction according to the
+  # most likely cluster
+  if (avg) {
     predictions <- rowSums(
-      predictions$pred *
+      as.matrix(predictions[, -1]) *
+        as.matrix(pprob[, -c(1, 2)])
+    )
+  } else {
+    predictions <- rowSums(
+      as.matrix(predictions[, -1]) *
         model.matrix(
           ~ as.factor(pprob$class) - 1,
           data = as.data.frame(pprob$class)
         )
     )
-  } else {
-    predictions <- rowSums(predictions$pred * as.matrix(pprob[, -c(1, 2)]))
   }
+
   # Store predictions in LandmarkAnalysis object
   names(predictions) <- newdata[, subject]
 
