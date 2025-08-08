@@ -72,6 +72,18 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+      - name: Install dependencies and your package
+        shell: Rscript {0}
+        run: |
+          install.packages("remotes", repos = "https://cloud.r-project.org")
+          remotes::install_deps(dependencies = TRUE)
+          devtools::install(dependencies = TRUE)
+      
+      - name: Debug fit_survival function
+        shell: Rscript {0}
+        run: |
+          print(packageVersion("landmaRk"))
+          print(args(landmaRk::fit_survival))
       - name: Check
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
