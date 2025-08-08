@@ -60,34 +60,12 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
         with:
           pandoc-version: '2.7.3' # The pandoc version to download (if necessary) and use.
-      - name: Initialise and update git submodules
-        run: git submodule update --init --recursive
-        shell: bash
-      - name: Install lcmm dependencies
+      - name: Install lcmm 
         shell: Rscript {0}
         run: |
-          install.packages(c("mvtnorm", "spacefillr", "marqLevAlg", "doParallel", "numDeriv"),
-                           repos = "https://cloud.r-project.org")
+          install.packages("devtools", repos = "https://cloud.r-project.org")
+          devtools::install("lcmm")
 
-      - name: Install lcmm package (cross-platform)
-        shell: Rscript {0}
-        run: |
-          path <- normalizePath("lcmm")
-          message("Installing lcmm from: ", path)
-          install.packages(path, repos = NULL, type = "source")
-
-      - name: Install your package
-        shell: Rscript {0}
-        run: |
-          install.packages(c("devtools"), repos = "https://cloud.r-project.org")
-          devtools::install(dependencies = TRUE)
-
-      - name: Debug predictRE and predictY
-        shell: Rscript {0}
-        run: |
-          print(packageVersion("lcmm"))
-          print(args(lcmm::predictRE))
-          print(args(lcmm::predictY))
       - name: Check
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
