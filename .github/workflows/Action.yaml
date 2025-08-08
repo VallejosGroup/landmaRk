@@ -61,7 +61,7 @@ jobs:
         with:
           pandoc-version: '2.7.3' # The pandoc version to download (if necessary) and use.
       - name: Initialise and update git submodules
-	run: git submodule update --init --recursive
+        run: git submodule update --init --recursive
       - name: Install lcmm
         run: install.packages("devtools"); devtools::install("lcmm")
         shell: Rscript {0}
