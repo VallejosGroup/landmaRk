@@ -75,7 +75,7 @@ jobs:
       - name: Install dependencies and your package
         shell: Rscript {0}
         run: |
-          install.packages("remotes", repos = "https://cloud.r-project.org")
+          install.packages(c("remotes", "devtools"), repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)
           devtools::install(dependencies = TRUE)
       
