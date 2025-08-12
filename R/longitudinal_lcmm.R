@@ -86,8 +86,11 @@
   subject,
   var.time,
   avg = FALSE,
-  include_clusters = FALSE
+  include_clusters = FALSE,
+  .k = 0,
+  test = FALSE
 ) {
+  hlme <- NULL
   # Step 1. we make predictions for individuals in the training set.
 
   # Step 1a. We estimate the random effects for individuals in the training set
@@ -108,26 +111,28 @@
   }
 
   # Step 1c. Find class-specific predictions for individuals in the training set.
-  predictions_step1 <- t(sapply(
-    in_train_set,
-    function(individual) {
-      return(
-        lcmm::predictY(
-          x,
-          newdata = newdata |> filter(get(subject) == individual),
-          predRE = predRE |> filter(get(subject) == individual)
-        )$pred
-      )
-    }
-  ))
+  if (!test) {
+    predictions_step1 <- t(sapply(
+      in_train_set,
+      function(individual) {
+        return(
+          lcmm::predictY(
+            x,
+            newdata = newdata |> filter(get(subject) == individual),
+            predRE = predRE |> filter(get(subject) == individual)
+          )$pred
+        )
+      }
+    ))
 
-  predictions_step1 <- as.data.frame(predictions_step1)
-  predictions_step1[, subject] <- in_train_set
-  predictions_step1 <- predictions_step1 |> relocate(subject)
-  colnames(predictions_step1) <- c(
-    subject,
-    paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
-  )
+    predictions_step1 <- as.data.frame(predictions_step1)
+    predictions_step1[, subject] <- in_train_set
+    predictions_step1 <- predictions_step1 |> relocate(subject)
+    colnames(predictions_step1) <- c(
+      subject,
+      paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
+    )
+  }
 
   # Step 1d. Estimate most likely cluster, and cluster allocation probabilities,
   # for individuals in the training set
@@ -196,11 +201,16 @@
   }
 
   if (length(not_in_train_set) > 0) {
-    predictions <- rbind(
-      predictions_step1,
-      predictions_step2
-    ) |>
-      arrange(get(subject))
+    if (test) {
+      predictions <- predictions_step2 |>
+        arrange(get(subject))
+    } else {
+      predictions <- rbind(
+        predictions_step1,
+        predictions_step2
+      ) |>
+        arrange(get(subject))
+    }
   } else {
     predictions <- predictions_step1
   }
@@ -213,13 +223,18 @@
         as.matrix(pprob[, -c(1, 2)])
     )
   } else {
-    predictions <- rowSums(
-      as.matrix(predictions[, -1]) *
-        model.matrix(
-          ~ as.factor(pprob$class) - 1,
-          data = as.data.frame(pprob$class)
-        )
-    )
+    if (test) {
+      model_matrix_aux <- pprob |> inner_join(newdata, by = subject) |> select(starts_with("prob")) |> as.matrix()
+      predictions <- rowSums(as.matrix(predictions[, -1]) * model_matrix_aux)
+    } else {
+      predictions <- rowSums(
+        as.matrix(predictions[, -1]) *
+          model.matrix(
+            ~ as.factor(pprob$class) - 1,
+            data = as.data.frame(pprob$class)
+          )
+      )
+    }
   }
 
   # Store predictions in LandmarkAnalysis object

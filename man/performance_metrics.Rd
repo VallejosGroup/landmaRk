@@ -4,7 +4,16 @@
 \alias{performance_metrics}
 \title{Performance metrics}
 \usage{
-performance_metrics(x, landmarks, horizons, c_index = TRUE, brier = TRUE)
+performance_metrics(
+  x,
+  landmarks,
+  horizons,
+  c_index = TRUE,
+  brier = TRUE,
+  auc_t = FALSE,
+  train = TRUE,
+  .k = 0
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
@@ -17,6 +26,14 @@ submodel is fitted.}
 \item{c_index}{A logical. If TRUE (default), C index is reported.}
 
 \item{brier}{A logical. If TRUE (default), Brier score is reported.}
+
+\item{auc_t}{A logical. If TRUE (default), AUC_t is reported.}
+
+\item{train}{A logical. If TRUE (default), performance metrics are computed
+in the training set. If FALSE (default), they are computed in the test set.}
+
+\item{.k}{A numeric. Refers to the CV fold where in-sample and out-of-sample
+prediction metrics.}
 }
 \value{
 Data frame with performance metrics across the specified landmark

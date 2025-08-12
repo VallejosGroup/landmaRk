@@ -9,6 +9,12 @@
 #'   submodel is fitted.
 #' @param c_index A logical. If TRUE (default), C index is reported.
 #' @param brier A logical. If TRUE (default), Brier score is reported.
+#' @param auc_t A logical. If TRUE (default), AUC_t is reported.
+#' @param train A logical. If TRUE (default), performance metrics are computed
+#'   in the training set. If FALSE (default), they are computed in the test set.
+#' @param .k A numeric. Refers to the CV fold where in-sample and out-of-sample
+#'   prediction metrics.
+
 #'
 #' @returns Data frame with performance metrics across the specified landmark
 #' times and prediction horizons.
@@ -17,7 +23,7 @@
 #' @examples
 setGeneric(
   "performance_metrics",
-  function(x, landmarks, horizons, c_index = TRUE, brier = TRUE) {
+  function(x, landmarks, horizons, c_index = TRUE, brier = TRUE, auc_t = FALSE, train = TRUE, .k = 0) {
     standardGeneric("performance_metrics")
   }
 )
@@ -36,8 +42,9 @@ setGeneric(
 setMethod(
   "performance_metrics",
   "LandmarkAnalysis",
-  function(x, landmarks, horizons, c_index = TRUE, brier = TRUE) {
+  function(x, landmarks, horizons, c_index = TRUE, brier = TRUE, auc_t = FALSE, train = TRUE, .k = 0) {
     error_str <- NULL
+    fold <- NULL
     if (!inherits(x, "LandmarkAnalysis")) {
       error_str <- c(
         error_str,
@@ -67,33 +74,30 @@ setMethod(
     }
 
     scores <- cbind(landmark = landmarks, horizon = horizons)
-    brier_list <- list()
+    brier_list  <- list()
     cindex_list <- list()
+    auct_list   <- list()
     for (i in seq_along(landmarks)) {
       landmark <- landmarks[i]
       horizon <- horizons[i]
       at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
 
-      # Construct survival analysis dataset (censor events past horizon time)
-      dataset <- data.frame(at_risk_individuals)
-      colnames(dataset) <- x@ids
-      dataset <- dataset |>
-        left_join(x@data_static, by = stats::setNames(x@ids, x@ids)) |>
-        mutate(
-          event_status = ifelse(
-            get(x@event_time) > horizon,
-            0,
-            get(x@event_indicator)
-          ),
-          event_time = ifelse(
-            get(x@event_time) > horizon,
-            horizon - landmark,
-            get(x@event_time) - landmark
-          )
-        )
+      # Retrieve survival analysis dataset (censor events past horizon time)
+      dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
 
-      predictions <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
-      if (brier == TRUE) {
+      # Recover the observations and predictions (in-sample or out-of-sample)
+      if (train) {
+        dataset <- dataset |>
+          inner_join(x@cv_folds |> filter(fold != .k) |> select(x@ids), by = x@ids)
+        predictions <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
+      } else {
+        dataset <- dataset |>
+          inner_join(x@cv_folds |> filter(fold == .k) |> select(x@ids), by = x@ids)
+        predictions <- x@survival_predictions_test[[paste0(landmark, "-", horizon)]]
+      }
+
+
+      if (brier) {
         brier_list[[paste0(landmark, "-", horizon)]] <-
           .BinaryBrierScore(
             predictions = predictions,
@@ -103,7 +107,7 @@ setMethod(
             cause = 1
           )
       }
-      if (c_index == TRUE) {
+      if (c_index) {
         cindex_list[[paste0(landmark, "-", horizon)]] <-
           .CIndexCRisks(
             predictions = predictions,
@@ -114,7 +118,21 @@ setMethod(
             method = "survival",
             cens.code = 0
           )
+
       }
+      # if (auc_t) {
+      #   auct_list[[paste0(landmark, "-", horizon)]] <-
+      #     prueba <- timeROC::timeROC(
+      #       T = dataset[, "event_time"],
+      #       delta = dataset[, "event_status"],
+      #       marker = unname(predictions),
+      #       cause = 1,
+      #       weighting = "marginal",
+      #       times = 365.25,
+      #       iid = TRUE
+      #     )
+#
+      # }
     }
     if (c_index == TRUE) {
       scores <- cbind(scores, cindex = unlist(cindex_list))
