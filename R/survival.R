@@ -78,7 +78,6 @@ setMethod(
     include_clusters = FALSE,
     .k = 0
   ) {
-
     # Check that method is a function with arguments formula, data, ...
     method <- .check_method_survival_predict(method)
 
@@ -91,26 +90,32 @@ setMethod(
       # Recover risk sets (ids of individuals who are at risk at landmark time)
       # Construct dataset for survival analysis (censor events past horizon time)
       x@survival_datasets[[paste0(landmarks, "-", horizons)]] <-
-        .create_survival_dataframe(x, landmarks, horizons, dynamic_covariates, include_clusters, .k, train = TRUE)
+        .create_survival_dataframe(
+          x,
+          landmarks,
+          horizons,
+          dynamic_covariates,
+          include_clusters,
+          .k,
+          train = TRUE
+        )
 
-
-    # Include predicted cluster membership in the training dataset and in the survival formula
-    if (length(dynamic_covariates) > 0 && include_clusters == TRUE) {
-      for (dynamic_covariate in dynamic_covariates) {
-        formula <- as.formula(
-          paste(
-            as.character(formula)[2],
-            as.character(formula)[1],
-            paste0(
-              as.character(formula)[3],
-              " + ",
-              paste0("cluster_", dynamic_covariate)
+      # Include predicted cluster membership in the training dataset and in the survival formula
+      if (length(dynamic_covariates) > 0 && include_clusters == TRUE) {
+        for (dynamic_covariate in dynamic_covariates) {
+          formula <- as.formula(
+            paste(
+              as.character(formula)[2],
+              as.character(formula)[1],
+              paste0(
+                as.character(formula)[3],
+                " + ",
+                paste0("cluster_", dynamic_covariate)
+              )
             )
           )
-        )
+        }
       }
-    }
-
 
       # Call to method that performs survival analysis
       if (is(method)[1] == "character" && method == "coxph") {
@@ -175,7 +180,16 @@ setMethod(
 #' @examples
 setGeneric(
   "predict_survival",
-  function(x, landmarks, horizons, method, dynamic_covariates = c(), include_clusters = FALSE, .k = 0, ...) {
+  function(
+    x,
+    landmarks,
+    horizons,
+    method,
+    dynamic_covariates = c(),
+    include_clusters = FALSE,
+    .k = 0,
+    ...
+  ) {
     standardGeneric("predict_survival")
   }
 )
@@ -191,7 +205,16 @@ setGeneric(
 setMethod(
   "predict_survival",
   "LandmarkAnalysis",
-  function(x, landmarks, horizons, method, dynamic_covariates = c(), include_clusters = FALSE, .k = 0, ...) {
+  function(
+    x,
+    landmarks,
+    horizons,
+    method,
+    dynamic_covariates = c(),
+    include_clusters = FALSE,
+    .k = 0,
+    ...
+  ) {
     # Check that method is a function with arguments formula, data, ...
     if (is(method)[1] == "character" && method == "coxph") {
       method <- predict
@@ -235,15 +258,40 @@ setMethod(
       if (.k > 0) {
         x@survival_predictions_test[[model_name]] <- method(
           x@survival_fits[[model_name]],
-          .create_survival_dataframe(x, landmarks, horizons, dynamic_covariates, include_clusters, .k, train = FALSE),
+          .create_survival_dataframe(
+            x,
+            landmarks,
+            horizons,
+            dynamic_covariates,
+            include_clusters,
+            .k,
+            train = FALSE
+          ),
           ...
-      )
-    }
-
+        )
+      }
     } else {
       # Recursion
-      x <- predict_survival(x, landmarks[1], horizons[1], method, dynamic_covariates, include_clusters, .k, ...)
-      x <- predict_survival(x, landmarks[-1], horizons[-1], method, dynamic_covariates, include_clusters, .k, ...)
+      x <- predict_survival(
+        x,
+        landmarks[1],
+        horizons[1],
+        method,
+        dynamic_covariates,
+        include_clusters,
+        .k,
+        ...
+      )
+      x <- predict_survival(
+        x,
+        landmarks[-1],
+        horizons[-1],
+        method,
+        dynamic_covariates,
+        include_clusters,
+        .k,
+        ...
+      )
     }
     x
   }

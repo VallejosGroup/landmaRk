@@ -184,14 +184,13 @@ LandmarkAnalysis <- function(
   N <- nrow(data_static)
   if (ids %in% colnames(data_static)) {
     if (K > 1) {
-      parts <- rep(1:K, floor(N/K))
+      parts <- rep(1:K, floor(N / K))
       if (N %% K > 0) {
         parts <- c(parts, 1:(N %% K))
       }
       parts <- sample(parts)
 
       cv_folds <- cbind(data_static[, ids], parts)
-
     } else {
       # If K == 1 (no cross-validation), allocate all individuals to cv fold 1.
       cv_folds <- cbind(data_static[, ids], 1)
@@ -201,7 +200,6 @@ LandmarkAnalysis <- function(
   } else {
     .eval_error_str("@ids must be a column in every dataframe in @data_dynamic")
   }
-
 
   new(
     "LandmarkAnalysis",

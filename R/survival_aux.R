@@ -68,17 +68,31 @@
   }
 }
 
-.create_survival_dataframe <- function(x, landmarks, horizons, dynamic_covariates = c(), include_clusters = FALSE, .k = 0, train = TRUE) {
+.create_survival_dataframe <- function(
+  x,
+  landmarks,
+  horizons,
+  dynamic_covariates = c(),
+  include_clusters = FALSE,
+  .k = 0,
+  train = TRUE
+) {
   fold <- NULL
   # Create dataframe for survival analysis
-  survival_df <- x@survival_datasets[[paste0(landmarks, "-", horizons)]] <- x@data_static[
+  survival_df <- x@survival_datasets[[paste0(
+    landmarks,
+    "-",
+    horizons
+  )]] <- x@data_static[
     which(x@data_static[, x@event_time] >= landmarks),
   ]
   # Select individuals for train or for test
   if (train) {
-    survival_df <- survival_df |> inner_join(x@cv_folds |> filter(fold != .k) |> select(x@ids), by = x@ids)
+    survival_df <- survival_df |>
+      inner_join(x@cv_folds |> filter(fold != .k) |> select(x@ids), by = x@ids)
   } else {
-    survival_df <- survival_df |> inner_join(x@cv_folds |> filter(fold == .k) |> select(x@ids), by = x@ids)
+    survival_df <- survival_df |>
+      inner_join(x@cv_folds |> filter(fold == .k) |> select(x@ids), by = x@ids)
   }
   # Censor observations past the horizon time
   survival_df <- survival_df |>
@@ -109,7 +123,9 @@
           dynamic_covariate
         ]]
       } else {
-        predictions <- x@longitudinal_predictions_test[[as.character(landmarks)]][[
+        predictions <- x@longitudinal_predictions_test[[as.character(
+          landmarks
+        )]][[
           dynamic_covariate
         ]]
       }
@@ -128,11 +144,7 @@
         colnames(survival_df)[ncol(survival_df)] <- dynamic_covariate
       }
     }
-
-
   }
 
-
   survival_df
-
 }

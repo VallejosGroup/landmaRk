@@ -100,7 +100,11 @@ setMethod(
           dynamic_covariate,
           at_risk_individuals,
           landmark
-        ) |> inner_join(x@cv_folds |> filter(fold != .k) |> select(x@ids), by = x@ids)
+        ) |>
+          inner_join(
+            x@cv_folds |> filter(fold != .k) |> select(x@ids),
+            by = x@ids
+          )
         prop_individuals_few_obs <- sum(table(dataframe$id) <= 1) /
           length(at_risk_individuals)
         if (prop_individuals_few_obs >= 0.25) {
@@ -265,7 +269,10 @@ setMethod(
               left_join(x@data_static, by = stats::setNames(x@ids, x@ids))
 
             newdata_train <- newdata |>
-              inner_join(x@cv_folds |> filter(fold != .k) |> select(x@ids), by = x@ids)
+              inner_join(
+                x@cv_folds |> filter(fold != .k) |> select(x@ids),
+                by = x@ids
+              )
             x@longitudinal_predictions[[as.character(landmarks)]][[
               dynamic_covariate
             ]] <- method(
@@ -283,12 +290,14 @@ setMethod(
                 x@longitudinal_fits[[as.character(landmarks)]][[
                   dynamic_covariate
                 ]],
-                newdata = newdata|>
-                  inner_join(x@cv_folds |> filter(fold == .k) |> select(x@ids), by = x@ids),
+                newdata = newdata |>
+                  inner_join(
+                    x@cv_folds |> filter(fold == .k) |> select(x@ids),
+                    by = x@ids
+                  ),
                 ...
               )
             }
-
           }
 
           predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[
