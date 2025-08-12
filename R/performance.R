@@ -23,7 +23,16 @@
 #' @examples
 setGeneric(
   "performance_metrics",
-  function(x, landmarks, horizons, c_index = TRUE, brier = TRUE, auc_t = FALSE, train = TRUE, .k = 0) {
+  function(
+    x,
+    landmarks,
+    horizons,
+    c_index = TRUE,
+    brier = TRUE,
+    auc_t = FALSE,
+    train = TRUE,
+    .k = 0
+  ) {
     standardGeneric("performance_metrics")
   }
 )
@@ -42,7 +51,16 @@ setGeneric(
 setMethod(
   "performance_metrics",
   "LandmarkAnalysis",
-  function(x, landmarks, horizons, c_index = TRUE, brier = TRUE, auc_t = FALSE, train = TRUE, .k = 0) {
+  function(
+    x,
+    landmarks,
+    horizons,
+    c_index = TRUE,
+    brier = TRUE,
+    auc_t = FALSE,
+    train = TRUE,
+    .k = 0
+  ) {
     error_str <- NULL
     fold <- NULL
     if (!inherits(x, "LandmarkAnalysis")) {
@@ -74,9 +92,9 @@ setMethod(
     }
 
     scores <- cbind(landmark = landmarks, horizon = horizons)
-    brier_list  <- list()
+    brier_list <- list()
     cindex_list <- list()
-    auct_list   <- list()
+    auct_list <- list()
     for (i in seq_along(landmarks)) {
       landmark <- landmarks[i]
       horizon <- horizons[i]
@@ -88,14 +106,23 @@ setMethod(
       # Recover the observations and predictions (in-sample or out-of-sample)
       if (train) {
         dataset <- dataset |>
-          inner_join(x@cv_folds |> filter(fold != .k) |> select(x@ids), by = x@ids)
+          inner_join(
+            x@cv_folds |> filter(fold != .k) |> select(x@ids),
+            by = x@ids
+          )
         predictions <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
       } else {
         dataset <- dataset |>
-          inner_join(x@cv_folds |> filter(fold == .k) |> select(x@ids), by = x@ids)
-        predictions <- x@survival_predictions_test[[paste0(landmark, "-", horizon)]]
+          inner_join(
+            x@cv_folds |> filter(fold == .k) |> select(x@ids),
+            by = x@ids
+          )
+        predictions <- x@survival_predictions_test[[paste0(
+          landmark,
+          "-",
+          horizon
+        )]]
       }
-
 
       if (brier) {
         brier_list[[paste0(landmark, "-", horizon)]] <-
@@ -118,7 +145,6 @@ setMethod(
             method = "survival",
             cens.code = 0
           )
-
       }
       # if (auc_t) {
       #   auct_list[[paste0(landmark, "-", horizon)]] <-
@@ -131,7 +157,7 @@ setMethod(
       #       times = 365.25,
       #       iid = TRUE
       #     )
-#
+      #
       # }
     }
     if (c_index == TRUE) {

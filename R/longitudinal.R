@@ -122,7 +122,7 @@ setMethod(
     }
 
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
-    # for (landmark in landmarks)
+      # for (landmark in landmarks)
       {
         .check_riskset(x, landmark)
         # Create list for storing model fits for longitudinal analysis
@@ -200,7 +200,7 @@ setMethod(
   "LandmarkAnalysis",
   function(x, landmarks, method, dynamic_covariates, .k = 0, ...) {
     value <- NULL # Global var
-    fold  <- NULL # Global var
+    fold <- NULL # Global var
 
     method <- .check_method_long_predict(method)
 

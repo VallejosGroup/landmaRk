@@ -224,7 +224,10 @@
     )
   } else {
     if (test) {
-      model_matrix_aux <- pprob |> inner_join(newdata, by = subject) |> select(starts_with("prob")) |> as.matrix()
+      model_matrix_aux <- pprob |>
+        inner_join(newdata, by = subject) |>
+        select(starts_with("prob")) |>
+        as.matrix()
       predictions <- rowSums(as.matrix(predictions[, -1]) * model_matrix_aux)
     } else {
       predictions <- rowSums(
