@@ -17,6 +17,8 @@
 #' @param formula A formula to be used in longitudinal sub-model fitting.
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
+#' @param .k If positive, cross-validation fold where model is fitted. If 0
+#'   (default), model fitting is performed in the complete dataset.
 #' @param cores Number of cores/threads to be used for parallel computation on
 #'   Linux and MacOS. Defaults to either \code{options("Ncpus")} if set, or 1
 #'   (single threaded) otherwise. Only single-threaded computation is currently
@@ -35,6 +37,7 @@ setGeneric(
     method,
     formula,
     dynamic_covariates,
+    .k = 0,
     cores = getOption("Ncpus", 1L),
     ...
   ) {
@@ -68,10 +71,12 @@ setMethod(
     method,
     formula,
     dynamic_covariates,
+    .k = 0,
     cores = getOption("Ncpus", 1L),
     ...
   ) {
     landmark <- NULL # Global var
+    fold <- NULL # Global var
 
     method <- .check_method_long_fit(method)
 
@@ -95,7 +100,7 @@ setMethod(
           dynamic_covariate,
           at_risk_individuals,
           landmark
-        )
+        ) |> inner_join(x@cv_folds |> filter(fold != .k) |> select(x@ids), by = x@ids)
         prop_individuals_few_obs <- sum(table(dataframe$id) <= 1) /
           length(at_risk_individuals)
         if (prop_individuals_few_obs >= 0.25) {
@@ -157,6 +162,8 @@ setMethod(
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
+#' @param .k If positive, cross-validation fold where model is fitted. If 0
+#'   (default), model fitting is performed in the complete dataset.
 #' @param ... Additional arguments passed to the prediction function (e.g.
 #'   number of classes/clusters for lcmm).
 #'
@@ -166,7 +173,7 @@ setMethod(
 #' @examples
 setGeneric(
   "predict_longitudinal",
-  function(x, landmarks, method, dynamic_covariates, ...) {
+  function(x, landmarks, method, dynamic_covariates, .k = 0, ...) {
     standardGeneric("predict_longitudinal")
   }
 )
@@ -182,7 +189,7 @@ setGeneric(
 setMethod(
   "predict_longitudinal",
   "LandmarkAnalysis",
-  function(x, landmarks, method, dynamic_covariates, ...) {
+  function(x, landmarks, method, dynamic_covariates, .k = 0, ...) {
     value <- NULL # Global var
 
     method <- .check_method_long_predict(method)
@@ -230,6 +237,9 @@ setMethod(
         risk_set <- x@risk_sets[[as.character(landmarks)]]
         # Create list for storing model predictions, for longitudinal analysis
         x@longitudinal_predictions[[as.character(landmarks)]] <- list()
+        if (.k > 0) {
+          x@longitudinal_predictions_test[[as.character(landmarks)]] <- list()
+        }
         # Loop that iterates over all time-varying covariates, to fit a longitudinal
         # model for the underlying trajectories
         for (dynamic_covariate in names(x@data_dynamic)) {
@@ -254,15 +264,31 @@ setMethod(
             newdata <- newdata |>
               left_join(x@data_static, by = stats::setNames(x@ids, x@ids))
 
+            newdata_train <- newdata |>
+              inner_join(x@cv_folds |> filter(fold != .k) |> select(x@ids), by = x@ids)
             x@longitudinal_predictions[[as.character(landmarks)]][[
               dynamic_covariate
             ]] <- method(
               x@longitudinal_fits[[as.character(landmarks)]][[
                 dynamic_covariate
               ]],
-              newdata = newdata,
+              newdata = newdata_train,
               ...
             )
+
+            if (.k > 0) {
+              x@longitudinal_predictions_test[[as.character(landmarks)]][[
+                dynamic_covariate
+              ]] <- method(
+                x@longitudinal_fits[[as.character(landmarks)]][[
+                  dynamic_covariate
+                ]],
+                newdata = newdata|>
+                  inner_join(x@cv_folds |> filter(fold == .k) |> select(x@ids), by = x@ids),
+                ...
+              )
+            }
+
           }
 
           predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[
@@ -274,7 +300,7 @@ setMethod(
             length(predictions),
             nrow(predictions)
           )
-          if (npred != nrow(newdata)) {
+          if (npred != nrow(newdata_train)) {
             stop(paste(
               "Number of predictions for dynamic_covariate",
               dynamic_covariate,
@@ -292,6 +318,7 @@ setMethod(
         landmarks[1],
         method,
         dynamic_covariates,
+        .k,
         ...
       )
       x <- predict_longitudinal(
@@ -299,6 +326,7 @@ setMethod(
         landmarks[-1],
         method,
         dynamic_covariates,
+        .k,
         ...
       )
     }

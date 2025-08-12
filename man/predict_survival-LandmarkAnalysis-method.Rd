@@ -4,7 +4,16 @@
 \alias{predict_survival,LandmarkAnalysis-method}
 \title{Make predictions for time-to-event outcomes at specified horizon times}
 \usage{
-\S4method{predict_survival}{LandmarkAnalysis}(x, landmarks, horizons, method, ...)
+\S4method{predict_survival}{LandmarkAnalysis}(
+  x,
+  landmarks,
+  horizons,
+  method,
+  dynamic_covariates = c(),
+  include_clusters = FALSE,
+  .k = 0,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
@@ -15,6 +24,15 @@
 is fitted.}
 
 \item{method}{R function that is used to make predictions}
+
+\item{dynamic_covariates}{Vector of time-varying covariates to be used
+in the survival model.}
+
+\item{include_clusters}{Boolean indicating whether to propagate cluster
+membership to survival analysis.}
+
+\item{.k}{If positive, cross-validation fold where model is fitted. If 0
+(default), model fitting is performed in the complete dataset.}
 
 \item{...}{Additional arguments passed to the prediction function (e.g.
 number of classes/clusters for lcmm).}

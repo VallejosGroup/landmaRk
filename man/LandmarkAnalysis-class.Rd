@@ -37,6 +37,9 @@ and biomarkers.}
 \item{\code{longitudinal_predictions}}{List of model predictions for the specified
 landmark times and biomarkers.}
 
+\item{\code{longitudinal_predictions_test}}{List of out-of-sample predictions for the
+specified landmark times and biomarkers.}
+
 \item{\code{survival_datasets}}{List of survival dataframes used in the survival
 submodel.}
 
@@ -45,5 +48,12 @@ landmark times.}
 
 \item{\code{survival_predictions}}{List of time-to-event predictions for the
 specified landmark times and prediction horizons.}
+
+\item{\code{survival_predictions_test}}{List of out-of-sample predictions
+for the time-to-event outcome if K > 1.}
+
+\item{\code{K}}{Number of cross-validation folds (1 by default)}
+
+\item{\code{cv_folds}}{Data frame associating individuals to cross-validation folds}
 }}
 

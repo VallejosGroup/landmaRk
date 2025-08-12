@@ -386,7 +386,9 @@ landmarking_object <- landmarking_object |>
     landmarks = seq(from = 365.25, to = 4 * 365.25, by = 365.25),
     horizons = seq(from = 2 * 365.25, to = 5 * 365.25, by = 365.25),
     method = "coxph",
-    type = "survival"
+    dynamic_covariates = c("dose"),
+    include_clusters = TRUE,
+    type = "survival", 
   )
 ```
 

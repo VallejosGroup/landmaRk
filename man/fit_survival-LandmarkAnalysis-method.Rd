@@ -12,7 +12,8 @@ times specified by the user}
   horizons,
   method,
   dynamic_covariates = c(),
-  include_clusters = FALSE
+  include_clusters = FALSE,
+  .k = 0
 )
 }
 \arguments{
@@ -32,6 +33,9 @@ in the survival model.}
 
 \item{include_clusters}{Boolean indicating whether to propagate cluster
 membership to survival analysis.}
+
+\item{.k}{If positive, cross-validation fold where model is fitted. If 0
+(default), model fitting is performed in the complete dataset.}
 }
 \value{
 An object of class \code{\link{LandmarkAnalysis}}.
