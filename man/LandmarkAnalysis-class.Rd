@@ -43,6 +43,9 @@ specified landmark times and biomarkers.}
 \item{\code{survival_datasets}}{List of survival dataframes used in the survival
 submodel.}
 
+\item{\code{survival_datasets_test}}{List of survival dataframes used for out-of-sample
+predictions with the survival submodel.}
+
 \item{\code{survival_fits}}{List of survival model fits at each of the specified
 landmark times.}
 

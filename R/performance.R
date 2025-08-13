@@ -11,10 +11,7 @@
 #' @param brier A logical. If TRUE (default), Brier score is reported.
 #' @param auc_t A logical. If TRUE (default), AUC_t is reported.
 #' @param train A logical. If TRUE (default), performance metrics are computed
-#'   in the training set. If FALSE (default), they are computed in the test set.
-#' @param .k A numeric. Refers to the CV fold where in-sample and out-of-sample
-#'   prediction metrics.
-
+#'   in the training set. If FALSE, they are computed in the test set.
 #'
 #' @returns Data frame with performance metrics across the specified landmark
 #' times and prediction horizons.
@@ -30,8 +27,7 @@ setGeneric(
     c_index = TRUE,
     brier = TRUE,
     auc_t = FALSE,
-    train = TRUE,
-    .k = 0
+    train = TRUE
   ) {
     standardGeneric("performance_metrics")
   }
@@ -58,8 +54,7 @@ setMethod(
     c_index = TRUE,
     brier = TRUE,
     auc_t = FALSE,
-    train = TRUE,
-    .k = 0
+    train = TRUE
   ) {
     error_str <- NULL
     fold <- NULL
@@ -105,18 +100,10 @@ setMethod(
 
       # Recover the observations and predictions (in-sample or out-of-sample)
       if (train) {
-        dataset <- dataset |>
-          inner_join(
-            x@cv_folds |> filter(fold != .k) |> select(x@ids),
-            by = x@ids
-          )
+        dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
         predictions <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
       } else {
-        dataset <- dataset |>
-          inner_join(
-            x@cv_folds |> filter(fold == .k) |> select(x@ids),
-            by = x@ids
-          )
+        dataset <- x@survival_datasets_test[[paste0(landmark, "-", horizon)]]
         predictions <- x@survival_predictions_test[[paste0(
           landmark,
           "-",
@@ -146,6 +133,18 @@ setMethod(
             cens.code = 0
           )
       }
+      if (auc_t) {
+        timepoints <- seq(min(dataset[, "event_time"]), max(dataset[, "event_time"]), length.out = 12)
+        timepoints <- timepoints[-c(1,length(timepoints))]
+        auct_list[[paste0(landmark, "-", horizon)]] <-
+          unname(timeROC::timeROC(
+            T = dataset[, "event_time"],
+            delta = dataset[, "event_status"],
+            marker = predictions,
+            cause = 1,
+            times = timepoints
+          )$AUC)
+      }
       # if (auc_t) {
       #   auct_list[[paste0(landmark, "-", horizon)]] <-
       #     prueba <- timeROC::timeROC(
@@ -160,11 +159,16 @@ setMethod(
       #
       # }
     }
-    if (c_index == TRUE) {
+    if (c_index) {
       scores <- cbind(scores, cindex = unlist(cindex_list))
     }
-    if (brier == TRUE) {
+    if (brier) {
       scores <- cbind(scores, brier = unlist(brier_list))
+    }
+    if (auc_t) {
+      auct_matrix <- do.call(rbind, auct_list)
+      colnames(auct_matrix) <- paste0("AUCt", 1:ncol(auct_matrix))
+      scores <- cbind(scores, auct_matrix)
     }
     return(scores)
   }

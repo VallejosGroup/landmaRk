@@ -31,7 +31,8 @@ Imports:
     lcmm,
     doParallel,
     foreach,
-    utils
+    utils,
+    timeROC
 Suggests: 
     knitr,
     rmarkdown,

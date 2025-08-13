@@ -218,10 +218,21 @@
   # probabilities. If avg == FALSE, we return the prediction according to the
   # most likely cluster
   if (avg) {
-    predictions <- rowSums(
-      as.matrix(predictions[, -1]) *
-        as.matrix(pprob[, -c(1, 2)])
-    )
+    if (test) {
+      pprob_matrix_aux <- pprob |>
+        inner_join(newdata, by = subject) |>
+        select(starts_with("prob")) |>
+        as.matrix()
+      predictions <- rowSums(
+        as.matrix(predictions[, -1]) *
+          pprob_matrix_aux
+      )
+    } else {
+      predictions <- rowSums(
+        as.matrix(predictions[, -1]) *
+          as.matrix(pprob[, -c(1, 2)])
+      )
+    }
   } else {
     if (test) {
       model_matrix_aux <- pprob |>

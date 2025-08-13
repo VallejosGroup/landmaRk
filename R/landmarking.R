@@ -21,6 +21,8 @@
 #'   specified landmark times and biomarkers.
 #' @slot survival_datasets List of survival dataframes used in the survival
 #'   submodel.
+#' @slot survival_datasets_test List of survival dataframes used for out-of-sample
+#'   predictions with the survival submodel.
 #' @slot survival_fits List of survival model fits at each of the specified
 #'   landmark times.
 #' @slot survival_predictions List of time-to-event predictions for the
@@ -47,6 +49,7 @@ setClass(
     longitudinal_predictions = "list",
     longitudinal_predictions_test = "list",
     survival_datasets = "list",
+    survival_datasets_test = "list",
     survival_fits = "list",
     survival_predictions = "list",
     survival_predictions_test = "list",
@@ -214,6 +217,8 @@ LandmarkAnalysis <- function(
     longitudinal_fits = list(),
     longitudinal_predictions = list(),
     longitudinal_predictions_test = list(),
+    survival_datasets = list(),
+    survival_datasets_test = list(),
     survival_fits = list(),
     survival_predictions = list(),
     survival_predictions_test = list(),

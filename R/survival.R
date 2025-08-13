@@ -256,8 +256,7 @@ setMethod(
       )
       # Out-of-sample predictions
       if (.k > 0) {
-        x@survival_predictions_test[[model_name]] <- method(
-          x@survival_fits[[model_name]],
+        x@survival_datasets_test[[model_name]] <-
           .create_survival_dataframe(
             x,
             landmarks,
@@ -266,7 +265,10 @@ setMethod(
             include_clusters,
             .k,
             train = FALSE
-          ),
+          )
+        x@survival_predictions_test[[model_name]] <- method(
+          x@survival_fits[[model_name]],
+          x@survival_datasets_test[[model_name]],
           ...
         )
       }

@@ -11,8 +11,7 @@
   c_index = TRUE,
   brier = TRUE,
   auc_t = FALSE,
-  train = TRUE,
-  .k = 0
+  train = TRUE
 )
 }
 \arguments{
@@ -30,10 +29,7 @@ submodel is fitted.}
 \item{auc_t}{A logical. If TRUE (default), AUC_t is reported.}
 
 \item{train}{A logical. If TRUE (default), performance metrics are computed
-in the training set. If FALSE (default), they are computed in the test set.}
-
-\item{.k}{A numeric. Refers to the CV fold where in-sample and out-of-sample
-prediction metrics.}
+in the training set. If FALSE, they are computed in the test set.}
 }
 \description{
 Computes concordance index (c-index) and Brier scores at the specified
