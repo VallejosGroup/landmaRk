@@ -134,16 +134,22 @@ setMethod(
           )
       }
       if (auc_t) {
-        timepoints <- seq(min(dataset[, "event_time"]), max(dataset[, "event_time"]), length.out = 12)
-        timepoints <- timepoints[-c(1,length(timepoints))]
+        timepoints <- seq(
+          min(dataset[, "event_time"]),
+          max(dataset[, "event_time"]),
+          length.out = 12
+        )
+        timepoints <- timepoints[-c(1, length(timepoints))]
         auct_list[[paste0(landmark, "-", horizon)]] <-
-          unname(timeROC::timeROC(
-            T = dataset[, "event_time"],
-            delta = dataset[, "event_status"],
-            marker = predictions,
-            cause = 1,
-            times = timepoints
-          )$AUC)
+          unname(
+            timeROC::timeROC(
+              T = dataset[, "event_time"],
+              delta = dataset[, "event_status"],
+              marker = predictions,
+              cause = 1,
+              times = timepoints
+            )$AUC
+          )
       }
       # if (auc_t) {
       #   auct_list[[paste0(landmark, "-", horizon)]] <-
