@@ -2,7 +2,7 @@
 title: "Cross-validation with the landmaRk package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to the landmaRk package}
+  %\VignetteIndexEntry{Cross-validation with the landmaRk package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -91,7 +91,7 @@ landmarking_object <- landmarking_object |>
 
 ## Performance evaluation in hold-out dataset
 
-Now that we have splitted the dataset into `K=5` parts for cross-validation,
+Now that we have split the dataset into `K=5` parts for cross-validation,
 we can use one of the five parts as test set and the remaining four parts as
 the training set. To do so, use the argument `.k` to indicate the that you 
 want to use as test set when calling `fit_longitudinal()`, `predict_longitudinal()`,
