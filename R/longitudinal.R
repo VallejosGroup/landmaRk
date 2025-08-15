@@ -17,8 +17,9 @@
 #' @param formula A formula to be used in longitudinal sub-model fitting.
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
-#' @param .k If positive, cross-validation fold where model is fitted. If 0
-#'   (default), model fitting is performed in the complete dataset.
+#' @param validation_fold If positive, cross-validation fold where model is
+#'   fitted. If 0 (default), model fitting is performed using the complete
+#'   dataset.
 #' @param cores Number of cores/threads to be used for parallel computation on
 #'   Linux and MacOS. Defaults to either \code{options("Ncpus")} if set, or 1
 #'   (single threaded) otherwise. Only single-threaded computation is currently
@@ -37,7 +38,7 @@ setGeneric(
     method,
     formula,
     dynamic_covariates,
-    .k = 0,
+    validation_fold = 0,
     cores = getOption("Ncpus", 1L),
     ...
   ) {
@@ -71,7 +72,7 @@ setMethod(
     method,
     formula,
     dynamic_covariates,
-    .k = 0,
+    validation_fold = 0,
     cores = getOption("Ncpus", 1L),
     ...
   ) {
@@ -102,7 +103,7 @@ setMethod(
           landmark
         ) |>
           inner_join(
-            x@cv_folds |> filter(fold != .k) |> select(x@ids),
+            x@cv_folds |> filter(fold != validation_fold) |> select(x@ids),
             by = x@ids
           )
         prop_individuals_few_obs <- sum(table(dataframe$id) <= 1) /
@@ -122,7 +123,6 @@ setMethod(
     }
 
     x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
-      # for (landmark in landmarks)
       {
         .check_riskset(x, landmark)
         # Create list for storing model fits for longitudinal analysis
@@ -130,12 +130,12 @@ setMethod(
 
         # Risk set for the landmark time
         at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
-        # Loop that iterates over all time-varying covariates to fit a longitudinal
-        # model for the underlying trajectories
+        # Loop that iterates over all time-varying covariates to fit a
+        # longitudinal model for the underlying trajectories
         for (dynamic_covariate in dynamic_covariates) {
           .check_dynamic_covariate(x, dynamic_covariate)
-          # Construct dataset for the longitudinal analysis (static measurements +
-          # time-varying covariate and its recording time)
+          # Construct dataset for the longitudinal analysis
+          # (static measurements+time-varying covariate and its recording time)
           dataframe <- .construct_data(
             x,
             dynamic_covariate,
@@ -143,7 +143,7 @@ setMethod(
             landmark
           ) |>
             inner_join(
-              x@cv_folds |> filter(fold != .k) |> select(x@ids),
+              x@cv_folds |> filter(fold != validation_fold) |> select(x@ids),
               by = x@ids
             )
 
@@ -171,8 +171,8 @@ setMethod(
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
-#' @param .k If positive, cross-validation fold where model is fitted. If 0
-#'   (default), model fitting is performed in the complete dataset.
+#' @param validation_fold If positive, cross-validation fold where model is
+#'   fitted. If 0 (default), model fitting is performed in the complete dataset.
 #' @param ... Additional arguments passed to the prediction function (e.g.
 #'   number of classes/clusters for lcmm).
 #'
@@ -182,7 +182,7 @@ setMethod(
 #' @examples
 setGeneric(
   "predict_longitudinal",
-  function(x, landmarks, method, dynamic_covariates, .k = 0, ...) {
+  function(x, landmarks, method, dynamic_covariates, validation_fold = 0, ...) {
     standardGeneric("predict_longitudinal")
   }
 )
@@ -198,7 +198,7 @@ setGeneric(
 setMethod(
   "predict_longitudinal",
   "LandmarkAnalysis",
-  function(x, landmarks, method, dynamic_covariates, .k = 0, ...) {
+  function(x, landmarks, method, dynamic_covariates, validation_fold = 0, ...) {
     value <- NULL # Global var
     fold <- NULL # Global var
 
@@ -247,11 +247,11 @@ setMethod(
         risk_set <- x@risk_sets[[as.character(landmarks)]]
         # Create list for storing model predictions, for longitudinal analysis
         x@longitudinal_predictions[[as.character(landmarks)]] <- list()
-        if (.k > 0) {
+        if (validation_fold > 0) {
           x@longitudinal_predictions_test[[as.character(landmarks)]] <- list()
         }
-        # Loop that iterates over all time-varying covariates, to fit a longitudinal
-        # model for the underlying trajectories
+        # Loop that iterates over all time-varying covariates, to fit a
+        # longitudinal model for the underlying trajectories
         for (dynamic_covariate in names(x@data_dynamic)) {
           # Check that relevant model fit is available
           if (
@@ -276,7 +276,7 @@ setMethod(
 
             newdata_train <- newdata |>
               inner_join(
-                x@cv_folds |> filter(fold != .k) |> select(x@ids),
+                x@cv_folds |> filter(fold != validation_fold) |> select(x@ids),
                 by = x@ids
               )
             x@longitudinal_predictions[[as.character(landmarks)]][[
@@ -289,7 +289,7 @@ setMethod(
               ...
             )
 
-            if (.k > 0) {
+            if (validation_fold > 0) {
               x@longitudinal_predictions_test[[as.character(landmarks)]][[
                 dynamic_covariate
               ]] <- method(
@@ -298,7 +298,8 @@ setMethod(
                 ]],
                 newdata = newdata |>
                   inner_join(
-                    x@cv_folds |> filter(fold == .k) |> select(x@ids),
+                    x@cv_folds |> filter(fold == validation_fold) |>
+                      select(x@ids),
                     by = x@ids
                   ),
                 test = TRUE,
@@ -334,7 +335,7 @@ setMethod(
         landmarks[1],
         method,
         dynamic_covariates,
-        .k,
+        validation_fold,
         ...
       )
       x <- predict_longitudinal(
@@ -342,7 +343,7 @@ setMethod(
         landmarks[-1],
         method,
         dynamic_covariates,
-        .k,
+        validation_fold,
         ...
       )
     }

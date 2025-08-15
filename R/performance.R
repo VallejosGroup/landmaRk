@@ -57,7 +57,6 @@ setMethod(
     train = TRUE
   ) {
     error_str <- NULL
-    fold <- NULL
     if (!inherits(x, "LandmarkAnalysis")) {
       error_str <- c(
         error_str,
@@ -151,19 +150,6 @@ setMethod(
             )$AUC
           )
       }
-      # if (auc_t) {
-      #   auct_list[[paste0(landmark, "-", horizon)]] <-
-      #     prueba <- timeROC::timeROC(
-      #       T = dataset[, "event_time"],
-      #       delta = dataset[, "event_status"],
-      #       marker = unname(predictions),
-      #       cause = 1,
-      #       weighting = "marginal",
-      #       times = 365.25,
-      #       iid = TRUE
-      #     )
-      #
-      # }
     }
     if (c_index) {
       scores <- cbind(scores, cindex = unlist(cindex_list))
@@ -173,7 +159,7 @@ setMethod(
     }
     if (auc_t) {
       auct_matrix <- do.call(rbind, auct_list)
-      colnames(auct_matrix) <- paste0("AUCt", 1:ncol(auct_matrix))
+      colnames(auct_matrix) <- paste0("AUCt", seq_len(ncol(auct_matrix)))
       scores <- cbind(scores, auct_matrix)
     }
     return(scores)

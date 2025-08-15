@@ -22,8 +22,8 @@
 #'   in the survival model.
 #' @param include_clusters Boolean indicating whether to propagate cluster
 #'   membership to survival analysis.
-#' @param .k If positive, cross-validation fold where model is fitted. If 0
-#'   (default), model fitting is performed in the complete dataset.
+#' @param validation_fold If positive, cross-validation fold where model is
+#'   fitted. If 0 (default), model fitting is performed on the complete dataset.
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
@@ -39,7 +39,7 @@ setGeneric(
     method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
-    .k = 0
+    validation_fold = 0
   ) {
     standardGeneric("fit_survival")
   }
@@ -76,7 +76,7 @@ setMethod(
     method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
-    .k = 0
+    validation_fold = 0
   ) {
     # Check that method is a function with arguments formula, data, ...
     method <- .check_method_survival_predict(method)
@@ -96,7 +96,7 @@ setMethod(
           horizons,
           dynamic_covariates,
           include_clusters,
-          .k,
+          validation_fold,
           train = TRUE
         )
 
@@ -141,7 +141,7 @@ setMethod(
         method,
         dynamic_covariates,
         include_clusters,
-        .k
+        validation_fold
       )
       x <- fit_survival(
         x,
@@ -151,7 +151,7 @@ setMethod(
         method,
         dynamic_covariates,
         include_clusters,
-        .k
+        validation_fold
       )
     }
     x
@@ -169,8 +169,8 @@ setMethod(
 #'   in the survival model.
 #' @param include_clusters Boolean indicating whether to propagate cluster
 #'   membership to survival analysis.
-#' @param .k If positive, cross-validation fold where model is fitted. If 0
-#'   (default), model fitting is performed in the complete dataset.
+#' @param validation_fold If positive, cross-validation fold where model is
+#'   fitted. If 0 (default), model fitting is performed on the complete dataset.
 #' @param ... Additional arguments passed to the prediction function (e.g.
 #'   number of classes/clusters for lcmm).
 #'
@@ -187,7 +187,7 @@ setGeneric(
     method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
-    .k = 0,
+    validation_fold = 0,
     ...
   ) {
     standardGeneric("predict_survival")
@@ -212,7 +212,7 @@ setMethod(
     method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
-    .k = 0,
+    validation_fold = 0,
     ...
   ) {
     # Check that method is a function with arguments formula, data, ...
@@ -255,7 +255,7 @@ setMethod(
         ...
       )
       # Out-of-sample predictions
-      if (.k > 0) {
+      if (validation_fold > 0) {
         x@survival_datasets_test[[model_name]] <-
           .create_survival_dataframe(
             x,
@@ -263,7 +263,7 @@ setMethod(
             horizons,
             dynamic_covariates,
             include_clusters,
-            .k,
+            validation_fold,
             train = FALSE
           )
         x@survival_predictions_test[[model_name]] <- method(
@@ -281,7 +281,7 @@ setMethod(
         method,
         dynamic_covariates,
         include_clusters,
-        .k,
+        validation_fold,
         ...
       )
       x <- predict_survival(
@@ -291,7 +291,7 @@ setMethod(
         method,
         dynamic_covariates,
         include_clusters,
-        .k,
+        validation_fold,
         ...
       )
     }

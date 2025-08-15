@@ -74,7 +74,7 @@
   horizons,
   dynamic_covariates = c(),
   include_clusters = FALSE,
-  .k = 0,
+  validation_fold = 0,
   train = TRUE
 ) {
   fold <- NULL
@@ -89,10 +89,16 @@
   # Select individuals for train or for test
   if (train) {
     survival_df <- survival_df |>
-      inner_join(x@cv_folds |> filter(fold != .k) |> select(x@ids), by = x@ids)
+      inner_join(
+                 x@cv_folds |>
+                   filter(fold != validation_fold) |>
+                   select(x@ids),
+                 by = x@ids)
   } else {
     survival_df <- survival_df |>
-      inner_join(x@cv_folds |> filter(fold == .k) |> select(x@ids), by = x@ids)
+      inner_join(x@cv_folds |>
+                   filter(fold == validation_fold) |> select(x@ids),
+                 by = x@ids)
   }
   # Censor observations past the horizon time
   survival_df <- survival_df |>
