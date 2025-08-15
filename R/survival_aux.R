@@ -90,15 +90,19 @@
   if (train) {
     survival_df <- survival_df |>
       inner_join(
-                 x@cv_folds |>
-                   filter(fold != validation_fold) |>
-                   select(x@ids),
-                 by = x@ids)
+        x@cv_folds |>
+          filter(fold != validation_fold) |>
+          select(x@ids),
+        by = x@ids
+      )
   } else {
     survival_df <- survival_df |>
-      inner_join(x@cv_folds |>
-                   filter(fold == validation_fold) |> select(x@ids),
-                 by = x@ids)
+      inner_join(
+        x@cv_folds |>
+          filter(fold == validation_fold) |>
+          select(x@ids),
+        by = x@ids
+      )
   }
   # Censor observations past the horizon time
   survival_df <- survival_df |>

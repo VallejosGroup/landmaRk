@@ -298,7 +298,8 @@ setMethod(
                 ]],
                 newdata = newdata |>
                   inner_join(
-                    x@cv_folds |> filter(fold == validation_fold) |>
+                    x@cv_folds |>
+                      filter(fold == validation_fold) |>
                       select(x@ids),
                     by = x@ids
                   ),
