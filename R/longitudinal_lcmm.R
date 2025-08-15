@@ -68,10 +68,14 @@
 #'   IDs
 #' @param subject Name of the column in newdata where individual IDs are stored.
 #' @param var.time Name of the column in newdata where time is recorded.
-#' @param avg Boolean indicating whether to make predictions based on the
+#' @param avg Logical indicating whether to make predictions based on the
 #'   most likely cluster (FALSE, default) or averaging over clusters (TRUE).
-#' @param include_clusters Boolean indicating whether to include
+#' @param include_clusters Logical indicating whether to include
 #'   predicted class allocation in the predictions.
+#' @param validation_fold If positive, cross-validation fold where model is
+#'   fitted. If 0 (default), model fitting is performed in the complete dataset.
+#' @param test Logical indicating whether to make predictions for the test set
+#'   (make out of sample predictions). Defaults to FALSE
 #'
 #' @returns If \code{include_clusters == FALSE}, a vector of predictions. If
 #'   \code{include_clusters == TRUE}, a vector whose first column includes
@@ -86,8 +90,11 @@
   subject,
   var.time,
   avg = FALSE,
-  include_clusters = FALSE
+  include_clusters = FALSE,
+  validation_fold = 0,
+  test = FALSE
 ) {
+  hlme <- NULL
   # Step 1. we make predictions for individuals in the training set.
 
   # Step 1a. We estimate the random effects for individuals in the training set
@@ -108,30 +115,26 @@
   }
 
   # Step 1c. Find class-specific predictions for individuals in the training set.
-  predictions_step1 <- t(sapply(
-    in_train_set,
-    function(individual) {
-      return(
+  if (!test) {
+    predictions_step1 <- t(sapply(
+      in_train_set,
+      function(individual) {
         lcmm::predictY(
           x,
           newdata = newdata |> filter(get(subject) == individual),
           predRE = predRE |> filter(get(subject) == individual)
         )$pred
-      )
-    }
-  ))
+      }
+    ))
 
-  predictions_step1 <- as.data.frame(predictions_step1)
-  predictions_step1[, subject] <- in_train_set
-  predictions_step1 <- predictions_step1 |> relocate(subject)
-  colnames(predictions_step1) <- c(
-    subject,
-    paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
-  )
-
-  # Step 1d. Estimate most likely cluster, and cluster allocation probabilities,
-  # for individuals in the training set
-  predicted_class_step1 <- lcmm::predictClass(x, x$data)
+    predictions_step1 <- as.data.frame(predictions_step1)
+    predictions_step1[, subject] <- in_train_set
+    predictions_step1 <- predictions_step1 |> relocate(subject)
+    colnames(predictions_step1) <- c(
+      subject,
+      paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
+    )
+  }
 
   # Step 2. we make predictions for individuals outwith the training set.
 
@@ -171,36 +174,42 @@
       "Imputing values for those individuals"
     )
     # Assign individuals not included in model fitting to the biggest cluster
-    pprob.extra <- data.frame(
+    pprob_extra <- data.frame(
       id = setdiff(newdata[, subject], pprob[, subject]),
       cluster = mode_cluster
     )
 
-    # Compute the column means for the probability matrix (excluding id and class columns)
+    # Compute the column means for the probability matrix
+    # (excluding id and class columns)
     prob_means <- colMeans(pprob[, -c(1, 2)])
 
     # Convert the column means into a dataframe and transpose it
     prob_means_df <- t(as.data.frame(prob_means))
 
-    # Repeat the column means for each individual in pprob.extra
-    repeated_means <- apply(prob_means_df, 2, rep, each = nrow(pprob.extra))
+    # Repeat the column means for each individual in pprob_extra
+    repeated_means <- apply(prob_means_df, 2, rep, each = nrow(pprob_extra))
 
-    # Combine the repeated means with pprob.extra
-    pprob.extra <- cbind(pprob.extra, repeated_means)
+    # Combine the repeated means with pprob_extra
+    pprob_extra <- cbind(pprob_extra, repeated_means)
 
     # Reset row names and column names to match the original pprob structure
-    rownames(pprob.extra) <- NULL
-    colnames(pprob.extra) <- colnames(pprob)
+    rownames(pprob_extra) <- NULL
+    colnames(pprob_extra) <- colnames(pprob)
 
-    pprob <- rbind(pprob, pprob.extra) |> arrange(get(subject))
+    pprob <- rbind(pprob, pprob_extra) |> arrange(get(subject))
   }
 
   if (length(not_in_train_set) > 0) {
-    predictions <- rbind(
-      predictions_step1,
-      predictions_step2
-    ) |>
-      arrange(get(subject))
+    if (test) {
+      predictions <- predictions_step2 |>
+        arrange(get(subject))
+    } else {
+      predictions <- rbind(
+        predictions_step1,
+        predictions_step2
+      ) |>
+        arrange(get(subject))
+    }
   } else {
     predictions <- predictions_step1
   }
@@ -208,18 +217,37 @@
   # probabilities. If avg == FALSE, we return the prediction according to the
   # most likely cluster
   if (avg) {
-    predictions <- rowSums(
-      as.matrix(predictions[, -1]) *
-        as.matrix(pprob[, -c(1, 2)])
-    )
+    if (test) {
+      pprob_matrix_aux <- pprob |>
+        inner_join(newdata, by = subject) |>
+        select(starts_with("prob")) |>
+        as.matrix()
+      predictions <- rowSums(
+        as.matrix(predictions[, -1]) *
+          pprob_matrix_aux
+      )
+    } else {
+      predictions <- rowSums(
+        as.matrix(predictions[, -1]) *
+          as.matrix(pprob[, -c(1, 2)])
+      )
+    }
   } else {
-    predictions <- rowSums(
-      as.matrix(predictions[, -1]) *
-        model.matrix(
-          ~ as.factor(pprob$class) - 1,
-          data = as.data.frame(pprob$class)
-        )
-    )
+    if (test) {
+      model_matrix_aux <- pprob |>
+        inner_join(newdata, by = subject) |>
+        select(starts_with("prob")) |>
+        as.matrix()
+      predictions <- rowSums(as.matrix(predictions[, -1]) * model_matrix_aux)
+    } else {
+      predictions <- rowSums(
+        as.matrix(predictions[, -1]) *
+          model.matrix(
+            ~ as.factor(pprob$class) - 1,
+            data = as.data.frame(pprob$class)
+          )
+      )
+    }
   }
 
   # Store predictions in LandmarkAnalysis object

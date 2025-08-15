@@ -386,16 +386,24 @@ landmarking_object <- landmarking_object |>
     landmarks = seq(from = 365.25, to = 4 * 365.25, by = 365.25),
     horizons = seq(from = 2 * 365.25, to = 5 * 365.25, by = 365.25),
     method = "coxph",
-    type = "survival"
+    dynamic_covariates = c("dose"),
+    include_clusters = TRUE,
+    type = "survival",
   )
 ```
 
 ```{r}
-summary(landmarking_object, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
+summary(landmarking_object,
+        type = "longitudinal",
+        landmark = 365.25,
+        dynamic_covariate = "dose")
 ```
 
 ```{r}
-summary(landmarking_object, type = "survival", landmark = 365.25, horizon = 730.5)
+summary(landmarking_object,
+        type = "survival",
+        landmark = 365.25,
+        horizon = 730.5)
 ```
 
 ```{r}

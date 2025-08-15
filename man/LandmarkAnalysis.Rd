@@ -11,7 +11,8 @@ LandmarkAnalysis(
   ids,
   event_time,
   times,
-  measurements
+  measurements,
+  K = 1
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ values, measurement times and measurement name.}
 
 \item{measurements}{Name of the column indicating measurement values in
 \code{data_dynamic}.}
+
+\item{K}{Number of cross-validation folds (by default, 1).}
 }
 \value{
 An object of class \code{\link{LandmarkAnalysis}}

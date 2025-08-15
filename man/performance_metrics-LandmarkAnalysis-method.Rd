@@ -4,7 +4,15 @@
 \alias{performance_metrics,LandmarkAnalysis-method}
 \title{Performance metrics}
 \usage{
-\S4method{performance_metrics}{LandmarkAnalysis}(x, landmarks, horizons, c_index = TRUE, brier = TRUE)
+\S4method{performance_metrics}{LandmarkAnalysis}(
+  x,
+  landmarks,
+  horizons,
+  c_index = TRUE,
+  brier = TRUE,
+  auc_t = FALSE,
+  train = TRUE
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
@@ -17,6 +25,11 @@ submodel is fitted.}
 \item{c_index}{A logical. If TRUE (default), C index is reported.}
 
 \item{brier}{A logical. If TRUE (default), Brier score is reported.}
+
+\item{auc_t}{A logical. If TRUE, AUC_t is reported.}
+
+\item{train}{A logical. If TRUE (default), performance metrics are computed
+in the training set. If FALSE, they are computed in the test set.}
 }
 \description{
 Computes concordance index (c-index) and Brier scores at the specified
