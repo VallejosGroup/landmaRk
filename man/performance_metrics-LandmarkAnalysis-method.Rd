@@ -26,7 +26,7 @@ submodel is fitted.}
 
 \item{brier}{A logical. If TRUE (default), Brier score is reported.}
 
-\item{auc_t}{A logical. If TRUE (default), AUC_t is reported.}
+\item{auc_t}{A logical. If TRUE, AUC_t is reported.}
 
 \item{train}{A logical. If TRUE (default), performance metrics are computed
 in the training set. If FALSE, they are computed in the test set.}
