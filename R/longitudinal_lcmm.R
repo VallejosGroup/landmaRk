@@ -146,6 +146,14 @@
 
   # Step 2b. Find class-specific predictions for individuals outwith the training set.
   if (length(not_in_train_set) > 0) {
+    if (test && include_clusters) {
+      newdata_long <- newdata
+      colnames(newdata_long)[which(colnames(newdata_long) == paste0(var.time, ".y"))] <- var.time
+      newdata <- newdata[, -c(ncol(newdata)-1,ncol(newdata))] |> unique()
+      colnames(newdata)[which(colnames(newdata) == paste0(var.time, ".x"))] <- var.time
+    } else if (test) {
+      newdata_long <- newdata
+    }
     predictions_step2 <- lcmm::predictY(
       x,
       newdata = newdata |>
@@ -243,7 +251,7 @@
       predictions <- rowSums(
         as.matrix(predictions[, -1]) *
           model.matrix(
-            ~ as.factor(pprob$class) - 1,
+            ~ factor(pprob$class, levels = as.character(1:x$ng)) - 1,
             data = as.data.frame(pprob$class)
           )
       )

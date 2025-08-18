@@ -107,10 +107,10 @@ setMethod(
             paste(
               as.character(formula)[2],
               as.character(formula)[1],
+              paste(paste0(strsplit(as.character(formula)[3], " *\\+ *")[[1]], "*cluster_", dynamic_covariate), collapse = " + "),
               paste0(
-                as.character(formula)[3],
                 " + ",
-                paste0("cluster_", dynamic_covariate)
+                paste0("strata(cluster_", dynamic_covariate, ")")
               )
             )
           )
