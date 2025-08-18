@@ -534,7 +534,13 @@ model.</p></li>
 <span><span class="co">#&gt; Warning in</span></span>
 <span><span class="co">#&gt; method(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]], :</span></span>
 <span><span class="co">#&gt; Individuals 28, 389, 473, have not been used in LCMM model fitting. Imputing</span></span>
-<span><span class="co">#&gt; values for those individuals</span></span></code></pre></div>
+<span><span class="co">#&gt; values for those individuals</span></span>
+<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span><span class="co">#&gt; Loglik converged before variable 5,10 ; coefficient may be infinite.</span></span>
+<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span><span class="co">#&gt; Loglik converged before variable 10 ; coefficient may be infinite.</span></span>
+<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span><span class="co">#&gt; Loglik converged before variable 5,9,10 ; coefficient may be infinite.</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"longitudinal"</span>,</span>
@@ -576,15 +582,20 @@ model.</p></li>
 <span><span class="co">#&gt; survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, </span></span>
 <span><span class="co">#&gt;     "-", horizons)]], model = TRUE, x = TRUE)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                    coef exp(coef)  se(coef)      z     p</span></span>
-<span><span class="co">#&gt; treatLTG       0.130641  1.139559  0.272382  0.480 0.631</span></span>
-<span><span class="co">#&gt; age           -0.009708  0.990339  0.007683 -1.264 0.206</span></span>
-<span><span class="co">#&gt; genderM        0.226267  1.253910  0.276259  0.819 0.413</span></span>
-<span><span class="co">#&gt; learn.disYes  -0.827358  0.437203  0.737026 -1.123 0.262</span></span>
-<span><span class="co">#&gt; dose           0.226753  1.254520  0.209346  1.083 0.279</span></span>
-<span><span class="co">#&gt; cluster_dose2  0.133665  1.143010  0.693173  0.193 0.847</span></span>
+<span><span class="co">#&gt;                                 coef exp(coef)  se(coef)      z      p</span></span>
+<span><span class="co">#&gt; treatLTG                   -0.049098  0.952088  0.299207 -0.164 0.8697</span></span>
+<span><span class="co">#&gt; cluster_dose2                     NA        NA  0.000000     NA     NA</span></span>
+<span><span class="co">#&gt; age                        -0.016270  0.983862  0.008495 -1.915 0.0555</span></span>
+<span><span class="co">#&gt; genderM                     0.131476  1.140511  0.303117  0.434 0.6645</span></span>
+<span><span class="co">#&gt; learn.disYes               -1.318162  0.267627  1.027134 -1.283 0.1994</span></span>
+<span><span class="co">#&gt; dose                        0.411263  1.508723  0.257818  1.595 0.1107</span></span>
+<span><span class="co">#&gt; treatLTG:cluster_dose2      0.670725  1.955655  0.920410  0.729 0.4662</span></span>
+<span><span class="co">#&gt; cluster_dose2:age           0.042024  1.042919  0.020860  2.015 0.0439</span></span>
+<span><span class="co">#&gt; cluster_dose2:genderM       0.497034  1.643838  0.848175  0.586 0.5579</span></span>
+<span><span class="co">#&gt; cluster_dose2:learn.disYes  1.907475  6.736059  1.555057  1.227 0.2200</span></span>
+<span><span class="co">#&gt; cluster_dose2:dose         -0.633257  0.530860  0.515536 -1.228 0.2193</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Likelihood ratio test=10.36  on 6 df, p=0.1104</span></span>
+<span><span class="co">#&gt; Likelihood ratio test=12.71  on 10 df, p=0.2402</span></span>
 <span><span class="co">#&gt; n= 430, number of events= 57</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
@@ -593,10 +604,10 @@ model.</p></li>
 <span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;               landmark horizon    cindex     brier</span></span>
-<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.1939288 0.6657487</span></span>
-<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.4433854 0.7834579</span></span>
-<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.4237197 0.7973544</span></span>
-<span><span class="co">#&gt; 1461-1826.25   1461.00 1826.25 0.4136054 0.7920773</span></span></code></pre></div>
+<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.2652899 0.6752188</span></span>
+<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.5411742 0.7847448</span></span>
+<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.5283019 0.8091608</span></span>
+<span><span class="co">#&gt; 1461-1826.25   1461.00 1826.25 0.6680272 0.8105012</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
