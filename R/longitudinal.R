@@ -290,19 +290,32 @@ setMethod(
             )
 
             if (validation_fold > 0) {
+              newdata <- newdata |>
+                inner_join(
+                  x@cv_folds |>
+                    filter(fold == validation_fold) |>
+                    select(x@ids),
+                  by = x@ids
+                )
+              if (
+                "include_clusters" %in%
+                  names(list(...)) &&
+                  list(...)$include_clusters
+              ) {
+                newdata <- newdata |>
+                  left_join(
+                    x@data_dynamic[[dynamic_covariate]] |>
+                      filter(get(x@times) <= landmarks),
+                    by = x@ids
+                  )
+              }
               x@longitudinal_predictions_test[[as.character(landmarks)]][[
                 dynamic_covariate
               ]] <- method(
                 x@longitudinal_fits[[as.character(landmarks)]][[
                   dynamic_covariate
                 ]],
-                newdata = newdata |>
-                  inner_join(
-                    x@cv_folds |>
-                      filter(fold == validation_fold) |>
-                      select(x@ids),
-                    by = x@ids
-                  ),
+                newdata = newdata,
                 test = TRUE,
                 ...
               )
