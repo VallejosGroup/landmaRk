@@ -148,9 +148,13 @@
   if (length(not_in_train_set) > 0) {
     if (test && include_clusters) {
       newdata_long <- newdata
-      colnames(newdata_long)[which(colnames(newdata_long) == paste0(var.time, ".y"))] <- var.time
-      newdata <- newdata[, -c(ncol(newdata)-1,ncol(newdata))] |> unique()
-      colnames(newdata)[which(colnames(newdata) == paste0(var.time, ".x"))] <- var.time
+      colnames(newdata_long)[which(
+        colnames(newdata_long) == paste0(var.time, ".y")
+      )] <- var.time
+      newdata <- newdata[, -c(ncol(newdata) - 1, ncol(newdata))] |> unique()
+      colnames(newdata)[which(
+        colnames(newdata) == paste0(var.time, ".x")
+      )] <- var.time
     } else if (test) {
       newdata_long <- newdata
     }
