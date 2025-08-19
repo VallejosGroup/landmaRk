@@ -15,7 +15,16 @@
 #' @returns An object of class hlme
 #'
 #' @examples
-.fit_lcmm <- function(formula, data, mixture, random, subject, ng, rep = 1, ...) {
+.fit_lcmm <- function(
+  formula,
+  data,
+  mixture,
+  random,
+  subject,
+  ng,
+  rep = 1,
+  ...
+) {
   model_init <- lcmm::hlme(
     formula,
     data = data,
