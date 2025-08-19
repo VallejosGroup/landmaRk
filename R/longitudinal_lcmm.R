@@ -321,22 +321,39 @@ check_lcmm_convergence <- function(x) {
   if (!is(x, "LandmarkAnalysis")) {
     stop("@x must be an object of class LandmarkAnalysis")
   } else if (length(x@longitudinal_fits) == 0) {
-    stop("Longitudinal submodels must be fitted before calling check_lcmm_convergence")
+    stop(
+      "Longitudinal submodels must be fitted before calling check_lcmm_convergence"
+    )
   }
   num_models_not_converged <- 0
   for (landmark in names(x@longitudinal_fits)) {
     for (dynamic_covariate in names(x@longitudinal_fits[[landmark]])) {
       if (!(is(x@longitudinal_fits[[landmark]][[dynamic_covariate]], "hlme"))) {
-        stop(paste0("Longitudinal model for dynamic covariate ", dynamic_covariate, " at landmark time ", landmark, "was not fitted using LCMM."))
+        stop(paste0(
+          "Longitudinal model for dynamic covariate ",
+          dynamic_covariate,
+          " at landmark time ",
+          landmark,
+          "was not fitted using LCMM."
+        ))
       }
       conv_status <- x@longitudinal_fits[[landmark]][[dynamic_covariate]]$conv
       if (!(conv_status %in% c(1, 3))) {
         num_models_not_converged <- num_models_not_converged + 1
-        msg <- paste0("Model  of dynamic covariate", dynamic_covariate, " at landmark time ", landmark, " did not converge. ", switch(
-          as.character(x@longitudinal_fits[[landmark]][[dynamic_covariate]]$conv),
-          "2" = "Maximum number of iterations were reached.",
-          "Problem occured during optimisation."
-        ))
+        msg <- paste0(
+          "Model  of dynamic covariate",
+          dynamic_covariate,
+          " at landmark time ",
+          landmark,
+          " did not converge. ",
+          switch(
+            as.character(
+              x@longitudinal_fits[[landmark]][[dynamic_covariate]]$conv
+            ),
+            "2" = "Maximum number of iterations were reached.",
+            "Problem occured during optimisation."
+          )
+        )
         warning(msg)
       }
     }
