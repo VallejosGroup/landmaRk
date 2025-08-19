@@ -5,7 +5,9 @@
 #' @param mixture One-sided formula specifying the class-specific fixed effects.
 #' @param random One-sided formula specifying the random effects.
 #' @param subject Name of the column indicating individual ids in data
-#' @param ng Number of clusters in the LCMM model
+#' @param ng Number of clusters in the LCMM model.
+#' @param rep Number of times the model fitting algorithm is run using grid
+#'   search.
 #' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
 #'   function.
 #' @seealso  [lcmm::hlme()]
@@ -13,7 +15,7 @@
 #' @returns An object of class hlme
 #'
 #' @examples
-.fit_lcmm <- function(formula, data, mixture, random, subject, ng, ...) {
+.fit_lcmm <- function(formula, data, mixture, random, subject, ng, rep = 1, ...) {
   model_init <- lcmm::hlme(
     formula,
     data = data,
@@ -22,17 +24,37 @@
     ng = 1,
     ...
   )
-  model_fit <- lcmm::hlme(
-    formula,
-    data = data,
-    mixture = mixture,
-    random = random,
-    subject = subject,
-    ng = ng,
-    B = model_init,
-    returndata = TRUE,
-    ...
-  )
+
+  hlme <- NULL
+  if (rep == 1) {
+    model_fit <- lcmm::hlme(
+      formula,
+      data = data,
+      mixture = mixture,
+      random = random,
+      subject = subject,
+      ng = ng,
+      B = model_init,
+      returndata = TRUE,
+      ...
+    )
+  } else {
+    model_fit <- lcmm::gridsearch(
+      m = hlme(
+        formula,
+        data = data,
+        mixture = mixture,
+        random = random,
+        subject = subject,
+        ng = ng,
+        returndata = TRUE,
+        ...
+      ),
+      rep = rep,
+      maxiter = 1, # This argument is ignored by lcmm::gridsearch
+      minit = model_init
+    )
+  }
 
   .check_lcmm_convergence(model_fit)
 
@@ -178,7 +200,7 @@
   mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
   # If there are individuals in newdata that had not been used in model fitting,
   # we augment pprob imputing the sample average in those individuals
-  if (nrow(newdata) != nrow(pprob)) {
+  if (!test && (nrow(newdata) != nrow(pprob))) {
     warning(
       "Individuals ",
       paste(setdiff(newdata[, subject], pprob[, subject]), collapse = ", "),
@@ -209,6 +231,9 @@
     colnames(pprob_extra) <- colnames(pprob)
 
     pprob <- rbind(pprob, pprob_extra) |> arrange(get(subject))
+  } else if (test && include_clusters) {
+    # In the test set, use lcmm::predictClass to estimate cluster allocation
+    pprob <- lcmm::predictClass(x, newdata = newdata_long)
   }
 
   if (length(not_in_train_set) > 0) {
