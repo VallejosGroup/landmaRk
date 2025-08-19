@@ -328,12 +328,21 @@ setMethod(
       model_fit <- object@longitudinal_fits[[as.character(landmark)]][[
         dynamic_covariate
       ]]
-      cat(
-        capture.output(object@longitudinal_fits[[as.character(
-          landmark
-        )]][[dynamic_covariate]]),
-        sep = "\n"
-      )
+      if (is(model_fit, "hlme")) {
+        cat(
+          capture.output(summary(object@longitudinal_fits[[as.character(
+            landmark
+          )]][[dynamic_covariate]])),
+          sep = "\n"
+        )
+      } else {
+        cat(
+          capture.output(object@longitudinal_fits[[as.character(
+            landmark
+          )]][[dynamic_covariate]]),
+          sep = "\n"
+        )
+      }
     } else if (type == "survival") {
       # Summary of survival submodel fit
       if (is.null(horizon) || !(is.numeric(horizon)) || length(horizon) > 1) {
