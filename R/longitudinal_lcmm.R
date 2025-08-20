@@ -30,8 +30,7 @@
     data = data,
     random = random,
     subject = subject,
-    ng = 1,
-    ...
+    ng = 1
   )
 
   hlme <- NULL
