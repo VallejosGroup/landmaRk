@@ -318,7 +318,7 @@
 check_lcmm_convergence <- function(x) {
   err_str <- NULL
   if (!is(x, "LandmarkAnalysis")) {
-    stop("@x must be an object of class LandmarkAnalysis")
+    stop("x must be an object of class LandmarkAnalysis")
   } else if (length(x@longitudinal_fits) == 0) {
     stop(
       "Longitudinal submodels must be fitted before calling check_lcmm_convergence"
