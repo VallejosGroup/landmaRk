@@ -572,7 +572,39 @@ model.</p></li>
 <span><span class="co">#&gt;      AIC: 2059.51  </span></span>
 <span><span class="co">#&gt;      BIC: 2128.48  </span></span>
 <span><span class="co">#&gt;  </span></span>
-<span><span class="co">#&gt; </span></span></code></pre></div>
+<span><span class="co">#&gt;  </span></span>
+<span><span class="co">#&gt; Maximum Likelihood Estimates: </span></span>
+<span><span class="co">#&gt;  </span></span>
+<span><span class="co">#&gt; Fixed effects in the class-membership model:</span></span>
+<span><span class="co">#&gt; (the class of reference is the last class) </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                      coef      Se    Wald p-value</span></span>
+<span><span class="co">#&gt; intercept class1  1.93379 0.20138   9.603 0.00000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Fixed effects in the longitudinal model:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                         coef      Se    Wald p-value</span></span>
+<span><span class="co">#&gt; intercept class1     1.79296 0.10677  16.793 0.00000</span></span>
+<span><span class="co">#&gt; intercept class2     1.50591 0.36890   4.082 0.00004</span></span>
+<span><span class="co">#&gt; treatLTG class1     -0.10047 0.07110  -1.413 0.15763</span></span>
+<span><span class="co">#&gt; treatLTG class2     -0.79701 0.32750  -2.434 0.01495</span></span>
+<span><span class="co">#&gt; age class1          -0.00108 0.00189  -0.571 0.56818</span></span>
+<span><span class="co">#&gt; age class2           0.00923 0.00783   1.179 0.23832</span></span>
+<span><span class="co">#&gt; genderM class1       0.06565 0.07207   0.911 0.36233</span></span>
+<span><span class="co">#&gt; genderM class2       0.76241 0.24669   3.091 0.00200</span></span>
+<span><span class="co">#&gt; learn.disYes class1 -0.32565 0.15996  -2.036 0.04177</span></span>
+<span><span class="co">#&gt; learn.disYes class2  0.56195 0.51759   1.086 0.27761</span></span>
+<span><span class="co">#&gt; time class1          0.00089 0.00017   5.395 0.00000</span></span>
+<span><span class="co">#&gt; time class2          0.00822 0.00050  16.283 0.00000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Variance-covariance matrix of the random-effects:</span></span>
+<span><span class="co">#&gt;           intercept time</span></span>
+<span><span class="co">#&gt; intercept   0.32775     </span></span>
+<span><span class="co">#&gt; time        0.00009    0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                              coef      Se</span></span>
+<span><span class="co">#&gt; Residual standard error:  0.36771 0.01301</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>,</span>
 <span>        type <span class="op">=</span> <span class="st">"survival"</span>,</span>
