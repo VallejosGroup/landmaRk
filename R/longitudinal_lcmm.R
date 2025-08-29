@@ -316,12 +316,12 @@
 #'
 #' @examples
 check_lcmm_convergence <- function(x) {
-  err_str <- NULL
   if (!is(x, "LandmarkAnalysis")) {
     stop("x must be an object of class LandmarkAnalysis")
   } else if (length(x@longitudinal_fits) == 0) {
     stop(
-      "Longitudinal submodels must be fitted before calling check_lcmm_convergence"
+      "Longitudinal submodels must be fitted before calling ",
+      "check_lcmm_convergence()"
     )
   }
   num_models_not_converged <- 0
@@ -340,7 +340,7 @@ check_lcmm_convergence <- function(x) {
       if (!(conv_status %in% c(1, 3))) {
         num_models_not_converged <- num_models_not_converged + 1
         msg <- paste0(
-          "Model  of dynamic covariate",
+          "Model for dynamic covariate ",
           dynamic_covariate,
           " at landmark time ",
           landmark,
