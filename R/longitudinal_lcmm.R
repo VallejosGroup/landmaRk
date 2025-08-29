@@ -328,7 +328,7 @@ check_lcmm_convergence <- function(x) {
   for (landmark in names(x@longitudinal_fits)) {
     for (dynamic_covariate in names(x@longitudinal_fits[[landmark]])) {
       if (!(is(x@longitudinal_fits[[landmark]][[dynamic_covariate]], "hlme"))) {
-        stop(paste0(
+        warning(paste0(
           "Longitudinal model for dynamic covariate ",
           dynamic_covariate,
           " at landmark time ",
