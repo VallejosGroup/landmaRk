@@ -23,6 +23,7 @@
   subject,
   ng,
   rep = 1,
+  classmb = ~1,
   ...
 ) {
   model_init <- lcmm::hlme(
@@ -43,6 +44,7 @@
       subject = subject,
       ng = ng,
       B = model_init,
+      classmb = classmb,
       returndata = TRUE,
       ...
     )
@@ -55,6 +57,7 @@
         random = random,
         subject = subject,
         ng = ng,
+        classmb = classmb,
         returndata = TRUE,
         ...
       ),
@@ -73,7 +76,7 @@
   model_fit$call$ng <- ng
   model_fit$call$data <- data
   model_fit$call$B <- model_init
-
+  model_fit$call$classmb <- classmb
   model_fit
 }
 
@@ -122,6 +125,7 @@
   avg = FALSE,
   include_clusters = FALSE,
   validation_fold = 0,
+  classmb = NULL,
   test = FALSE
 ) {
   hlme <- NULL
