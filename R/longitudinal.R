@@ -298,9 +298,10 @@ setMethod(
                   by = x@ids
                 )
               if (
-                "include_clusters" %in%
+                ("include_clusters" %in%
                   names(list(...)) &&
-                  list(...)$include_clusters
+                  list(...)$include_clusters) ||
+                  ("avg" %in% names(list(...)) && list(...)$avg)
               ) {
                 newdata <- newdata |>
                   left_join(

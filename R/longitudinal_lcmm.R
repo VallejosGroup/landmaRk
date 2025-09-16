@@ -23,6 +23,7 @@
   subject,
   ng,
   rep = 1,
+  classmb = ~1,
   ...
 ) {
   model_init <- lcmm::hlme(
@@ -43,6 +44,7 @@
       subject = subject,
       ng = ng,
       B = model_init,
+      classmb = classmb,
       returndata = TRUE,
       ...
     )
@@ -55,6 +57,7 @@
         random = random,
         subject = subject,
         ng = ng,
+        classmb = classmb,
         returndata = TRUE,
         ...
       ),
@@ -73,7 +76,7 @@
   model_fit$call$ng <- ng
   model_fit$call$data <- data
   model_fit$call$B <- model_init
-
+  model_fit$call$classmb <- classmb
   model_fit
 }
 
@@ -122,6 +125,7 @@
   avg = FALSE,
   include_clusters = FALSE,
   validation_fold = 0,
+  classmb = NULL,
   test = FALSE
 ) {
   hlme <- NULL
@@ -176,7 +180,7 @@
 
   # Step 2b. Find class-specific predictions for individuals outwith the training set.
   if (length(not_in_train_set) > 0) {
-    if (test && include_clusters) {
+    if (test) {
       newdata_long <- newdata
       colnames(newdata_long)[which(
         colnames(newdata_long) == paste0(var.time, ".y")
@@ -185,8 +189,6 @@
       colnames(newdata)[which(
         colnames(newdata) == paste0(var.time, ".x")
       )] <- var.time
-    } else if (test) {
-      newdata_long <- newdata
     }
     predictions_step2 <- lcmm::predictY(
       x,
@@ -263,14 +265,13 @@
   # most likely cluster
   if (avg) {
     if (test) {
-      pprob_matrix_aux <- pprob |>
-        inner_join(newdata, by = subject) |>
-        select(starts_with("prob")) |>
-        as.matrix()
-      predictions <- rowSums(
-        as.matrix(predictions[, -1]) *
-          pprob_matrix_aux
+      class_predictions <- lcmm::predictClass(
+        x,
+        newdata_long,
+        subject = subject
       )
+      predictions <- rowSums(class_predictions[, -c(1, 2)] * predictions[, -1])
+      names(predictions) <- NULL
     } else {
       predictions <- rowSums(
         as.matrix(predictions[, -1]) *
