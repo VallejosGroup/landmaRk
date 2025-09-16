@@ -300,7 +300,8 @@ setMethod(
               if (
                 ("include_clusters" %in%
                   names(list(...)) &&
-                  list(...)$include_clusters) || ("avg" %in% names(list(...)) && list(...)$avg)
+                  list(...)$include_clusters) ||
+                  ("avg" %in% names(list(...)) && list(...)$avg)
               ) {
                 newdata <- newdata |>
                   left_join(

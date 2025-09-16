@@ -261,8 +261,12 @@
   # most likely cluster
   if (avg) {
     if (test) {
-      class_predictions <- lcmm::predictClass(x, newdata_long, subject = subject)
-      predictions <- rowSums(class_predictions[, -c(1,2)] * predictions[, -1])
+      class_predictions <- lcmm::predictClass(
+        x,
+        newdata_long,
+        subject = subject
+      )
+      predictions <- rowSums(class_predictions[, -c(1, 2)] * predictions[, -1])
       names(predictions) <- NULL
     } else {
       predictions <- rowSums(
