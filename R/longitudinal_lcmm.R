@@ -109,6 +109,7 @@
 #'   fitted. If 0 (default), model fitting is performed in the complete dataset.
 #' @param test Logical indicating whether to make predictions for the test set
 #'   (make out of sample predictions). Defaults to FALSE
+#' @param newdata_long A data frame containing longitudinal measurements for prediction. Required when \code{test = TRUE} and either \code{avg = TRUE} or \code{include_clusters = TRUE}. Should include columns for subject IDs, time (\code{var.time}), and any time-varying covariates used in the model. Defaults to \code{NULL}.
 #'
 #' @returns If \code{include_clusters == FALSE}, a vector of predictions. If
 #'   \code{include_clusters == TRUE}, a vector whose first column includes
@@ -126,26 +127,29 @@
   include_clusters = FALSE,
   validation_fold = 0,
   classmb = NULL,
-  test = FALSE
+  test = FALSE,
+  newdata_long = NULL
 ) {
   hlme <- NULL
   # Step 1. we make predictions for individuals in the training set.
 
   # Step 1a. We estimate the random effects for individuals in the training set
   x$call[[1]] <- expr(hlme)
-  predRE <- lcmm::predictRE(x, x$data, subject = subject, classpredRE = TRUE)
-
   # Step 1b. Find ids of individuals in the training set
   in_train_set <- unique(x$data[, subject])
-  if (length(unique(predRE[, subject])) != length(in_train_set)) {
-    stop(sprintf(
-      paste(
-        "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
-        "Probable reason: static covariates contain missing data.\n"
-      ),
-      length(unique(predRE[, subject])),
-      length(in_train_set)
-    ))
+  if (!test) {
+    predRE <- lcmm::predictRE(x, x$data, subject = subject, classpredRE = TRUE)
+
+    if (length(unique(predRE[, subject])) != length(in_train_set)) {
+      stop(sprintf(
+        paste(
+          "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
+          "Probable reason: static covariates contain missing data.\n"
+        ),
+        length(unique(predRE[, subject])),
+        length(in_train_set)
+      ))
+    }
   }
 
   # Step 1c. Find class-specific predictions for individuals in the training set.
@@ -180,16 +184,6 @@
 
   # Step 2b. Find class-specific predictions for individuals outwith the training set.
   if (length(not_in_train_set) > 0) {
-    if (test) {
-      newdata_long <- newdata
-      colnames(newdata_long)[which(
-        colnames(newdata_long) == paste0(var.time, ".y")
-      )] <- var.time
-      newdata <- newdata[, -c(ncol(newdata) - 1, ncol(newdata))] |> unique()
-      colnames(newdata)[which(
-        colnames(newdata) == paste0(var.time, ".x")
-      )] <- var.time
-    }
     predictions_step2 <- lcmm::predictY(
       x,
       newdata = newdata |>
