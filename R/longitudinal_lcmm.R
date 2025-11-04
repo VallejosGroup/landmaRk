@@ -138,18 +138,18 @@
   # Step 1b. Find ids of individuals in the training set
   in_train_set <- unique(x$data[, subject])
   if (!test) {
-  predRE <- lcmm::predictRE(x, x$data, subject = subject, classpredRE = TRUE)
+    predRE <- lcmm::predictRE(x, x$data, subject = subject, classpredRE = TRUE)
 
-  if (length(unique(predRE[, subject])) != length(in_train_set)) {
-    stop(sprintf(
-      paste(
-        "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
-        "Probable reason: static covariates contain missing data.\n"
-      ),
-      length(unique(predRE[, subject])),
-      length(in_train_set)
-    ))
-  }
+    if (length(unique(predRE[, subject])) != length(in_train_set)) {
+      stop(sprintf(
+        paste(
+          "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
+          "Probable reason: static covariates contain missing data.\n"
+        ),
+        length(unique(predRE[, subject])),
+        length(in_train_set)
+      ))
+    }
   }
 
   # Step 1c. Find class-specific predictions for individuals in the training set.
