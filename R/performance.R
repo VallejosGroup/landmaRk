@@ -133,22 +133,15 @@ setMethod(
           )
       }
       if (auc_t) {
-        timepoints <- seq(
-          min(dataset[, "event_time"]),
-          max(dataset[, "event_time"]),
-          length.out = 12
+        auct_list[[paste0(landmark, "-", horizon)]] <- unname(
+          timeROC::timeROC(
+            T = dataset[, "event_time"],
+            delta = dataset[, "event_status"],
+            marker = predictions,
+            cause = 1,
+            times = horizon-landmark
+          )$AUC[2]
         )
-        timepoints <- timepoints[-c(1, length(timepoints))]
-        auct_list[[paste0(landmark, "-", horizon)]] <-
-          unname(
-            timeROC::timeROC(
-              T = dataset[, "event_time"],
-              delta = dataset[, "event_status"],
-              marker = predictions,
-              cause = 1,
-              times = timepoints
-            )$AUC
-          )
       }
     }
     if (c_index) {
@@ -159,7 +152,7 @@ setMethod(
     }
     if (auc_t) {
       auct_matrix <- do.call(rbind, auct_list)
-      colnames(auct_matrix) <- paste0("AUCt", seq_len(ncol(auct_matrix)))
+      colnames(auct_matrix) <- "AUCt"
       scores <- cbind(scores, auct_matrix)
     }
     return(scores)
