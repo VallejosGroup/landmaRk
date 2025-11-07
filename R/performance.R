@@ -139,7 +139,7 @@ setMethod(
             delta = dataset[, "event_status"],
             marker = predictions,
             cause = 1,
-            times = horizon-landmark
+            times = horizon - landmark
           )$AUC[2]
         )
       }
