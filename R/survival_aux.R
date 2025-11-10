@@ -131,7 +131,6 @@
           dynamic_covariate
         ]]
       }
-      browser()
       survival_df <- bind_cols(
         survival_df,
         predictions
