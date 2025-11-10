@@ -1,0 +1,188 @@
+# landmaRk
+
+Time-to-event analysis using a wide array of longitudinal and survival
+sub-models.
+
+## Introduction
+
+Time-to-event, or survival analysis, is used to analyse the time until
+an *event of interest* occurs. Common events include hospitalisation,
+equipment failure, or a prisoner reoffending. Whilst classic survival
+methods assume model covariates are static, it is often the case that
+longitudinal data related to the outcome of interest are collected. Two
+main forms of survival analysis incorporating time-dependent covariates
+exist, joint models and landmarking [¹](#fn1). This package focuses on
+the latter.
+
+For a set of landmark times, a survival model is fitted up to specified
+horizon times. At landmark times, any time-dependent covariates must be
+summarised. Most commonly, the last observation carried forward (LOCF)
+approach is used. However, a more modern approach is to instead fit a
+linear mixed effects model which accounts for observations being
+measured with error [²](#fn2). However, any method which summarises
+longitudinal observations can be used. Moreover, whilst landmarking
+methods typically reply on Cox proportional hazards models, nearly any
+survival model can also be used.
+
+Whilst packages already exist which implement landmarking, these
+packages implement specific longitudinal and survival models. The aim of
+`landmaRk` is to support a wide array of longitudinal and survival
+sub-models whilst providing a modular system allowing others to
+incorporate their own models.
+
+## Installation
+
+We are planning to release the package on CRAN once the software is
+mature. For now, you can get a CRAN-like experience by installing from
+our r-universe
+
+``` r
+install.packages("landmaRk",
+                 repos = c("https://vallejosgroup.r-universe.dev",
+                           "https://cloud.r-project.org"))
+```
+
+Alternatively, the package can be built from source using `remotes`
+
+``` r
+# install.packages("remotes")
+remotes::install_github("vallejosgroup/landmaRk", build_vignettes = TRUE)
+```
+
+## Getting started
+
+We recommend starting with the `landmaRk` vignette, which provides an
+overview of the package and how to use it. You can access the vignette
+in R by calling
+
+``` r
+vignette("landmaRk")
+```
+
+Alternatively, you can view the vignette
+[online](https://vallejosgroup.github.io/landmaRk/articles/landmaRk.html).
+
+## References
+
+------------------------------------------------------------------------
+
+1.  Rizopoulos D, Molenberghs G, Lesaffre EMEH. Dynamic predictions with
+    time-dependent covariates in survival analysis using joint modeling
+    and landmarking. Biometrical Journal. 2017;59(6):1261-1276. doi:
+    [10.1002/bimj.201600238](https://doi.org/10.1002/bimj.201600238)
+
+2.  Paige E, Barrett J, Stevens D, et al. Landmark models for optimizing
+    the use of repeated measurements of risk factors in electronic
+    health records to predict future disease risk. American Journal of
+    Epidemiology. 2018;187(7):1530-1538. doi:
+    [10.1093/aje/kwy018](https://doi.org/10.1093/aje/kwy018)
+
+# Package index
+
+## All functions
+
+- [`LandmarkAnalysis-class`](https://vallejosgroup.github.io/landmaRk/reference/LandmarkAnalysis-class.md)
+  : S4 class for performing a landmarking analysis
+
+- [`LandmarkAnalysis()`](https://vallejosgroup.github.io/landmaRk/reference/LandmarkAnalysis.md)
+  : Creates an S4 class for a landmarking analysis
+
+- [`check_lcmm_convergence()`](https://vallejosgroup.github.io/landmaRk/reference/check_lcmm_convergence.md)
+  : Checks convergence of lcmm models
+
+- [`compute_risk_sets(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/compute_risk_sets-LandmarkAnalysis-method.md)
+  : Compute the list of individuals at risk at landmark times
+
+- [`compute_risk_sets()`](https://vallejosgroup.github.io/landmaRk/reference/compute_risk_sets.md)
+  : Compute the list of individuals at risk at landmark times
+
+- [`.BinaryBrierScore()`](https://vallejosgroup.github.io/landmaRk/reference/dot-BinaryBrierScore.md)
+  : Binary Brier Score
+
+- [`.CIndexCRisks()`](https://vallejosgroup.github.io/landmaRk/reference/dot-CIndexCRisks.md)
+  : Concordance index for competing risks
+
+- [`epileptic`](https://vallejosgroup.github.io/landmaRk/reference/epileptic.md)
+  : Dose calibration of anti-epileptic drugs data
+
+- [`fit_longitudinal(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal-LandmarkAnalysis-method.md)
+  : Fits the specified longitudinal model for time-varying covariates up
+  to the landmark times
+
+- [`fit_longitudinal()`](https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal.md)
+  : Fits the specified longitudinal model for time-varying covariates up
+  to the landmark times
+
+- [`fit_survival(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/fit_survival-LandmarkAnalysis-method.md)
+  : Fits the specified survival model at the landmark times and up to
+  the horizon times specified by the user
+
+- [`fit_survival()`](https://vallejosgroup.github.io/landmaRk/reference/fit_survival.md)
+  : Fits the specified survival model at the landmark times and up to
+  the horizon times specified by the user
+
+- [`performance_metrics(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/performance_metrics-LandmarkAnalysis-method.md)
+  : Performance metrics
+
+- [`performance_metrics()`](https://vallejosgroup.github.io/landmaRk/reference/performance_metrics.md)
+  : Performance metrics
+
+- [`plot(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/plot-LandmarkAnalysis-method.md)
+  : Plots longitudinal trajectories and survival curves for landmarking
+  models.
+
+- [`predict_longitudinal(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal-LandmarkAnalysis-method.md)
+  : Make predictions for time-varying covariates at specified landmark
+  times
+
+- [`predict_longitudinal()`](https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal.md)
+  : Make predictions for time-varying covariates at specified landmark
+  times
+
+- [`predict_survival(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/predict_survival-LandmarkAnalysis-method.md)
+  : Make predictions for time-to-event outcomes at specified horizon
+  times
+
+- [`predict_survival()`](https://vallejosgroup.github.io/landmaRk/reference/predict_survival.md)
+  : Make predictions for time-to-event outcomes at specified horizon
+  times
+
+- [`prune(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/prune-LandmarkAnalysis-method.md)
+  :
+
+  Prunes a landmark time from a `LandmarkAnalysis`, removing the risk
+  set, longitudinal submodel and survival submodel from the object.
+
+- [`prune()`](https://vallejosgroup.github.io/landmaRk/reference/prune.md)
+  :
+
+  Prunes a landmark time from a `LandmarkAnalysis`, removing the risk
+  set, longitudinal submodel and survival submodel from the object.
+
+- [`prune_risk_sets(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/prune_risk_sets-LandmarkAnalysis-method.md)
+  : Prune a set of individuals from a risk set
+
+- [`prune_risk_sets()`](https://vallejosgroup.github.io/landmaRk/reference/prune_risk_sets.md)
+  : Prune a set of individuals from a risk set
+
+- [`show(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/show-LandmarkAnalysis-method.md)
+  :
+
+  Displays an object of class "`LandmarkAnalysis`"
+
+- [`split_wide_df()`](https://vallejosgroup.github.io/landmaRk/reference/split_wide_df.md)
+  : Split a wide dataframe containing static and dynamic covariates and
+  splits in into a dataframe with the static covariates and a list of
+  dataframes, each associated to a dynamic covariate.
+
+- [`summary(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/summary-LandmarkAnalysis-method.md)
+  : Summarise a LandmarkAnalysis object
+
+# Articles
+
+### All vignettes
+
+- [Cross-validation with the landmaRk
+  package](https://vallejosgroup.github.io/landmaRk/articles/landmaRk-cv.md):
+- [Introduction to the landmaRk
+  package](https://vallejosgroup.github.io/landmaRk/articles/landmaRk.md):
