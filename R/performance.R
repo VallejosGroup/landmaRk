@@ -116,7 +116,7 @@ setMethod(
             predictions = predictions,
             time = dataset$event_time,
             status = dataset$event_status,
-            tau = horizon,
+            tau = horizon-landmark,
             cause = 1
           )
       }
@@ -126,7 +126,7 @@ setMethod(
             predictions = predictions,
             time = dataset$event_time,
             status = dataset$event_status,
-            tau = horizon,
+            tau = horizon-landmark,
             cause = 1,
             method = "survival",
             cens.code = 0
