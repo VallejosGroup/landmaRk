@@ -121,16 +121,16 @@ setMethod(
           )
       }
       if (c_index) {
-        cindex_list[[paste0(landmark, "-", horizon)]] <-
-          .CIndexCRisks(
-            predictions = predictions,
-            time = dataset$event_time,
-            status = dataset$event_status,
-            tau = horizon - landmark,
-            cause = 1,
-            method = "survival",
-            cens.code = 0
-          )
+        if (train == TRUE) {
+          survival_dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
+        } else {
+          survival_dataset <- x@survival_datasets_test[[paste0(landmark, "-", horizon)]]
+        }
+        cindex_list[[paste0(landmark, "-", horizon)]] <- pec::cindex(
+          list(x@survival_fits[[paste0(landmark, "-", horizon)]]),
+          x@survival_fits[[paste0(landmark, "-", horizon)]]$formula,
+          survival_dataset,
+        )$AppCindex$coxph
       }
       if (auc_t) {
         auct_list[[paste0(landmark, "-", horizon)]] <- unname(

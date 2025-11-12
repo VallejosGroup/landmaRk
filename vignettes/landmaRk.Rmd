@@ -368,8 +368,8 @@ landmarking_object <- landmarking_object |>
     landmarks = seq(from = 365.25, to = 4 * 365.25, by = 365.25),
     method = "lcmm",
     subject = "id",
-    avg = FALSE,
-    include_clusters = TRUE,
+    avg = TRUE,
+    include_clusters = FALSE,
     var.time = "time",
     dynamic_covariates = c("dose")
   ) |>
@@ -380,14 +380,14 @@ landmarking_object <- landmarking_object |>
     horizons = seq(from = 2 * 365.25, to = 5 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose"),
-    include_clusters = TRUE
+    include_clusters = FALSE
   ) |>
   predict_survival(
     landmarks = seq(from = 365.25, to = 4 * 365.25, by = 365.25),
     horizons = seq(from = 2 * 365.25, to = 5 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose"),
-    include_clusters = TRUE,
+    include_clusters = FALSE,
     type = "survival",
   )
 ```
