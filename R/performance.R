@@ -122,9 +122,17 @@ setMethod(
       }
       if (c_index) {
         if (train == TRUE) {
-          survival_dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
+          survival_dataset <- x@survival_datasets[[paste0(
+            landmark,
+            "-",
+            horizon
+          )]]
         } else {
-          survival_dataset <- x@survival_datasets_test[[paste0(landmark, "-", horizon)]]
+          survival_dataset <- x@survival_datasets_test[[paste0(
+            landmark,
+            "-",
+            horizon
+          )]]
         }
         cindex_list[[paste0(landmark, "-", horizon)]] <- pec::cindex(
           list(x@survival_fits[[paste0(landmark, "-", horizon)]]),
