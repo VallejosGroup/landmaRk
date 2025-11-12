@@ -90,7 +90,8 @@
 <span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>    masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use the conflicted package (<span style="color: #0000BB; font-style: italic;">&lt;http://conflicted.r-lib.org/&gt;</span>) to force all conflicts to become errors</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">prodlim</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-epileptic-data">Example: epileptic data<a class="anchor" aria-label="anchor" href="#example-epileptic-data"></a>
@@ -275,15 +276,15 @@ part of the original dataset for validation.</p>
 <span><span class="co">#&gt; survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, </span></span>
 <span><span class="co">#&gt;     "-", horizons)]], model = TRUE, x = TRUE)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                   coef exp(coef)  se(coef)      z     p</span></span>
-<span><span class="co">#&gt; treatLTG      0.042801  1.043730  0.289702  0.148 0.883</span></span>
-<span><span class="co">#&gt; age          -0.012326  0.987750  0.008503 -1.450 0.147</span></span>
-<span><span class="co">#&gt; genderM      -0.003815  0.996192  0.295850 -0.013 0.990</span></span>
-<span><span class="co">#&gt; learn.disYes -0.860808  0.422820  0.740392 -1.163 0.245</span></span>
-<span><span class="co">#&gt; dose          0.325584  1.384839  0.113134  2.878 0.004</span></span>
+<span><span class="co">#&gt;                   coef exp(coef)  se(coef)      z       p</span></span>
+<span><span class="co">#&gt; treatLTG      0.050993  1.052316  0.214191  0.238 0.81182</span></span>
+<span><span class="co">#&gt; age          -0.016284  0.983848  0.006482 -2.512 0.01199</span></span>
+<span><span class="co">#&gt; genderM      -0.189162  0.827652  0.214458 -0.882 0.37775</span></span>
+<span><span class="co">#&gt; learn.disYes -0.430140  0.650418  0.438529 -0.981 0.32666</span></span>
+<span><span class="co">#&gt; dose          0.275454  1.317129  0.085492  3.222 0.00127</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Likelihood ratio test=10.34  on 5 df, p=0.06621</span></span>
-<span><span class="co">#&gt; n= 346, number of events= 49</span></span></code></pre></div>
+<span><span class="co">#&gt; Likelihood ratio test=16.25  on 5 df, p=0.006154</span></span>
+<span><span class="co">#&gt; n= 346, number of events= 90</span></span></code></pre></div>
 <p>Here are the in-sample performance metrics:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
@@ -292,24 +293,12 @@ part of the original dataset for validation.</p>
 <span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>  auc_t <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier     AUCt1     AUCt2</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.2250417 0.6490448 0.9906947 0.9835355</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.4002502 0.7862853 0.9629473 0.9331092</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.4107143 0.7749309 0.9375000 0.7669928</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.4311774 0.7548344 1.0000000 0.8785837</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9411765 0.9340199 0.1000000 0.1153846</span></span>
-<span><span class="co">#&gt;                    AUCt3     AUCt4      AUCt5      AUCt6      AUCt7      AUCt8</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.9343474 0.9262169 0.92984774 0.90451648 0.89613490 0.84661698</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.9099835 0.8668686 0.76147979 0.76349325 0.76209135 0.65998586</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.7678328 0.7722389 0.68207760 0.66225974 0.59515953 0.59179396</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.8986478 0.7956535 0.65172219 0.68151100 0.64682663 0.56038561</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.1363636 0.1428571 0.04273504 0.04273504 0.05128205 0.05494505</span></span>
-<span><span class="co">#&gt;                     AUCt9     AUCt10</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.81209213 0.78216204</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.64683809 0.61057758</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.57390978 0.57576113</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.46876576 0.46026476</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.06410256 0.06993007</span></span></code></pre></div>
+<span><span class="co">#&gt;                landmark horizon    cindex     brier       AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6225997 0.5262495 0.93876976</span></span>
+<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6432658 0.6500848 0.89580939</span></span>
+<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.6918492 0.6673227 0.84557518</span></span>
+<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7616765 0.7284649 0.59756103</span></span>
+<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9875992 0.9340199 0.07692308</span></span></code></pre></div>
 <p>Out-of-sample performance metrics can be obtained by specifying
 <code>train = FALSE</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -320,24 +309,14 @@ part of the original dataset for validation.</p>
 <span>  auc_t <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  train <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier     AUCt1     AUCt2</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.1091234 0.7030735 1.0000000 1.0000000</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.2583333 0.7902356 0.9565217 0.8701926</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.0000000 0.8585820        NA        NA</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25       NaN 0.8296894        NA        NA</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50       NaN 0.9843228        NA        NA</span></span>
-<span><span class="co">#&gt;                    AUCt3     AUCt4     AUCt5     AUCt6     AUCt7     AUCt8</span></span>
-<span><span class="co">#&gt; 365.25-730.5   1.0000000 1.0000000 0.9855764 0.9925822 0.9969145 0.9969145</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.8229645 0.8321659 0.7002645 0.7074602 0.7174983 0.7174983</span></span>
-<span><span class="co">#&gt; 1095.75-1461          NA 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000</span></span>
-<span><span class="co">#&gt; 1461-1826.25          NA        NA        NA        NA        NA        NA</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5        NA        NA        NA        NA        NA        NA</span></span>
-<span><span class="co">#&gt;                    AUCt9    AUCt10</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.9291742 0.9293744</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.7174983 0.7680128</span></span>
-<span><span class="co">#&gt; 1095.75-1461   1.0000000 1.0000000</span></span>
-<span><span class="co">#&gt; 1461-1826.25          NA        NA</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5        NA        NA</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning in max(Y[status == 1]): no non-missing arguments to max; returning -Inf</span></span>
+<span><span class="co">#&gt; Warning in max(Y[status == 1]): no non-missing arguments to max; returning -Inf</span></span>
+<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.5113732 0.5906314 0.9646766</span></span>
+<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.5475362 0.6748556 0.9823438</span></span>
+<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.1200000 0.7517810 1.0000000</span></span>
+<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25       NaN 0.8027774        NA</span></span>
+<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50       NaN 0.9843228        NA</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="cross-validation">Cross-validation<a class="anchor" aria-label="anchor" href="#cross-validation"></a>
@@ -476,9 +455,6 @@ cross-validation:</p>
 <span><span class="co">#&gt; : unused arguments ignored</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Loglik converged before variable 4 ; coefficient may be infinite.</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
@@ -512,9 +488,6 @@ cross-validation:</p>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Loglik converged before variable 4 ; coefficient may be infinite.</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
@@ -558,104 +531,44 @@ cross-validation:</p>
 <span></span>
 <span><span class="va">metrics</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier     AUCt1     AUCt2</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.2576979 0.6750654 0.9847133 0.9692624</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.4614756 0.7772294 0.8880067 0.7710943</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.4652677 0.7796606 0.9414062 0.7370968</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.5577342 0.8093310        NA 0.6836420</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 1.0000000 0.9846045 0.0000000 0.0000000</span></span>
-<span><span class="co">#&gt;                    AUCt3     AUCt4     AUCt5     AUCt6     AUCt7     AUCt8</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.9307441 0.9212866 0.9096582 0.8849507 0.8518927 0.7956471</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.7058081 0.6779460 0.6092313 0.6114898 0.6172209 0.6000710</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.7433333 0.7198520 0.6289192 0.6003492 0.5410070 0.5407021</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.7061688 0.6248573 0.5220890 0.5650313 0.4550202 0.4482342</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000</span></span>
-<span><span class="co">#&gt;                    AUCt9    AUCt10</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.7790505 0.7470220</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.5999108 0.5654821</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.5184780 0.5251662</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.3534164 0.3348095</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.0000000 0.0000000</span></span>
+<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6336712 0.5476312 0.9343432</span></span>
+<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6681284 0.6626849 0.8324416</span></span>
+<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.6973781 0.7012488 0.7499993</span></span>
+<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7766896 0.7938033 0.4953194</span></span>
+<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 1.0000000 0.9846045 0.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier     AUCt1     AUCt2</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.2798589 0.6660893 0.9881538 0.9735122</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.4314570 0.7618801 0.9516195 0.8331193</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.5960334 0.8469187 0.7203108 0.5583966</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.5108514 0.7972720 0.8994652 0.8491005</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 1.0000000 0.9853555        NA        NA</span></span>
-<span><span class="co">#&gt;                    AUCt3     AUCt4     AUCt5     AUCt6     AUCt7     AUCt8</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.8765133 0.8772083 0.8892168 0.8534006 0.8217506 0.7809371</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.7846446 0.7580944 0.6844112 0.6911200 0.6861711 0.6054836</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.5624183 0.5618904 0.4258553 0.4276322 0.3973064 0.3952500</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.7030205 0.7131008 0.5688396 0.5963637 0.5571901 0.4825371</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5        NA        NA 0.0000000 0.0000000 0.0000000 0.0000000</span></span>
-<span><span class="co">#&gt;                    AUCt9    AUCt10</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.7427626 0.7230432</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.5924479 0.5752228</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.3907853 0.3895766</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.3786107 0.3700142</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.0000000 0.0000000</span></span>
+<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6605406 0.5471592 0.9127225</span></span>
+<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.7141958 0.6657560 0.7919147</span></span>
+<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.7495549 0.7535546 0.7120984</span></span>
+<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.8210927 0.7853303 0.3812993</span></span>
+<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 1.0000000 0.9853555 0.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[3]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier     AUCt1     AUCt2</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.2713214 0.6716338 0.9889312 0.9878066</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.4399887 0.7728541 0.8297670 0.7581583</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.4491228 0.8065689 0.9365079 0.6472846</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.3624679 0.8130292 0.9135802 0.8302186</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9215686 0.9300287 0.1290323 0.1538462</span></span>
-<span><span class="co">#&gt;                    AUCt3     AUCt4     AUCt5     AUCt6      AUCt7     AUCt8</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.8962888 0.8970480 0.9129100 0.8722543 0.84490634 0.7948612</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.7693931 0.7339311 0.6829594 0.6921019 0.69759775 0.6130315</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.6553621 0.5860532 0.5249039 0.5844193 0.58829446 0.5412064</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.8324390 0.8057394 0.8346940 0.8518402 0.79337907 0.6091133</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.1818182 0.1904762 0.0678733 0.0678733 0.08241758 0.0887574</span></span>
-<span><span class="co">#&gt;                    AUCt9    AUCt10</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.7606236 0.7349016</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.6029425 0.5852143</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.5488984 0.5566024</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.6142147 0.6259838</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.1048951 0.1153846</span></span>
+<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6212185 0.5485583 0.9260363</span></span>
+<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6373537 0.6610433 0.9083269</span></span>
+<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.6475242 0.7164068 0.9113404</span></span>
+<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7770478 0.7818805 0.6872417</span></span>
+<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9875992 0.9300287 0.1153846</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[4]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt1     AUCt2</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.1439101 0.6483904 0.99571742 0.9931192</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.3909853 0.7894662 0.94861100 0.8890465</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.6751969 0.8353488 0.93650794 0.5426002</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.4349593 0.7725270 1.00000000 0.8339512</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9600000 0.9379297 0.06666667 0.0800000</span></span>
-<span><span class="co">#&gt;                    AUCt3      AUCt4     AUCt5     AUCt6     AUCt7     AUCt8</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.9822635 0.98275289 0.9789553 0.9750663 0.9522820 0.9330249</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.8097079 0.78539769 0.6563541 0.6593042 0.6534115 0.6033175</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.5394629 0.44873014 0.4509842 0.4520323 0.3720697 0.3515997</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.8480321 0.77209800 0.6429344 0.6860274 0.6705238 0.5921040</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.0500000 0.05263158 0.0000000 0.0000000 0.0000000 0.0000000</span></span>
-<span><span class="co">#&gt;                    AUCt9    AUCt10</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.9046571 0.8892080</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.5919417 0.6146831</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.2930669 0.2968365</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.5011351 0.5066887</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.0000000 0.0000000</span></span>
+<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.5897559 0.5373165 0.9603579</span></span>
+<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6387605 0.6681717 0.9376969</span></span>
+<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.7001645 0.7201016 0.7234967</span></span>
+<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7562045 0.7458446 0.6171271</span></span>
+<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9778120 0.9379297 0.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[5]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier     AUCt1     AUCt2</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.2279665 0.6823035 0.9897590 0.9857013</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.4892277 0.7850246 0.9086824 0.7221125</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.4051173 0.7451454 0.9791667 0.8062650</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.4114833 0.7865477 0.9740260 0.8865393</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9361702 0.9262527 0.1071429 0.1304348</span></span>
-<span><span class="co">#&gt;                    AUCt3     AUCt4     AUCt5     AUCt6      AUCt7      AUCt8</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.9182847 0.9169552 0.9132184 0.8850731 0.88833970 0.85128205</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.6639545 0.6721947 0.6148379 0.6209510 0.63729112 0.55684347</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.8100506 0.7655173 0.6754118 0.6693516 0.61024589 0.60889010</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.8964118 0.8969084 0.7230070 0.7468498 0.74845052 0.57227809</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.1578947 0.1666667 0.0468750 0.0468750 0.05357143 0.05357143</span></span>
-<span><span class="co">#&gt;                     AUCt9    AUCt10</span></span>
-<span><span class="co">#&gt; 365.25-730.5   0.82416651 0.7855345</span></span>
-<span><span class="co">#&gt; 730.5-1095.75  0.55635200 0.5334360</span></span>
-<span><span class="co">#&gt; 1095.75-1461   0.57881124 0.5820844</span></span>
-<span><span class="co">#&gt; 1461-1826.25   0.50569049 0.4855763</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5 0.06818182 0.0750000</span></span></code></pre></div>
+<span><span class="co">#&gt;                landmark horizon    cindex     brier       AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6059305 0.5527893 0.94672845</span></span>
+<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6399187 0.6476502 0.85803018</span></span>
+<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.6417725 0.6504718 0.85764034</span></span>
+<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7020792 0.7489997 0.67825788</span></span>
+<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9870504 0.9262527 0.08333333</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

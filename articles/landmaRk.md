@@ -65,6 +65,7 @@ library(tidyverse)
 #> ✖ dplyr::filter() masks stats::filter()
 #> ✖ dplyr::lag()    masks stats::lag()
 #> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+library(prodlim)
 ```
 
 ## Example: epileptic data
@@ -256,14 +257,14 @@ summary(landmarking_object, type = "survival", landmark = 365.25, horizon = 730.
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
 #>     "-", horizons)]], model = TRUE, x = TRUE)
 #> 
-#>                   coef exp(coef)  se(coef)      z     p
-#> treatLTG      0.149026  1.160703  0.268802  0.554 0.579
-#> age          -0.009630  0.990416  0.007368 -1.307 0.191
-#> genderM       0.293059  1.340522  0.272513  1.075 0.282
-#> learn.disYes -0.842526  0.430621  0.736509 -1.144 0.253
+#>                   coef exp(coef)  se(coef)      z       p
+#> treatLTG      0.112523  1.119098  0.197692  0.569 0.56923
+#> age          -0.014712  0.985396  0.005683 -2.589 0.00963
+#> genderM       0.032746  1.033288  0.196788  0.166 0.86784
+#> learn.disYes -0.519659  0.594723  0.436504 -1.191 0.23385
 #> 
-#> Likelihood ratio test=4.24  on 4 df, p=0.3746
-#> n= 430, number of events= 57
+#> Likelihood ratio test=7.58  on 4 df, p=0.1084
+#> n= 430, number of events= 105
 ```
 
 Now the `performance_metrics` function can be used to calculate (for
@@ -276,11 +277,11 @@ performance_metrics(
   horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25)
 )
 #>                landmark horizon    cindex     brier
-#> 365.25-730.5     365.25  730.50 0.1298831 0.6611129
-#> 730.5-1095.75    730.50 1095.75 0.3015631 0.7660603
-#> 1095.75-1461    1095.75 1461.00 0.2382749 0.7905402
-#> 1461-1826.25    1461.00 1826.25 0.3918367 0.7898793
-#> 1826.25-2191.5  1826.25 2191.50 0.9384615 0.9321694
+#> 365.25-730.5     365.25  730.50 0.5882109 0.5356865
+#> 730.5-1095.75    730.50 1095.75 0.5948564 0.6481250
+#> 1095.75-1461    1095.75 1461.00 0.6728138 0.6956658
+#> 1461-1826.25    1461.00 1826.25 0.7560211 0.7651004
+#> 1826.25-2191.5  1826.25 2191.50 0.9621034 0.9321694
 ```
 
 ## Landmarking analysis with lme4 + coxph
@@ -390,15 +391,15 @@ summary(landmarking_object, type = "survival", landmark = 365.25, horizon = 730.
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
 #>     "-", horizons)]], model = TRUE, x = TRUE)
 #> 
-#>                  coef exp(coef) se(coef)      z       p
-#> treatLTG      0.12420   1.13224  0.26962  0.461 0.64506
-#> age          -0.01015   0.98990  0.00776 -1.308 0.19098
-#> genderM       0.20803   1.23126  0.27567  0.755 0.45045
-#> learn.disYes -0.87223   0.41802  0.73770 -1.182 0.23706
-#> dose          0.31780   1.37410  0.10911  2.913 0.00358
+#>                   coef exp(coef)  se(coef)      z        p
+#> treatLTG      0.110243  1.116549  0.197993  0.557 0.577664
+#> age          -0.014894  0.985216  0.005952 -2.502 0.012341
+#> genderM      -0.022325  0.977923  0.198184 -0.113 0.910311
+#> learn.disYes -0.488076  0.613806  0.436477 -1.118 0.263475
+#> dose          0.276647  1.318700  0.082287  3.362 0.000774
 #> 
-#> Likelihood ratio test=11.92  on 5 df, p=0.03587
-#> n= 430, number of events= 57
+#> Likelihood ratio test=17.86  on 5 df, p=0.003126
+#> n= 430, number of events= 105
 ```
 
 Here are the performance metrics:
@@ -410,11 +411,11 @@ performance_metrics(
   horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25)
 )
 #>                landmark horizon    cindex     brier
-#> 365.25-730.5     365.25  730.50 0.2241851 0.6672443
-#> 730.5-1095.75    730.50 1095.75 0.4266108 0.7758282
-#> 1095.75-1461    1095.75 1461.00 0.4021563 0.7967850
-#> 1461-1826.25    1461.00 1826.25 0.3959184 0.7907983
-#> 1826.25-2191.5  1826.25 2191.50 0.9384615 0.9445921
+#> 365.25-730.5     365.25  730.50 0.6200416 0.5456640
+#> 730.5-1095.75    730.50 1095.75 0.6541186 0.6596835
+#> 1095.75-1461    1095.75 1461.00 0.6823551 0.7033921
+#> 1461-1826.25    1461.00 1826.25 0.7570973 0.7670473
+#> 1826.25-2191.5  1826.25 2191.50 0.9905259 0.9445921
 ```
 
 ## Landmarking analysis with lcmm + coxph
@@ -471,8 +472,8 @@ landmarking_object <- landmarking_object |>
     landmarks = seq(from = 365.25, to = 4 * 365.25, by = 365.25),
     method = "lcmm",
     subject = "id",
-    avg = FALSE,
-    include_clusters = TRUE,
+    avg = TRUE,
+    include_clusters = FALSE,
     var.time = "time",
     dynamic_covariates = c("dose")
   ) |>
@@ -483,16 +484,19 @@ landmarking_object <- landmarking_object |>
     horizons = seq(from = 2 * 365.25, to = 5 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose"),
-    include_clusters = TRUE
+    include_clusters = FALSE
   ) |>
   predict_survival(
     landmarks = seq(from = 365.25, to = 4 * 365.25, by = 365.25),
     horizons = seq(from = 2 * 365.25, to = 5 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose"),
-    include_clusters = TRUE,
+    include_clusters = FALSE,
     type = "survival",
   )
+#> Registered S3 method overwritten by 'lcmm':
+#>   method      from  
+#>   plot.cuminc cmprsk
 #> Warning in
 #> method(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]], :
 #> Individuals 28, 389, 473, have not been used in LCMM model fitting. Imputing
@@ -501,12 +505,12 @@ landmarking_object <- landmarking_object |>
 #> method(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]], :
 #> Individuals 28, 389, 473, have not been used in LCMM model fitting. Imputing
 #> values for those individuals
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Loglik converged before variable 5,10 ; coefficient may be infinite.
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Loglik converged before variable 10 ; coefficient may be infinite.
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Loglik converged before variable 5,9,10 ; coefficient may be infinite.
+#> New names:
+#> • `` -> `...10`
+#> New names:
+#> New names:
+#> New names:
+#> • `` -> `...10`
 ```
 
 ``` r
@@ -584,21 +588,15 @@ summary(landmarking_object,
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
 #>     "-", horizons)]], model = TRUE, x = TRUE)
 #> 
-#>                                 coef exp(coef)  se(coef)      z      p
-#> treatLTG                   -0.049098  0.952088  0.299207 -0.164 0.8697
-#> cluster_dose2                     NA        NA  0.000000     NA     NA
-#> age                        -0.016270  0.983862  0.008495 -1.915 0.0555
-#> genderM                     0.131476  1.140511  0.303117  0.434 0.6645
-#> learn.disYes               -1.318162  0.267627  1.027134 -1.283 0.1994
-#> dose                        0.411263  1.508723  0.257818  1.595 0.1107
-#> treatLTG:cluster_dose2      0.670725  1.955655  0.920410  0.729 0.4662
-#> cluster_dose2:age           0.042024  1.042919  0.020860  2.015 0.0439
-#> cluster_dose2:genderM       0.497034  1.643838  0.848175  0.586 0.5579
-#> cluster_dose2:learn.disYes  1.907475  6.736059  1.555057  1.227 0.2200
-#> cluster_dose2:dose         -0.633257  0.530860  0.515536 -1.228 0.2193
+#>                   coef exp(coef)  se(coef)      z        p
+#> treatLTG      0.118906  1.126264  0.198106  0.600 0.548363
+#> age          -0.014921  0.985190  0.005965 -2.501 0.012370
+#> genderM      -0.017429  0.982722  0.197943 -0.088 0.929834
+#> learn.disYes -0.460519  0.630956  0.436609 -1.055 0.291534
+#> dose          0.278632  1.321321  0.076351  3.649 0.000263
 #> 
-#> Likelihood ratio test=12.71  on 10 df, p=0.2402
-#> n= 430, number of events= 57
+#> Likelihood ratio test=19.14  on 5 df, p=0.001807
+#> n= 430, number of events= 105
 ```
 
 ``` r
@@ -608,8 +606,8 @@ performance_metrics(
   horizons = seq(from = 2 * 365.25, to = 5 * 365.25, by = 365.25)
 )
 #>               landmark horizon    cindex     brier
-#> 365.25-730.5    365.25  730.50 0.2652899 0.6752188
-#> 730.5-1095.75   730.50 1095.75 0.5411742 0.7847448
-#> 1095.75-1461   1095.75 1461.00 0.5283019 0.8091608
-#> 1461-1826.25   1461.00 1826.25 0.6680272 0.8105012
+#> 365.25-730.5    365.25  730.50 0.6228354 0.5457967
+#> 730.5-1095.75   730.50 1095.75 0.6605126 0.6624201
+#> 1095.75-1461   1095.75 1461.00 0.6814509 0.7033249
+#> 1461-1826.25   1461.00 1826.25 0.7609302 0.7679205
 ```
