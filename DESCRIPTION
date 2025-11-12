@@ -27,13 +27,14 @@ Imports:
     dplyr,
     lme4,
     methods,
+    pec,
+    prodlim,
     survival,
     lcmm,
     doParallel,
     foreach,
     utils,
-    timeROC,
-    prodlim
+    timeROC
 Suggests: 
     knitr,
     rmarkdown,
