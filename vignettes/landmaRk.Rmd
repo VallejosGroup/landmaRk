@@ -73,6 +73,7 @@ In addition to the `landmaRk` package, we will also use `tidyverse`.
 set.seed(123)
 library(landmaRk)
 library(tidyverse)
+library(prodlim)
 ```
 
 # Example: epileptic data

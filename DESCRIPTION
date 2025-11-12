@@ -32,7 +32,8 @@ Imports:
     doParallel,
     foreach,
     utils,
-    timeROC
+    timeROC,
+    prodlim
 Suggests: 
     knitr,
     rmarkdown,

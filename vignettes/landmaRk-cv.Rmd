@@ -26,6 +26,7 @@ set.seed(123)
 library(landmaRk)
 library(tidyverse)
 library(survival)
+library(prodlim)
 ```
 
 ## Example: epileptic data
