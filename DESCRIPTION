@@ -27,6 +27,8 @@ Imports:
     dplyr,
     lme4,
     methods,
+    pec,
+    prodlim,
     survival,
     lcmm,
     doParallel,

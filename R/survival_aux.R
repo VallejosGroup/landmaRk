@@ -104,19 +104,11 @@
         by = x@ids
       )
   }
-  # Censor observations past the horizon time
+  # Move 'baseline' to landmark time
   survival_df <- survival_df |>
     mutate(
-      event_status = ifelse(
-        get(x@event_time) > horizons,
-        0,
-        get(x@event_indicator)
-      ),
-      event_time = ifelse(
-        get(x@event_time) > horizons,
-        horizons - landmarks,
-        get(x@event_time) - landmarks
-      )
+      event_status = get(x@event_indicator),
+      event_time = get(x@event_time) - landmarks
     )
 
   # Check that longitudinal predictions are available at landmark time
