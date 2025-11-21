@@ -307,8 +307,8 @@ setMethod(
                   left_join(
                     x@data_dynamic[[dynamic_covariate]] |>
                       filter(get(x@times) <= landmarks) |>
-                      select(-!!sym(x@times)) |>
-                      select(-!!sym(x@measurements)) |>
+                      select(-any_of(x@times)) |>
+                      select(-any_of(x@measurements)) |>
                       unique(),
                     by = x@ids
                   )
@@ -322,8 +322,8 @@ setMethod(
                 newdata = newdata,
                 test = TRUE,
                 newdata_long = newdata |>
-                  select(-!!sym(x@times)) |>
-                  select(-!!sym(x@measurements)) |>
+                  select(-any_of(x@times)) |>
+                  select(-any_of(x@measurements)) |>
                   left_join(
                     x@data_dynamic[[dynamic_covariate]] |>
                       filter(get(x@times) <= landmarks),
