@@ -64,6 +64,12 @@ jobs:
         with:
           pandoc-version: '2.7.3' # The pandoc version to download (if necessary) and use.
 
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache: true
+          cache-version: 2
+          extra-packages: any::rcmdcheck
+
       - name: Check
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
