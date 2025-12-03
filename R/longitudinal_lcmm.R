@@ -109,7 +109,11 @@
 #'   fitted. If 0 (default), model fitting is performed in the complete dataset.
 #' @param test Logical indicating whether to make predictions for the test set
 #'   (make out of sample predictions). Defaults to FALSE
-#' @param newdata_long A data frame containing longitudinal measurements for prediction. Required when \code{test = TRUE} and either \code{avg = TRUE} or \code{include_clusters = TRUE}. Should include columns for subject IDs, time (\code{var.time}), and any time-varying covariates used in the model. Defaults to \code{NULL}.
+#' @param newdata_long A data frame containing longitudinal measurements for
+#'   prediction. Required when \code{test = TRUE} and either \code{avg = TRUE}
+#'   or \code{include_clusters = TRUE}. Should include columns for subject IDs,
+#'   time (\code{var.time}), and any time-varying covariates used in the model.
+#'   Defaults to \code{NULL}.
 #'
 #' @returns If \code{include_clusters == FALSE}, a vector of predictions. If
 #'   \code{include_clusters == TRUE}, a vector whose first column includes
