@@ -30,7 +30,7 @@ Imports:
     pec,
     prodlim,
     survival,
-    lcmm (>= 	2.2.2),
+    lcmm (>= 2.2.2),
     doParallel,
     foreach,
     utils,
