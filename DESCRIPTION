@@ -19,18 +19,21 @@ License: GPL (>= 3)
 BugReports: https://github.com/VallejosGroup/landmaRk/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Depends: 
     R (>= 4.1.0)
 Imports: 
     dplyr,
     lme4,
     methods,
+    pec,
+    prodlim,
     survival,
-    lcmm,
+    lcmm (>= 2.2.2),
     doParallel,
     foreach,
-    utils
+    utils,
+    timeROC
 Suggests: 
     knitr,
     rmarkdown,

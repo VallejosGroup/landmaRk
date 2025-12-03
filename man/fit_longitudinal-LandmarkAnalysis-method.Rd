@@ -11,6 +11,7 @@ the landmark times}
   method,
   formula,
   dynamic_covariates,
+  validation_fold = 0,
   cores = getOption("Ncpus", 1L),
   ...
 )
@@ -28,6 +29,10 @@ has a \code{data} argument.}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.}
+
+\item{validation_fold}{If positive, cross-validation fold where model is
+fitted. If 0 (default), model fitting is performed using the complete
+dataset.}
 
 \item{cores}{Number of cores/threads to be used for parallel computation on
 Linux and MacOS. Defaults to either \code{options("Ncpus")} if set, or 1

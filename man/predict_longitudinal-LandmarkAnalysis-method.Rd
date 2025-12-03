@@ -4,7 +4,14 @@
 \alias{predict_longitudinal,LandmarkAnalysis-method}
 \title{Make predictions for time-varying covariates at specified landmark times}
 \usage{
-\S4method{predict_longitudinal}{LandmarkAnalysis}(x, landmarks, method, dynamic_covariates, ...)
+\S4method{predict_longitudinal}{LandmarkAnalysis}(
+  x,
+  landmarks,
+  method,
+  dynamic_covariates,
+  validation_fold = 0,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
@@ -15,6 +22,9 @@
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.}
+
+\item{validation_fold}{If positive, cross-validation fold where model is
+fitted. If 0 (default), model fitting is performed in the complete dataset.}
 
 \item{...}{Additional arguments passed to the prediction function (e.g.
 number of classes/clusters for lcmm).}

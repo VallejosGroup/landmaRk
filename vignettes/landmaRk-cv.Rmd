@@ -1,0 +1,246 @@
+---
+title: "Cross-validation with the landmaRk package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Cross-validation with the landmaRk package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+
+## Setup
+
+In addition to the `landmaRk` package, we will also use `tidyverse`. 
+
+```{r setup}
+set.seed(123)
+library(landmaRk)
+library(tidyverse)
+library(survival)
+library(prodlim)
+```
+
+## Example: epileptic data
+
+As in the first vignette, we use the epileptic dataset to perform landmarking
+analysis  of time-to-event data with time-varying covariates. Here is the
+structure of  the dataset.
+
+```{r}
+data("epileptic")
+str(epileptic)
+```
+
+
+## Initialising the landmarking analysis for cross-validation
+
+As in the introductory vignette, the dataset `epileptic` comes in wide format.
+We split it into two dataframes, one for static covariates and one for dynamic
+covariates.
+
+```{r}
+# DF with Static covariates
+epileptic_dfs <- split_wide_df(
+  epileptic,
+  ids = "id",
+  times = "time",
+  static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+  dynamic = c("dose"),
+  measurement_name = "value"
+)
+static <- epileptic_dfs$df_static
+head(static)
+```
+
+```{r}
+# DF with Dynamic covariates
+dynamic <- epileptic_dfs$df_dynamic
+head(dynamic[["dose"]])
+```
+
+
+As in the introductory vignette, we create an object of class `LandmarkAnalysis`,
+using the helper function of the same name. We now use the optional argument `K`
+to specify the number of cross-validations folds. In this example, we request 
+five cross validation folds.
+
+We then calculate the risk sets using `compute_risk_sets()`. 
+```{r}
+landmarking_object <- LandmarkAnalysis(
+  data_static = static,
+  data_dynamic = dynamic,
+  event_indicator = "with.status",
+  ids = "id",
+  event_time = "with.time",
+  times = "time",
+  measurements = "value",
+  K = 5
+)
+
+landmarking_object <- landmarking_object |>
+  compute_risk_sets(
+    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
+  )
+```
+
+## Performance evaluation in hold-out dataset
+
+Now that we have split the dataset into `K=5` parts for cross-validation,
+we can use one of the five parts as test set and the remaining four parts as
+the training set. To do so, use the argument `validation_fold` to indicate the
+that you  want to use as test set when calling `fit_longitudinal()`,
+`predict_longitudinal()`, `fit_survival()` and `predict_survival()`. 
+
+
+```{r}
+landmarking_object <- landmarking_object |>
+  fit_longitudinal(
+    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    method = "lme4",
+    formula = value ~ treat + age + gender + learn.dis + (time | id),
+    dynamic_covariates = c("dose"),
+    validation_fold = 5
+  ) |>
+  predict_longitudinal(
+    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    method = "lme4",
+    dynamic_covariates = c("dose"),
+    validation_fold = 5,
+    allow.new.levels = TRUE
+  ) |>
+  fit_survival(
+    formula = Surv(event_time, event_status) ~
+      treat + age + gender + learn.dis + dose,
+    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+    method = "coxph",
+    dynamic_covariates = c("dose"),
+    validation_fold = 5
+  ) |>
+  predict_survival(
+    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+    method = "coxph",
+    type = "survival",
+    dynamic_covariates = c("dose"),
+    validation_fold = 5
+  )
+```
+
+We can also use `summary()` to print parameter estimates. Note that
+this time the sample size is smaller, because we have held out part of the
+original dataset for validation. 
+
+
+```{r}
+summary(landmarking_object,
+        type = "longitudinal",
+        landmark = 365.25,
+        dynamic_covariate = "dose")
+```
+
+```{r}
+summary(landmarking_object,
+        type = "survival",
+        landmark = 365.25,
+        horizon = 730.5)
+```
+
+Here are the in-sample performance metrics: 
+
+```{r}
+performance_metrics(
+  landmarking_object,
+  landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+  horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+  auc_t = TRUE
+)
+```
+
+Out-of-sample performance metrics can be obtained by specifying `train = FALSE`:
+
+```{r}
+performance_metrics(
+  landmarking_object,
+  landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+  horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+  auc_t = TRUE,
+  train = FALSE
+)
+```
+
+## Cross-validation
+
+Now, we can embed the above pipeline in a for loop to perform cross-validation:
+
+```{r}
+landmarking_object <- LandmarkAnalysis(
+  data_static = static,
+  data_dynamic = dynamic,
+  event_indicator = "with.status",
+  ids = "id",
+  event_time = "with.time",
+  times = "time",
+  measurements = "value",
+  K = 5
+)
+
+landmarking_object <- landmarking_object |>
+  compute_risk_sets(
+    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
+  )
+```
+
+```{r}
+metrics <- list()
+for (k in 1:5) {
+  metrics[[k]] <- landmarking_object |>
+    fit_longitudinal(
+      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+      method = "lme4",
+      formula = value ~ treat + age + gender + learn.dis + (time | id),
+      dynamic_covariates = c("dose"),
+      validation_fold = k
+    ) |>
+    predict_longitudinal(
+      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+      method = "lme4",
+      allow.new.levels = TRUE,
+      dynamic_covariates = c("dose"),
+      validation_fold = k
+    ) |>
+    fit_survival(
+      formula = Surv(event_time, event_status) ~
+        treat + age + gender + learn.dis + dose,
+      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+      horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+      method = "coxph",
+      dynamic_covariates = c("dose"),
+      validation_fold = k
+    ) |>
+    predict_survival(
+      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+      horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+      method = "coxph",
+      type = "survival",
+      dynamic_covariates = c("dose"),
+      validation_fold = k
+    ) |>
+    performance_metrics(
+      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+      horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+      auc_t = TRUE
+    )
+}
+
+metrics
+```

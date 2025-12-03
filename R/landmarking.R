@@ -17,12 +17,20 @@
 #'   and biomarkers.
 #' @slot longitudinal_predictions List of model predictions for the specified
 #'   landmark times and biomarkers.
+#' @slot longitudinal_predictions_test List of out-of-sample predictions for the
+#'   specified landmark times and biomarkers.
 #' @slot survival_datasets List of survival dataframes used in the survival
 #'   submodel.
+#' @slot survival_datasets_test List of survival dataframes used for
+#'   out-of-sample predictions with the survival submodel.
 #' @slot survival_fits List of survival model fits at each of the specified
 #'   landmark times.
 #' @slot survival_predictions List of time-to-event predictions for the
 #'   specified landmark times and prediction horizons.
+#' @slot survival_predictions_test List of out-of-sample predictions
+#'   for the time-to-event outcome if K > 1.
+#' @slot K Number of cross-validation folds (1 by default)
+#' @slot cv_folds Data frame associating individuals to cross-validation folds
 #'
 #' @export
 setClass(
@@ -39,9 +47,14 @@ setClass(
     risk_sets = "list",
     longitudinal_fits = "list",
     longitudinal_predictions = "list",
+    longitudinal_predictions_test = "list",
     survival_datasets = "list",
+    survival_datasets_test = "list",
     survival_fits = "list",
-    survival_predictions = "list"
+    survival_predictions = "list",
+    survival_predictions_test = "list",
+    K = "numeric",
+    cv_folds = "data.frame"
   )
 )
 
@@ -115,6 +128,7 @@ setValidity("LandmarkAnalysis", function(object) {
 #'   \code{data_dynamic}.
 #' @param measurements Name of the column indicating measurement values in
 #'   \code{data_dynamic}.
+#' @param K Number of cross-validation folds (by default, 1).
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}}
 #' @export
@@ -125,7 +139,8 @@ LandmarkAnalysis <- function(
   ids,
   event_time,
   times,
-  measurements
+  measurements,
+  K = 1
 ) {
   # Find out static covariates of type characters
   char_columns <- names(which(sapply(data_static, class) == "character"))
@@ -168,6 +183,27 @@ LandmarkAnalysis <- function(
     }
   }
 
+  # Define data frame with cross-validation folds if K > 1
+  N <- nrow(data_static)
+  if (ids %in% colnames(data_static)) {
+    if (K > 1) {
+      parts <- rep(1:K, floor(N / K))
+      if (N %% K > 0) {
+        parts <- c(parts, 1:(N %% K))
+      }
+      parts <- sample(parts)
+
+      cv_folds <- cbind(data_static[, ids], parts)
+    } else {
+      # If K == 1 (no cross-validation), allocate all individuals to cv fold 1.
+      cv_folds <- cbind(data_static[, ids], 1)
+    }
+    cv_folds <- as.data.frame(cv_folds)
+    colnames(cv_folds) <- c(ids, "fold")
+  } else {
+    .eval_error_str("@ids must be a column in every dataframe in @data_dynamic")
+  }
+
   new(
     "LandmarkAnalysis",
     data_static = data_static,
@@ -180,8 +216,14 @@ LandmarkAnalysis <- function(
     risk_sets = list(),
     longitudinal_fits = list(),
     longitudinal_predictions = list(),
+    longitudinal_predictions_test = list(),
+    survival_datasets = list(),
+    survival_datasets_test = list(),
     survival_fits = list(),
-    survival_predictions = list()
+    survival_predictions = list(),
+    survival_predictions_test = list(),
+    K = K,
+    cv_folds = cv_folds
   )
 }
 
@@ -286,12 +328,21 @@ setMethod(
       model_fit <- object@longitudinal_fits[[as.character(landmark)]][[
         dynamic_covariate
       ]]
-      cat(
-        capture.output(object@longitudinal_fits[[as.character(
-          landmark
-        )]][[dynamic_covariate]]),
-        sep = "\n"
-      )
+      if (is(model_fit, "hlme")) {
+        cat(
+          capture.output(summary(object@longitudinal_fits[[as.character(
+            landmark
+          )]][[dynamic_covariate]])),
+          sep = "\n"
+        )
+      } else {
+        cat(
+          capture.output(object@longitudinal_fits[[as.character(
+            landmark
+          )]][[dynamic_covariate]]),
+          sep = "\n"
+        )
+      }
     } else if (type == "survival") {
       # Summary of survival submodel fit
       if (is.null(horizon) || !(is.numeric(horizon)) || length(horizon) > 1) {
