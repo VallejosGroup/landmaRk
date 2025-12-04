@@ -216,10 +216,14 @@ setMethod(
           predictions <- as.data.frame(risk_set)
           colnames(predictions) <- x@ids
           predictions <- predictions |>
+            inner_join(
+              x@cv_folds |> filter(fold != validation_fold) |> select(x@ids),
+              by = x@ids
+            ) |>
             left_join(
               x@data_dynamic[[dynamic_covariate]] |>
                 filter(get(x@times) <= landmarks) |>
-                slice_max(get(x@times), by = id),
+                slice_max(get(x@times), by = x@ids),
               by = stats::setNames(x@ids, x@ids)
             )
           predictions <- predictions |> pull(x@measurements, name = x@ids)
@@ -238,7 +242,40 @@ setMethod(
           x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
           ]] <- predictions
+
+        if (validation_fold > 0) {
+          predictions <- as.data.frame(risk_set)
+          colnames(predictions) <- x@ids
+          predictions <- predictions |>
+            inner_join(
+              x@cv_folds |> filter(fold == validation_fold) |> select(x@ids),
+              by = x@ids
+            ) |>
+            left_join(
+              x@data_dynamic[[dynamic_covariate]] |>
+                filter(get(x@times) <= landmarks) |>
+                slice_max(get(x@times), by = x@ids),
+              by = stats::setNames(x@ids, x@ids)
+            )
+          predictions <- predictions |> pull(x@measurements, name = x@ids)
+          # Impute NAs
+          if (any(is.na(predictions))) {
+            if (is.numeric(predictions)) {
+              # Replace NAs with mean if covariate is continuous
+              predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
+            } else {
+              # Replace NAs with mode if covariate is discrete
+              predictions[is.na(predictions)] <- names(sort(
+                -table(predictions)
+              ))[1]
+            }
+          }
+          x@longitudinal_predictions_test[[as.character(landmarks)]][[
+            dynamic_covariate
+          ]] <- predictions
+
         }
+      }
       } else {
         # Check that relevant model fit is available (if model is not LOCF)
         .check_long_fit(x, landmarks)
