@@ -218,7 +218,11 @@ setMethod(
           x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
           ]] <- .compute_locf_predictions(
-            x, risk_set, dynamic_covariate, landmarks, train_folds
+            x,
+            risk_set,
+            dynamic_covariate,
+            landmarks,
+            train_folds
           )
 
           # Test fold predictions (if cross-validation is enabled)
@@ -227,7 +231,11 @@ setMethod(
             x@longitudinal_predictions_test[[as.character(landmarks)]][[
               dynamic_covariate
             ]] <- .compute_locf_predictions(
-              x, risk_set, dynamic_covariate, landmarks, test_folds
+              x,
+              risk_set,
+              dynamic_covariate,
+              landmarks,
+              test_folds
             )
           }
         }
