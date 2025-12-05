@@ -1,4 +1,4 @@
-initialise_longitudinal_test_ <- function(epileptic) {
+initialise_longitudinal_test_ <- function(epileptic, K = 1) {
   set.seed(123)
   epileptic$dose2 <- as.factor(epileptic$dose > 2)
 
@@ -31,7 +31,8 @@ initialise_longitudinal_test_ <- function(epileptic) {
     ids = "id",
     event_time = "with.time",
     times = "time",
-    measurements = "value"
+    measurements = "value",
+    K = K
   )
   landmarking_object
 }
@@ -137,6 +138,59 @@ test_that("LOCF works as expected", {
       )))]
       locf_predictions
     }
+  )
+})
+
+test_that("LOCF populates test fold predictions when validation_fold > 0", {
+  # Create LandmarkAnalysis object with K = 5 folds for cross-validation
+  x <- initialise_longitudinal_test_(epileptic = epileptic, K = 5)
+
+  x <- x |>
+    compute_risk_sets(365.25)
+
+  # Call predict_longitudinal with validation_fold = 1
+  x <- predict_longitudinal(
+    x,
+    landmarks = 365.25,
+    method = "locf",
+    subject = "id",
+    dynamic_covariates = "dose",
+    validation_fold = 1
+  )
+
+  # Verify longitudinal_predictions_test is populated for the landmark time
+  expect_true(
+    !is.null(x@longitudinal_predictions_test[["365.25"]][["dose"]])
+  )
+
+  # Get the test fold predictions
+  test_predictions <- x@longitudinal_predictions_test[["365.25"]][["dose"]]
+
+  # Verify test predictions only contain individuals from fold 1
+  test_fold_ids <- x@cv_folds |>
+    dplyr::filter(fold == 1) |>
+    dplyr::pull(id)
+  risk_set_test_ids <- intersect(x@risk_sets[["365.25"]], test_fold_ids)
+  expect_equal(
+    sort(as.integer(names(test_predictions))),
+    sort(as.integer(risk_set_test_ids))
+  )
+
+  # Verify training predictions contain individuals not in fold 1
+  train_predictions <- x@longitudinal_predictions[["365.25"]][["dose"]]
+  train_fold_ids <- x@cv_folds |>
+    dplyr::filter(fold != 1) |>
+    dplyr::pull(id)
+  risk_set_train_ids <- intersect(x@risk_sets[["365.25"]], train_fold_ids)
+  expect_equal(
+    sort(as.integer(names(train_predictions))),
+    sort(as.integer(risk_set_train_ids))
+  )
+
+  # Verify no overlap between train and test predictions
+  expect_equal(
+    length(intersect(names(train_predictions), names(test_predictions))),
+    0
   )
 })
 

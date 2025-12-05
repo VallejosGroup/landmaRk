@@ -8,6 +8,7 @@
 #' @param ng Number of clusters in the LCMM model.
 #' @param rep Number of times the model fitting algorithm is run using grid
 #'   search.
+#' @param maxiter Maximum number of iterations for the LCMM optimiser.
 #' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
 #'   function.
 #' @seealso  [lcmm::hlme()]
@@ -24,6 +25,7 @@
   ng,
   rep = 1,
   classmb = ~1,
+  maxiter = 500,
   ...
 ) {
   model_init <- lcmm::hlme(
@@ -31,7 +33,8 @@
     data = data,
     random = random,
     subject = subject,
-    ng = 1
+    ng = 1,
+    maxiter = maxiter
   )
 
   hlme <- NULL
@@ -46,6 +49,7 @@
       B = model_init,
       classmb = classmb,
       returndata = TRUE,
+      maxiter = maxiter,
       ...
     )
   } else {
@@ -59,6 +63,7 @@
         ng = ng,
         classmb = classmb,
         returndata = TRUE,
+        maxiter = maxiter,
         ...
       ),
       rep = rep,

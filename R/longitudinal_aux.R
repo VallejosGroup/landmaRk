@@ -110,3 +110,38 @@
   doParallel::registerDoParallel(cl)
   cl
 }
+
+# Compute LOCF predictions for a given fold condition
+.compute_locf_predictions <- function(
+  x,
+  risk_set,
+  dynamic_covariate,
+  landmarks,
+  cv_folds_subset
+) {
+  predictions <- as.data.frame(risk_set)
+  colnames(predictions) <- x@ids
+  predictions <- predictions |>
+    dplyr::inner_join(
+      cv_folds_subset |> dplyr::select(x@ids),
+      by = x@ids
+    ) |>
+    dplyr::left_join(
+      x@data_dynamic[[dynamic_covariate]] |>
+        dplyr::filter(get(x@times) <= landmarks) |>
+        dplyr::slice_max(get(x@times), by = x@ids),
+      by = stats::setNames(x@ids, x@ids)
+    )
+  predictions <- predictions |> dplyr::pull(x@measurements, name = x@ids)
+  # Impute NAs
+  if (any(is.na(predictions))) {
+    if (is.numeric(predictions)) {
+      # Replace NAs with mean if covariate is continuous
+      predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
+    } else {
+      # Replace NAs with mode if covariate is discrete
+      predictions[is.na(predictions)] <- names(sort(-table(predictions)))[1]
+    }
+  }
+  predictions
+}

@@ -213,31 +213,31 @@ setMethod(
         # Relevant risk set
         risk_set <- x@risk_sets[[as.character(landmarks)]]
         for (dynamic_covariate in dynamic_covariates) {
-          predictions <- as.data.frame(risk_set)
-          colnames(predictions) <- x@ids
-          predictions <- predictions |>
-            left_join(
-              x@data_dynamic[[dynamic_covariate]] |>
-                filter(get(x@times) <= landmarks) |>
-                slice_max(get(x@times), by = id),
-              by = stats::setNames(x@ids, x@ids)
-            )
-          predictions <- predictions |> pull(x@measurements, name = x@ids)
-          # Impute NAs
-          if (any(is.na(predictions))) {
-            if (is.numeric(predictions)) {
-              # Replace NAs with mean if covariate is continuous
-              predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
-            } else {
-              # Replace NAs with mode if covariate is discrete
-              predictions[is.na(predictions)] <- names(sort(
-                -table(predictions)
-              ))[1]
-            }
-          }
+          # Training fold predictions
+          train_folds <- x@cv_folds |> filter(fold != validation_fold)
           x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
-          ]] <- predictions
+          ]] <- .compute_locf_predictions(
+            x,
+            risk_set,
+            dynamic_covariate,
+            landmarks,
+            train_folds
+          )
+
+          # Test fold predictions (if cross-validation is enabled)
+          if (validation_fold > 0) {
+            test_folds <- x@cv_folds |> filter(fold == validation_fold)
+            x@longitudinal_predictions_test[[as.character(landmarks)]][[
+              dynamic_covariate
+            ]] <- .compute_locf_predictions(
+              x,
+              risk_set,
+              dynamic_covariate,
+              landmarks,
+              test_folds
+            )
+          }
         }
       } else {
         # Check that relevant model fit is available (if model is not LOCF)
