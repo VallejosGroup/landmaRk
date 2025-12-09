@@ -9,6 +9,8 @@
 #' @param rep Number of times the model fitting algorithm is run using grid
 #'   search.
 #' @param maxiter Maximum number of iterations for the LCMM optimiser.
+#' @param idiag Logical indicating whether the variance-covariance matrix of the
+#'   random effects is constant across clusters (FALSE, default) or not (TRUE)
 #' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
 #'   function.
 #' @seealso  [lcmm::hlme()]
@@ -26,6 +28,7 @@
   rep = 1,
   classmb = ~1,
   maxiter = 500,
+  idiag = FALSE,
   ...
 ) {
   model_init <- lcmm::hlme(
@@ -34,7 +37,8 @@
     random = random,
     subject = subject,
     ng = 1,
-    maxiter = maxiter
+    maxiter = maxiter,
+    idiag = idiag
   )
 
   hlme <- NULL
@@ -50,6 +54,7 @@
       classmb = classmb,
       returndata = TRUE,
       maxiter = maxiter,
+      idiag = idiag,
       ...
     )
   } else {
@@ -64,6 +69,7 @@
         classmb = classmb,
         returndata = TRUE,
         maxiter = maxiter,
+        idiag = idiag,
         ...
       ),
       rep = rep,
@@ -82,6 +88,7 @@
   model_fit$call$data <- data
   model_fit$call$B <- model_init
   model_fit$call$classmb <- classmb
+  model_fit$call$idiag <- idiag
   model_fit
 }
 
