@@ -175,7 +175,9 @@ work out the risk sets at each of those landmark times.
 
 ```{r}
 landmarking_object <- landmarking_object |>
-  compute_risk_sets(landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25))
+  compute_risk_sets(
+    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
+  )
 
 landmarking_object
 ```
@@ -219,7 +221,10 @@ landmarking_object <- landmarking_object |>
 To display the results, one can use the method `summary`, specifying 
 `type = "survival"`, in addition to a landmark and a horizon. 
 ```{r}
-summary(landmarking_object, type = "survival", landmark = 365.25, horizon = 730.5)
+summary(landmarking_object,
+        type = "survival",
+        landmark = 365.25,
+        horizon = 730.5)
 ```
 
 Now the `performance_metrics` function can be used to calculate 
@@ -302,11 +307,17 @@ landmarking_object <- landmarking_object |>
 As before, one can also use the function `summary` to display the results.
 
 ```{r}
-summary(landmarking_object, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
+summary(landmarking_object,
+        type = "longitudinal",
+        landmark = 365.25,
+        dynamic_covariate = "dose")
 ```
 
 ```{r}
-summary(landmarking_object, type = "survival", landmark = 365.25, horizon = 730.5)
+summary(landmarking_object,
+        type = "survival",
+        landmark = 365.25,
+        horizon = 730.5)
 ```
 
 Here are the performance metrics: 

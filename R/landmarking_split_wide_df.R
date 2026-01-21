@@ -38,10 +38,7 @@ split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
       measurement_name
   }
 
-  return(list(
-    df_static = df_static,
-    df_dynamic = df_dynamic
-  ))
+  list(df_static = df_static, df_dynamic = df_dynamic)
 }
 
 .build_error_str <- function(
@@ -86,5 +83,5 @@ split_wide_df <- function(df, ids, times, static, dynamic, measurement_name) {
   } else if (!(ids %in% colnames(df))) {
     error_str <- c(error_str, "@ids must be a column name in @df.")
   }
-  return(error_str)
+  error_str
 }

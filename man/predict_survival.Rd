@@ -20,8 +20,8 @@ predict_survival(
 
 \item{landmarks}{A numeric vector of landmark times.}
 
-\item{horizons}{Vector of prediction horizons up to when the survival submodel
-is fitted.}
+\item{horizons}{Vector of prediction horizons up to when the survival
+submodel is fitted.}
 
 \item{method}{R function that is used to make predictions}
 

@@ -1,7 +1,8 @@
 #' Concordance index for competing risks
 #'
 #' Assess discriminative performance of predictions obtained from a conventional
-#' or competing risks time-to-event model using time-dependent concordance index.
+#' or competing risks time-to-event model using time-dependent concordance
+#' index.
 #'
 #' Uses the proportion of correctly ordered risk pairs for the event
 #' \eqn{k}, based on the predicted risk of the event up
@@ -21,12 +22,13 @@
 #' risk by the model than the subject j, for event \eqn{E_k} until time \eqn{t}.
 #' \eqn{Q[i,j] = 0} for tied predictions.
 #'
-#' N_t == number of subjects with survival time < time point and experience event of interest
-#' Tied event times are included
+#' \eqn{N_t} == number of subjects with survival time < time point and
+#' experience event of interest. Tied event times are included
 #'
 #'
 #' @param predictions Numeric vector of model predictions.
-#' @param time Numeric vector describing the time to the event of interest or censoring.
+#' @param time Numeric vector describing the time to the event of interest or
+#'   censoring.
 #' @param cens.code Value used to denote censoring in \code{status}. Defaults to
 #'   0.
 #' @param status Vector of censoring status.
@@ -35,8 +37,8 @@
 #' @param method \code{'survival'} if the predictions are survival probabilities
 #'   or \code{'cifs'} if they are cumulative incidence functions
 #'
-#' @references Ahuja K, Schaar M van der. Joint Concordance Index. Published online August 17, 2019. \doi{10.48550/arXiv.1810.11207}
-
+#' @references Ahuja K, Schaar M van der. Joint Concordance Index. Published
+#'   online August 17, 2019. \doi{10.48550/arXiv.1810.11207}
 #'
 #' @return Concordance index value.
 
@@ -93,8 +95,7 @@
 
   Num <- sum(Num_mat)
   Den <- sum(Den_mat)
-
-  return(Num / Den)
+  Num / Den
 }
 
 #' Binary Brier Score
@@ -111,8 +112,6 @@
 
 .BinaryBrierScore <- function(predictions, time, status, tau, cause) {
   y_true <- ((time <= tau) * (status == cause))
-
   BS <- mean((predictions - y_true)^2)
-
-  return(BS)
+  BS
 }

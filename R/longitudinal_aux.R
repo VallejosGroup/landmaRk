@@ -145,3 +145,81 @@
   }
   predictions
 }
+
+
+# Check prediction vector length
+.pred_check <- function(predRE, subject, in_train_set) {
+  if (length(unique(predRE[, subject])) != length(in_train_set)) {
+    stop(sprintf(
+      paste0(
+        "lcmm::predictRE produced %d predictions but expected %d ",
+        "predictions.\n",
+        "Probable reason: static covariates contain missing data.\n"
+      ),
+      length(unique(predRE[, subject])),
+      length(in_train_set)
+    ))
+  }
+  NULL
+}
+
+
+.pred_train <- function(x, hlme, subject, newdata, test) {
+  predictions_step1 <- NULL
+
+  # Step 1a. We estimate the random effects for individuals in the training set
+  x$call[[1]] <- expr(hlme)
+  # Step 1b. Find ids of individuals in the training set
+  in_train_set <- unique(x$data[, subject])
+  if (!test) {
+    # In sample predictions.
+    predRE <- lcmm::predictRE(x, x$data, subject = subject, classpredRE = TRUE)
+    .pred_check(predRE, subject, in_train_set)
+
+    # Step 1c. Find class-specific predictions for individuals in the
+    # training set.
+    predictions_step1 <- t(sapply(
+      in_train_set,
+      function(individual) {
+        lcmm::predictY(
+          x,
+          newdata = newdata |> filter(get(subject) == individual),
+          predRE = predRE |> filter(get(subject) == individual)
+        )$pred
+      }
+    ))
+
+    predictions_step1 <- as.data.frame(predictions_step1)
+    predictions_step1[, subject] <- in_train_set
+    predictions_step1 <- predictions_step1 |> relocate(subject)
+    colnames(predictions_step1) <- c(
+      subject,
+      paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
+    )
+  }
+  list(predictions_step1, in_train_set)
+}
+
+
+.pred_test <- function(x, subject, newdata, in_train_set) {
+  predictions_step2 <- NULL
+  # Step 2a. Find ids of individuals outwith the training set
+  not_in_train_set <- setdiff(
+    unique(newdata[, subject]),
+    in_train_set
+  )
+
+  # Step 2b. Find class-specific predictions for individuals outwith the
+  # training set.
+  if (length(not_in_train_set) > 0) {
+    predictions_step2 <- lcmm::predictY(
+      x,
+      newdata = newdata |>
+        filter(!(get(subject) %in% in_train_set))
+    )$pred
+    predictions_step2 <- as.data.frame(predictions_step2)
+    predictions_step2[, subject] <- not_in_train_set
+    predictions_step2 <- predictions_step2 |> relocate(subject)
+  }
+  list(predictions_step2, not_in_train_set)
+}

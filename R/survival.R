@@ -88,7 +88,8 @@ setMethod(
       .check_riskset_survival(x, landmarks)
 
       # Recover risk sets (ids of individuals who are at risk at landmark time)
-      # Construct dataset for survival analysis (censor events past horizon time)
+      # Construct dataset for survival analysis (censor events past horizon
+      # time)
       x@survival_datasets[[paste0(landmarks, "-", horizons)]] <-
         .create_survival_dataframe(
           x,
@@ -100,7 +101,8 @@ setMethod(
           train = TRUE
         )
 
-      # Include predicted cluster membership in the training dataset and in the survival formula
+      # Include predicted cluster membership in the training dataset and in the
+      # survival formula
       if (length(dynamic_covariates) > 0 && include_clusters == TRUE) {
         for (dynamic_covariate in dynamic_covariates) {
           formula <- as.formula(
@@ -169,8 +171,8 @@ setMethod(
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
-#' @param horizons Vector of prediction horizons up to when the survival submodel
-#'   is fitted.
+#' @param horizons Vector of prediction horizons up to when the survival
+#'   submodel is fitted.
 #' @param method R function that is used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be used
 #'   in the survival model.
