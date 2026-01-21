@@ -28,7 +28,6 @@ Imports:
     lme4,
     methods,
     pec,
-    prodlim,
     survival,
     lcmm (>= 2.2.2),
     doParallel,
@@ -43,7 +42,8 @@ Suggests:
     tidyverse,
     spelling,
     joineR,
-    survminer
+    survminer,
+    prodlim
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 LazyData: true
