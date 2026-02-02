@@ -88,7 +88,7 @@ landmarking_object <- LandmarkAnalysis(
 
 landmarking_object <- landmarking_object |>
   compute_risk_sets(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25)
   )
 ```
 
@@ -104,14 +104,14 @@ that you  want to use as test set when calling `fit_longitudinal()`,
 ```{r}
 landmarking_object <- landmarking_object |>
   fit_longitudinal(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
     method = "lme4",
     formula = value ~ treat + age + gender + learn.dis + (time | id),
     dynamic_covariates = c("dose"),
     validation_fold = 5
   ) |>
   predict_longitudinal(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
     method = "lme4",
     dynamic_covariates = c("dose"),
     validation_fold = 5,
@@ -120,15 +120,15 @@ landmarking_object <- landmarking_object |>
   fit_survival(
     formula = Surv(event_time, event_status) ~
       treat + age + gender + learn.dis + dose,
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose"),
     validation_fold = 5
   ) |>
   predict_survival(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
     method = "coxph",
     type = "survival",
     dynamic_covariates = c("dose"),
@@ -160,8 +160,8 @@ Here are the in-sample performance metrics:
 ```{r}
 performance_metrics(
   landmarking_object,
-  landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-  horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+  landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+  horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
   auc_t = TRUE
 )
 ```
@@ -171,8 +171,8 @@ Out-of-sample performance metrics can be obtained by specifying `train = FALSE`:
 ```{r}
 performance_metrics(
   landmarking_object,
-  landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-  horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+  landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+  horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
   auc_t = TRUE,
   train = FALSE
 )
@@ -196,7 +196,7 @@ landmarking_object <- LandmarkAnalysis(
 
 landmarking_object <- landmarking_object |>
   compute_risk_sets(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25)
   )
 ```
 
@@ -205,14 +205,14 @@ metrics <- list()
 for (k in 1:5) {
   metrics[[k]] <- landmarking_object |>
     fit_longitudinal(
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
       method = "lme4",
       formula = value ~ treat + age + gender + learn.dis + (time | id),
       dynamic_covariates = c("dose"),
       validation_fold = k
     ) |>
     predict_longitudinal(
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
       method = "lme4",
       allow.new.levels = TRUE,
       dynamic_covariates = c("dose"),
@@ -221,23 +221,23 @@ for (k in 1:5) {
     fit_survival(
       formula = Surv(event_time, event_status) ~
         treat + age + gender + learn.dis + dose,
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
       method = "coxph",
       dynamic_covariates = c("dose"),
       validation_fold = k
     ) |>
     predict_survival(
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
       method = "coxph",
       type = "survival",
       dynamic_covariates = c("dose"),
       validation_fold = k
     ) |>
     performance_metrics(
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
       auc_t = TRUE
     )
 }
