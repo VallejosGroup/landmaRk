@@ -62,7 +62,7 @@ setMethod(
     h_times = c()
   ) {
     error_str <- NULL
-    model <- NULLBrier <- NULL
+    model <- NULL
     Brier <- NULL
     if (!inherits(x, "LandmarkAnalysis")) {
       error_str <- c(
