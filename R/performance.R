@@ -127,10 +127,12 @@ setMethod(
             formula = x@survival_fits[[paste0(landmark, "-", horizon)]]$formula,
             data = dataset,
             cause = 1,
-            times = horizon-landmark,
+            times = horizon - landmark,
             cens.method = "ipcw",
             cens.model = "km"
-          )$Brier$score |> filter(model != "Null model") |> pull(Brier)
+          )$Brier$score |>
+            filter(model != "Null model") |>
+            pull(Brier)
         } else {
           brier_list[[paste0(landmark, "-", horizon)]] <- riskRegression::Score(
             # object = list(x@survival_predictions_test[[paste0(landmark, "-", horizon)]]),
@@ -141,7 +143,9 @@ setMethod(
             times = h_times,
             cens.method = "ipcw",
             cens.model = "km"
-          )$Brier$score |> filter(model != "Null model") |> pull(Brier)
+          )$Brier$score |>
+            filter(model != "Null model") |>
+            pull(Brier)
 
           names(brier_list[[paste0(landmark, "-", horizon)]]) <- paste0(
             "Brier(",
