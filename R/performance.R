@@ -12,8 +12,9 @@
 #' @param auc_t A logical. If TRUE, AUC_t is reported.
 #' @param train A logical. If TRUE (default), performance metrics are computed
 #'   in the training set. If FALSE, they are computed in the test set.
-#' @param h_times A numeric vector of horizon times where auc_t and Brier score
-#'   are calculated.
+#' @param h_times A numeric vector of prediction horizon times, specified
+#'   relative to each landmark time, at which auc_t and Brier scores are
+#'   calculated.
 #'
 #' @returns Data frame with performance metrics across the specified landmark
 #' times and prediction horizons.
