@@ -32,8 +32,8 @@ submodel is fitted.}
 \item{train}{A logical. If TRUE (default), performance metrics are computed
 in the training set. If FALSE, they are computed in the test set.}
 
-\item{h_times}{A numeric vector of horizon times where auc_t and Brier score
-are calculated.}
+\item{h_times}{A numeric vector of horizon times relative to each landmark at
+which auc_t and Brier score are calculated.}
 }
 \value{
 Data frame with performance metrics across the specified landmark
