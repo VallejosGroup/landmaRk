@@ -12,6 +12,9 @@
 #' @param auc_t A logical. If TRUE, AUC_t is reported.
 #' @param train A logical. If TRUE (default), performance metrics are computed
 #'   in the training set. If FALSE, they are computed in the test set.
+#' @param h_times A numeric vector of prediction horizon times, specified
+#'   relative to each landmark time, at which auc_t and Brier scores are
+#'   calculated.
 #'
 #' @returns Data frame with performance metrics across the specified landmark
 #' times and prediction horizons.
@@ -27,7 +30,8 @@ setGeneric(
     c_index = TRUE,
     brier = TRUE,
     auc_t = FALSE,
-    train = TRUE
+    train = TRUE,
+    h_times = c()
   ) {
     standardGeneric("performance_metrics")
   }
@@ -54,9 +58,12 @@ setMethod(
     c_index = TRUE,
     brier = TRUE,
     auc_t = FALSE,
-    train = TRUE
+    train = TRUE,
+    h_times = c()
   ) {
     error_str <- NULL
+    model <- NULL
+    Brier <- NULL
     if (!inherits(x, "LandmarkAnalysis")) {
       error_str <- c(
         error_str,
@@ -109,16 +116,44 @@ setMethod(
           horizon
         )]]
       }
+      if (sum(dataset$event_status) == 0) {
+        stop("No events in the evaluation set")
+      }
 
       if (brier) {
-        brier_list[[paste0(landmark, "-", horizon)]] <-
-          .BinaryBrierScore(
-            predictions = predictions,
-            time = dataset$event_time,
-            status = dataset$event_status,
-            tau = horizon - landmark,
-            cause = 1
+        if (length(h_times) == 0) {
+          brier_list[[paste0(landmark, "-", horizon)]] <- riskRegression::Score(
+            # object = list(x@survival_predictions_test[[paste0(landmark, "-", horizon)]]),
+            object = list(x@survival_fits[[paste0(landmark, "-", horizon)]]),
+            formula = x@survival_fits[[paste0(landmark, "-", horizon)]]$formula,
+            data = dataset,
+            cause = 1,
+            times = horizon - landmark,
+            cens.method = "ipcw",
+            cens.model = "km"
+          )$Brier$score |>
+            filter(model != "Null model") |>
+            pull(Brier)
+        } else {
+          brier_list[[paste0(landmark, "-", horizon)]] <- riskRegression::Score(
+            # object = list(x@survival_predictions_test[[paste0(landmark, "-", horizon)]]),
+            object = list(x@survival_fits[[paste0(landmark, "-", horizon)]]),
+            formula = x@survival_fits[[paste0(landmark, "-", horizon)]]$formula,
+            data = dataset,
+            cause = 1,
+            times = h_times,
+            cens.method = "ipcw",
+            cens.model = "km"
+          )$Brier$score |>
+            filter(model != "Null model") |>
+            pull(Brier)
+
+          names(brier_list[[paste0(landmark, "-", horizon)]]) <- paste0(
+            "Brier(",
+            landmark + h_times,
+            ")"
           )
+        }
       }
       if (c_index) {
         if (train == TRUE) {
@@ -141,26 +176,49 @@ setMethod(
         )$AppCindex$coxph
       }
       if (auc_t) {
-        auct_list[[paste0(landmark, "-", horizon)]] <- unname(
-          timeROC::timeROC(
-            T = dataset[, "event_time"],
-            delta = dataset[, "event_status"],
-            marker = predictions,
-            cause = 1,
-            times = horizon - landmark
-          )$AUC[2]
-        )
+        if (length(h_times) == 0) {
+          auct_list[[paste0(landmark, "-", horizon)]] <- unname(
+            timeROC::timeROC(
+              T = dataset[, "event_time"],
+              delta = dataset[, "event_status"],
+              marker = predictions,
+              cause = 1,
+              times = horizon - landmark
+            )$AUC[2]
+          )
+        } else {
+          auct_list[[paste0(landmark, "-", horizon)]] <- unname(
+            timeROC::timeROC(
+              T = dataset[, "event_time"],
+              delta = dataset[, "event_status"],
+              marker = predictions,
+              cause = 1,
+              times = h_times - landmark
+            )$AUC
+          )
+          names(auct_list[[paste0(landmark, "-", horizon)]]) <- paste0(
+            "AUC(",
+            h_times,
+            ")"
+          )
+        }
       }
     }
     if (c_index) {
       scores <- cbind(scores, cindex = unlist(cindex_list))
     }
     if (brier) {
-      scores <- cbind(scores, brier = unlist(brier_list))
+      brier_matrix <- do.call(rbind, brier_list)
+      if (ncol(brier_matrix) == 1) {
+        colnames(brier_matrix) <- "Brier"
+      }
+      scores <- cbind(scores, brier_matrix)
     }
     if (auc_t) {
       auct_matrix <- do.call(rbind, auct_list)
-      colnames(auct_matrix) <- "AUCt"
+      if (ncol(auct_matrix) == 1) {
+        colnames(auct_matrix) <- "AUCt"
+      }
       scores <- cbind(scores, auct_matrix)
     }
     return(scores)

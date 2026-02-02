@@ -28,6 +28,7 @@ Imports:
     lme4,
     methods,
     pec,
+    riskRegression,
     survival,
     lcmm (>= 2.2.2),
     doParallel,
