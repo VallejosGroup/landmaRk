@@ -193,7 +193,7 @@ setMethod(
               delta = dataset[, "event_status"],
               marker = predictions,
               cause = 1,
-              times = h_times - landmark
+              times = h_times
             )$AUC
           )
           names(auct_list[[paste0(landmark, "-", horizon)]]) <- paste0(
