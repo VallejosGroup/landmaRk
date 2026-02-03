@@ -60,7 +60,8 @@ landmark times and prediction horizons.</p>
 <span>  c_index <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  brier <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  auc_t <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  train <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  train <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  h_times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -96,6 +97,11 @@ submodel is fitted.</p></dd>
 <dt id="arg-train">train<a class="anchor" aria-label="anchor" href="#arg-train"></a></dt>
 <dd><p>A logical. If TRUE (default), performance metrics are computed
 in the training set. If FALSE, they are computed in the test set.</p></dd>
+
+
+<dt id="arg-h-times">h_times<a class="anchor" aria-label="anchor" href="#arg-h-times"></a></dt>
+<dd><p>A numeric vector of horizon times relative to the landmark
+times at which auc_t and Brier score are calculated.</p></dd>
 
 </dl></div>
 

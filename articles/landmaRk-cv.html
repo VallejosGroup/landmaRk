@@ -170,7 +170,7 @@ cross validation folds.</p>
 <span></span>
 <span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="va">landmarking_object</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_risk_sets.html">compute_risk_sets</a></span><span class="op">(</span></span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -186,14 +186,14 @@ test set when calling <code><a href="../reference/fit_longitudinal.html">fit_lon
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="va">landmarking_object</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fit_longitudinal.html">fit_longitudinal</a></span><span class="op">(</span></span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"lme4"</span>,</span>
 <span>    formula <span class="op">=</span> <span class="va">value</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="op">(</span><span class="va">time</span> <span class="op">|</span> <span class="va">id</span><span class="op">)</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span>
 <span>    validation_fold <span class="op">=</span> <span class="fl">5</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/predict_longitudinal.html">predict_longitudinal</a></span><span class="op">(</span></span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"lme4"</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span>
 <span>    validation_fold <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -202,15 +202,15 @@ test set when calling <code><a href="../reference/fit_longitudinal.html">fit_lon
 <span>  <span class="fu"><a href="../reference/fit_survival.html">fit_survival</a></span><span class="op">(</span></span>
 <span>    formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">event_time</span>, <span class="va">event_status</span><span class="op">)</span> <span class="op">~</span></span>
 <span>      <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="va">dose</span>,</span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span>
 <span>    validation_fold <span class="op">=</span> <span class="fl">5</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/predict_survival.html">predict_survival</a></span><span class="op">(</span></span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>    horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>    type <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span>
@@ -225,20 +225,7 @@ test set when calling <code><a href="../reference/fit_longitudinal.html">fit_lon
 <span><span class="co">#&gt; Warning in</span></span>
 <span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
 <span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
 <span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
@@ -289,34 +276,28 @@ part of the original dataset for validation.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
 <span>  <span class="va">landmarking_object</span>,</span>
-<span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>  auc_t <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier       AUCt</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6225997 0.5262495 0.93876976</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6432658 0.6500848 0.89580939</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.6918492 0.6673227 0.84557518</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7616765 0.7284649 0.59756103</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9875992 0.9340199 0.07692308</span></span></code></pre></div>
+<span><span class="co">#&gt;               landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.6225997 0.5262495 0.9387698</span></span>
+<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.6432658 0.6500848 0.8958094</span></span>
+<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.6918492 0.6673227 0.8455752</span></span></code></pre></div>
 <p>Out-of-sample performance metrics can be obtained by specifying
 <code>train = FALSE</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
 <span>  <span class="va">landmarking_object</span>,</span>
-<span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>  auc_t <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  train <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in max(Y[status == 1]): no non-missing arguments to max; returning -Inf</span></span>
-<span><span class="co">#&gt; Warning in max(Y[status == 1]): no non-missing arguments to max; returning -Inf</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.5113732 0.5906314 0.9646766</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.5475362 0.6748556 0.9823438</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.1200000 0.7517810 1.0000000</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25       NaN 0.8027774        NA</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50       NaN 0.9843228        NA</span></span></code></pre></div>
+<span><span class="co">#&gt;               landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.5113732 0.5906314 0.9646766</span></span>
+<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.5475362 0.6748556 0.9823438</span></span>
+<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.1200000 0.7517810 1.0000000</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="cross-validation">Cross-validation<a class="anchor" aria-label="anchor" href="#cross-validation"></a>
@@ -337,21 +318,21 @@ cross-validation:</p>
 <span></span>
 <span><span class="va">landmarking_object</span> <span class="op">&lt;-</span> <span class="va">landmarking_object</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_risk_sets.html">compute_risk_sets</a></span><span class="op">(</span></span>
-<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
+<span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">k</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">metrics</span><span class="op">[[</span><span class="va">k</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">landmarking_object</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/fit_longitudinal.html">fit_longitudinal</a></span><span class="op">(</span></span>
-<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>      method <span class="op">=</span> <span class="st">"lme4"</span>,</span>
 <span>      formula <span class="op">=</span> <span class="va">value</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="op">(</span><span class="va">time</span> <span class="op">|</span> <span class="va">id</span><span class="op">)</span>,</span>
 <span>      dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span>
 <span>      validation_fold <span class="op">=</span> <span class="va">k</span></span>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/predict_longitudinal.html">predict_longitudinal</a></span><span class="op">(</span></span>
-<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>      method <span class="op">=</span> <span class="st">"lme4"</span>,</span>
 <span>      allow.new.levels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>      dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span>
@@ -360,23 +341,23 @@ cross-validation:</p>
 <span>    <span class="fu"><a href="../reference/fit_survival.html">fit_survival</a></span><span class="op">(</span></span>
 <span>      formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">event_time</span>, <span class="va">event_status</span><span class="op">)</span> <span class="op">~</span></span>
 <span>        <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="va">dose</span>,</span>
-<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>      horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>      horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>      method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>      dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span>
 <span>      validation_fold <span class="op">=</span> <span class="va">k</span></span>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/predict_survival.html">predict_survival</a></span><span class="op">(</span></span>
-<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>      horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>      horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>      method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>      type <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>      dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span>
 <span>      validation_fold <span class="op">=</span> <span class="va">k</span></span>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
-<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
-<span>      horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">6</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
+<span>      horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>, to <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fl">365.25</span>, by <span class="op">=</span> <span class="fl">365.25</span><span class="op">)</span>,</span>
 <span>      auc_t <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -389,20 +370,7 @@ cross-validation:</p>
 <span><span class="co">#&gt; Warning in</span></span>
 <span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
 <span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
 <span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
@@ -418,20 +386,7 @@ cross-validation:</p>
 <span><span class="co">#&gt; Warning in</span></span>
 <span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
 <span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
 <span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
@@ -447,23 +402,7 @@ cross-validation:</p>
 <span><span class="co">#&gt; Warning in</span></span>
 <span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
 <span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
 <span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Loglik converged before variable 4 ; coefficient may be infinite.</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
@@ -479,20 +418,7 @@ cross-validation:</p>
 <span><span class="co">#&gt; Warning in</span></span>
 <span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
 <span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
 <span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
@@ -508,20 +434,7 @@ cross-validation:</p>
 <span><span class="co">#&gt; Warning in</span></span>
 <span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
 <span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
-<span><span class="co">#&gt; Warning in</span></span>
-<span><span class="co">#&gt; predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],</span></span>
-<span><span class="co">#&gt; : unused arguments ignored</span></span>
 <span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
-<span><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
-<span><span class="co">#&gt; Ran out of iterations and did not converge</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
 <span><span class="co">#&gt; New names:</span></span>
@@ -531,44 +444,34 @@ cross-validation:</p>
 <span></span>
 <span><span class="va">metrics</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6336712 0.5476312 0.9343432</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6681284 0.6626849 0.8324416</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.6973781 0.7012488 0.7499993</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7766896 0.7938033 0.4953194</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 1.0000000 0.9846045 0.0000000</span></span>
+<span><span class="co">#&gt;               landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.6336712 0.5476312 0.9343432</span></span>
+<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.6681284 0.6626849 0.8324416</span></span>
+<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.6973781 0.7012488 0.7499993</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6605406 0.5471592 0.9127225</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.7141958 0.6657560 0.7919147</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.7495549 0.7535546 0.7120984</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.8210927 0.7853303 0.3812993</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 1.0000000 0.9853555 0.0000000</span></span>
+<span><span class="co">#&gt;               landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.6605406 0.5471592 0.9127225</span></span>
+<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.7141958 0.6657560 0.7919147</span></span>
+<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.7495549 0.7535546 0.7120984</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[3]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6212185 0.5485583 0.9260363</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6373537 0.6610433 0.9083269</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.6475242 0.7164068 0.9113404</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7770478 0.7818805 0.6872417</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9875992 0.9300287 0.1153846</span></span>
+<span><span class="co">#&gt;               landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.6212185 0.5485583 0.9260363</span></span>
+<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.6373537 0.6610433 0.9083269</span></span>
+<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.6475242 0.7164068 0.9113404</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[4]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier      AUCt</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.5897559 0.5373165 0.9603579</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6387605 0.6681717 0.9376969</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.7001645 0.7201016 0.7234967</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7562045 0.7458446 0.6171271</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9778120 0.9379297 0.0000000</span></span>
+<span><span class="co">#&gt;               landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.5897559 0.5373165 0.9603579</span></span>
+<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.6387605 0.6681717 0.9376969</span></span>
+<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.7001645 0.7201016 0.7234967</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[5]]</span></span>
-<span><span class="co">#&gt;                landmark horizon    cindex     brier       AUCt</span></span>
-<span><span class="co">#&gt; 365.25-730.5     365.25  730.50 0.6059305 0.5527893 0.94672845</span></span>
-<span><span class="co">#&gt; 730.5-1095.75    730.50 1095.75 0.6399187 0.6476502 0.85803018</span></span>
-<span><span class="co">#&gt; 1095.75-1461    1095.75 1461.00 0.6417725 0.6504718 0.85764034</span></span>
-<span><span class="co">#&gt; 1461-1826.25    1461.00 1826.25 0.7020792 0.7489997 0.67825788</span></span>
-<span><span class="co">#&gt; 1826.25-2191.5  1826.25 2191.50 0.9870504 0.9262527 0.08333333</span></span></code></pre></div>
+<span><span class="co">#&gt;               landmark horizon    cindex     brier      AUCt</span></span>
+<span><span class="co">#&gt; 365.25-730.5    365.25  730.50 0.6059305 0.5527893 0.9467284</span></span>
+<span><span class="co">#&gt; 730.5-1095.75   730.50 1095.75 0.6399187 0.6476502 0.8580302</span></span>
+<span><span class="co">#&gt; 1095.75-1461   1095.75 1461.00 0.6417725 0.6504718 0.8576403</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

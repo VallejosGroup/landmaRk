@@ -13,7 +13,8 @@ performance_metrics(
   c_index = TRUE,
   brier = TRUE,
   auc_t = FALSE,
-  train = TRUE
+  train = TRUE,
+  h_times = c()
 )
 ```
 
@@ -49,6 +50,11 @@ performance_metrics(
 
   A logical. If TRUE (default), performance metrics are computed in the
   training set. If FALSE, they are computed in the test set.
+
+- h_times:
+
+  A numeric vector of horizon times relative to each landmark at which
+  auc_t and Brier score are calculated.
 
 ## Value
 

@@ -105,7 +105,7 @@ landmarking_object <- LandmarkAnalysis(
 
 landmarking_object <- landmarking_object |>
   compute_risk_sets(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25)
   )
 ```
 
@@ -125,14 +125,14 @@ and
 ``` r
 landmarking_object <- landmarking_object |>
   fit_longitudinal(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
     method = "lme4",
     formula = value ~ treat + age + gender + learn.dis + (time | id),
     dynamic_covariates = c("dose"),
     validation_fold = 5
   ) |>
   predict_longitudinal(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
     method = "lme4",
     dynamic_covariates = c("dose"),
     validation_fold = 5,
@@ -141,15 +141,15 @@ landmarking_object <- landmarking_object |>
   fit_survival(
     formula = Surv(event_time, event_status) ~
       treat + age + gender + learn.dis + dose,
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
     method = "coxph",
     dynamic_covariates = c("dose"),
     validation_fold = 5
   ) |>
   predict_survival(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
     method = "coxph",
     type = "survival",
     dynamic_covariates = c("dose"),
@@ -164,20 +164,7 @@ landmarking_object <- landmarking_object |>
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Ran out of iterations and did not converge
 #> New names:
 #> New names:
 #> New names:
@@ -237,16 +224,14 @@ Here are the in-sample performance metrics:
 ``` r
 performance_metrics(
   landmarking_object,
-  landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-  horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+  landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+  horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
   auc_t = TRUE
 )
-#>                landmark horizon    cindex     brier       AUCt
-#> 365.25-730.5     365.25  730.50 0.6225997 0.5262495 0.93876976
-#> 730.5-1095.75    730.50 1095.75 0.6432658 0.6500848 0.89580939
-#> 1095.75-1461    1095.75 1461.00 0.6918492 0.6673227 0.84557518
-#> 1461-1826.25    1461.00 1826.25 0.7616765 0.7284649 0.59756103
-#> 1826.25-2191.5  1826.25 2191.50 0.9875992 0.9340199 0.07692308
+#>               landmark horizon    cindex     brier      AUCt
+#> 365.25-730.5    365.25  730.50 0.6225997 0.5262495 0.9387698
+#> 730.5-1095.75   730.50 1095.75 0.6432658 0.6500848 0.8958094
+#> 1095.75-1461   1095.75 1461.00 0.6918492 0.6673227 0.8455752
 ```
 
 Out-of-sample performance metrics can be obtained by specifying
@@ -255,19 +240,15 @@ Out-of-sample performance metrics can be obtained by specifying
 ``` r
 performance_metrics(
   landmarking_object,
-  landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-  horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+  landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+  horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
   auc_t = TRUE,
   train = FALSE
 )
-#> Warning in max(Y[status == 1]): no non-missing arguments to max; returning -Inf
-#> Warning in max(Y[status == 1]): no non-missing arguments to max; returning -Inf
-#>                landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5     365.25  730.50 0.5113732 0.5906314 0.9646766
-#> 730.5-1095.75    730.50 1095.75 0.5475362 0.6748556 0.9823438
-#> 1095.75-1461    1095.75 1461.00 0.1200000 0.7517810 1.0000000
-#> 1461-1826.25    1461.00 1826.25       NaN 0.8027774        NA
-#> 1826.25-2191.5  1826.25 2191.50       NaN 0.9843228        NA
+#>               landmark horizon    cindex     brier      AUCt
+#> 365.25-730.5    365.25  730.50 0.5113732 0.5906314 0.9646766
+#> 730.5-1095.75   730.50 1095.75 0.5475362 0.6748556 0.9823438
+#> 1095.75-1461   1095.75 1461.00 0.1200000 0.7517810 1.0000000
 ```
 
 ## Cross-validation
@@ -289,7 +270,7 @@ landmarking_object <- LandmarkAnalysis(
 
 landmarking_object <- landmarking_object |>
   compute_risk_sets(
-    landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25)
+    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25)
   )
 ```
 
@@ -298,14 +279,14 @@ metrics <- list()
 for (k in 1:5) {
   metrics[[k]] <- landmarking_object |>
     fit_longitudinal(
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
       method = "lme4",
       formula = value ~ treat + age + gender + learn.dis + (time | id),
       dynamic_covariates = c("dose"),
       validation_fold = k
     ) |>
     predict_longitudinal(
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
       method = "lme4",
       allow.new.levels = TRUE,
       dynamic_covariates = c("dose"),
@@ -314,23 +295,23 @@ for (k in 1:5) {
     fit_survival(
       formula = Surv(event_time, event_status) ~
         treat + age + gender + learn.dis + dose,
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
       method = "coxph",
       dynamic_covariates = c("dose"),
       validation_fold = k
     ) |>
     predict_survival(
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
       method = "coxph",
       type = "survival",
       dynamic_covariates = c("dose"),
       validation_fold = k
     ) |>
     performance_metrics(
-      landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
+      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
       auc_t = TRUE
     )
 }
@@ -343,20 +324,7 @@ for (k in 1:5) {
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Ran out of iterations and did not converge
 #> New names:
 #> New names:
 #> New names:
@@ -372,20 +340,7 @@ for (k in 1:5) {
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Ran out of iterations and did not converge
 #> New names:
 #> New names:
 #> New names:
@@ -401,23 +356,7 @@ for (k in 1:5) {
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Loglik converged before variable 4 ; coefficient may be infinite.
-#> New names:
-#> • `` -> `...10`
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Ran out of iterations and did not converge
 #> New names:
 #> New names:
 #> New names:
@@ -433,20 +372,7 @@ for (k in 1:5) {
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Ran out of iterations and did not converge
 #> New names:
 #> New names:
 #> New names:
@@ -462,20 +388,7 @@ for (k in 1:5) {
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :
-#> Ran out of iterations and did not converge
 #> New names:
 #> New names:
 #> New names:
@@ -485,42 +398,32 @@ for (k in 1:5) {
 
 metrics
 #> [[1]]
-#>                landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5     365.25  730.50 0.6336712 0.5476312 0.9343432
-#> 730.5-1095.75    730.50 1095.75 0.6681284 0.6626849 0.8324416
-#> 1095.75-1461    1095.75 1461.00 0.6973781 0.7012488 0.7499993
-#> 1461-1826.25    1461.00 1826.25 0.7766896 0.7938033 0.4953194
-#> 1826.25-2191.5  1826.25 2191.50 1.0000000 0.9846045 0.0000000
+#>               landmark horizon    cindex     brier      AUCt
+#> 365.25-730.5    365.25  730.50 0.6336712 0.5476312 0.9343432
+#> 730.5-1095.75   730.50 1095.75 0.6681284 0.6626849 0.8324416
+#> 1095.75-1461   1095.75 1461.00 0.6973781 0.7012488 0.7499993
 #> 
 #> [[2]]
-#>                landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5     365.25  730.50 0.6605406 0.5471592 0.9127225
-#> 730.5-1095.75    730.50 1095.75 0.7141958 0.6657560 0.7919147
-#> 1095.75-1461    1095.75 1461.00 0.7495549 0.7535546 0.7120984
-#> 1461-1826.25    1461.00 1826.25 0.8210927 0.7853303 0.3812993
-#> 1826.25-2191.5  1826.25 2191.50 1.0000000 0.9853555 0.0000000
+#>               landmark horizon    cindex     brier      AUCt
+#> 365.25-730.5    365.25  730.50 0.6605406 0.5471592 0.9127225
+#> 730.5-1095.75   730.50 1095.75 0.7141958 0.6657560 0.7919147
+#> 1095.75-1461   1095.75 1461.00 0.7495549 0.7535546 0.7120984
 #> 
 #> [[3]]
-#>                landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5     365.25  730.50 0.6212185 0.5485583 0.9260363
-#> 730.5-1095.75    730.50 1095.75 0.6373537 0.6610433 0.9083269
-#> 1095.75-1461    1095.75 1461.00 0.6475242 0.7164068 0.9113404
-#> 1461-1826.25    1461.00 1826.25 0.7770478 0.7818805 0.6872417
-#> 1826.25-2191.5  1826.25 2191.50 0.9875992 0.9300287 0.1153846
+#>               landmark horizon    cindex     brier      AUCt
+#> 365.25-730.5    365.25  730.50 0.6212185 0.5485583 0.9260363
+#> 730.5-1095.75   730.50 1095.75 0.6373537 0.6610433 0.9083269
+#> 1095.75-1461   1095.75 1461.00 0.6475242 0.7164068 0.9113404
 #> 
 #> [[4]]
-#>                landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5     365.25  730.50 0.5897559 0.5373165 0.9603579
-#> 730.5-1095.75    730.50 1095.75 0.6387605 0.6681717 0.9376969
-#> 1095.75-1461    1095.75 1461.00 0.7001645 0.7201016 0.7234967
-#> 1461-1826.25    1461.00 1826.25 0.7562045 0.7458446 0.6171271
-#> 1826.25-2191.5  1826.25 2191.50 0.9778120 0.9379297 0.0000000
+#>               landmark horizon    cindex     brier      AUCt
+#> 365.25-730.5    365.25  730.50 0.5897559 0.5373165 0.9603579
+#> 730.5-1095.75   730.50 1095.75 0.6387605 0.6681717 0.9376969
+#> 1095.75-1461   1095.75 1461.00 0.7001645 0.7201016 0.7234967
 #> 
 #> [[5]]
-#>                landmark horizon    cindex     brier       AUCt
-#> 365.25-730.5     365.25  730.50 0.6059305 0.5527893 0.94672845
-#> 730.5-1095.75    730.50 1095.75 0.6399187 0.6476502 0.85803018
-#> 1095.75-1461    1095.75 1461.00 0.6417725 0.6504718 0.85764034
-#> 1461-1826.25    1461.00 1826.25 0.7020792 0.7489997 0.67825788
-#> 1826.25-2191.5  1826.25 2191.50 0.9870504 0.9262527 0.08333333
+#>               landmark horizon    cindex     brier      AUCt
+#> 365.25-730.5    365.25  730.50 0.6059305 0.5527893 0.9467284
+#> 730.5-1095.75   730.50 1095.75 0.6399187 0.6476502 0.8580302
+#> 1095.75-1461   1095.75 1461.00 0.6417725 0.6504718 0.8576403
 ```
