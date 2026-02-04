@@ -161,7 +161,7 @@ landmarking_object <- LandmarkAnalysis(
 Arguments to the helper function are the following:
 
 -   `data_static` and `data_dynamic`: two datasets containing static and dynamic
-covariates, respectively (as created above using the `split_wide_df` function. 
+covariates, respectively (as created above using the `split_wide_df` function). 
 Both datasets must contain a column with individual ids.
 
 -   `event_indicator`: name of the column that indicates the censoring indicator 

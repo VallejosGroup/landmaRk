@@ -14,9 +14,9 @@ Authors@R: c(
   )
 Description: Provides a modular end-to-end framework for dynamic risk prediction 
   based on time-to-event and longitudinal data. This allows flexible specifications
-  for the longitudinal and survival sub-models. landmaRk enables reproducible
-  benchmarks of different model choices, including cross-validation to assess
-  out-of-sample predictive performance.
+  for the longitudinal and survival sub-models. The 'landmaRk' package enables 
+  reproducible benchmarks of different model choices, including cross-validation 
+  to assess out-of-sample predictive performance.
 License: GPL (>= 3)
 BugReports: https://github.com/VallejosGroup/landmaRk/issues
 Encoding: UTF-8
