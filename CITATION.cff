@@ -1,0 +1,396 @@
+# --------------------------------------------
+# CITATION file created with {cffr} R package
+# See also: https://docs.ropensci.org/cffr/
+# --------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "landmaRk" in publications use:'
+type: software
+license: GPL-3.0-or-later
+title: 'landmaRk: Time-to-Event Landmark Analysis using an Array of Longitudinal and
+  Survival Sub-Models'
+version: 0.1.1
+abstract: Provides a comprehensive framework for conducting time-to-event landmarking
+  analysis using a variety of longitudinal and survival sub-models. It aims to facilitate
+  the analysis of time-to-event data with time-dependent covariates.
+authors:
+- family-names: Velasco-Pardo
+  given-names: Victor
+  email: vvelasco@ed.ac.uk
+  orcid: https://orcid.org/0000-0002-7166-1573
+- family-names: Constantine-Cooke
+  given-names: Nathan
+  email: nathan.constantine-cooke@ed.ac.uk
+  orcid: https://orcid.org/0000-0002-4437-8713
+- family-names: Vallejos
+  given-names: Catalina
+  email: catalina.vallejos@ed.ac.uk
+  orcid: https://orcid.org/0000-0003-3638-1960
+- family-names: Lees
+  given-names: Charlie
+  email: charlie.lees@ed.ac.uk
+  orcid: https://orcid.org/0000-0002-0732-8215
+repository-code: https://github.com/VallejosGroup/landmaRk
+url: https://vallejosgroup.github.io/landmaRk/
+contact:
+- family-names: Velasco-Pardo
+  given-names: Victor
+  email: vvelasco@ed.ac.uk
+  orcid: https://orcid.org/0000-0002-7166-1573
+keywords:
+- landmarking
+- longitudinal-data
+- r
+- survival-analysis
+- time-to-event
+references:
+- type: software
+  title: 'R: A Language and Environment for Statistical Computing'
+  notes: Depends
+  url: https://www.R-project.org/
+  authors:
+  - name: R Core Team
+  institution:
+    name: R Foundation for Statistical Computing
+    address: Vienna, Austria
+  year: '2026'
+  version: '>= 4.1.0'
+- type: software
+  title: dplyr
+  abstract: 'dplyr: A Grammar of Data Manipulation'
+  notes: Imports
+  url: https://dplyr.tidyverse.org
+  repository: https://CRAN.R-project.org/package=dplyr
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: François
+    given-names: Romain
+    orcid: https://orcid.org/0000-0002-2444-4226
+  - family-names: Henry
+    given-names: Lionel
+  - family-names: Müller
+    given-names: Kirill
+    orcid: https://orcid.org/0000-0002-1416-3412
+  - family-names: Vaughan
+    given-names: Davis
+    email: davis@posit.co
+    orcid: https://orcid.org/0000-0003-4777-038X
+  year: '2026'
+  doi: 10.32614/CRAN.package.dplyr
+- type: software
+  title: lme4
+  abstract: 'lme4: Linear Mixed-Effects Models using ''Eigen'' and S4'
+  notes: Imports
+  url: https://github.com/lme4/lme4/
+  repository: https://CRAN.R-project.org/package=lme4
+  authors:
+  - family-names: Bates
+    given-names: Douglas
+    orcid: https://orcid.org/0000-0001-8316-9503
+  - family-names: Maechler
+    given-names: Martin
+    orcid: https://orcid.org/0000-0002-8685-9910
+  - family-names: Bolker
+    given-names: Ben
+    email: bbolker+lme4@gmail.com
+    orcid: https://orcid.org/0000-0002-2127-0443
+  - family-names: Walker
+    given-names: Steven
+    orcid: https://orcid.org/0000-0002-4394-9078
+  year: '2026'
+  doi: 10.32614/CRAN.package.lme4
+- type: software
+  title: methods
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  institution:
+    name: R Foundation for Statistical Computing
+    address: Vienna, Austria
+  year: '2026'
+- type: software
+  title: pec
+  abstract: 'pec: Prediction Error Curves for Risk Prediction Models in Survival Analysis'
+  notes: Imports
+  repository: https://CRAN.R-project.org/package=pec
+  authors:
+  - family-names: Gerds
+    given-names: Thomas A.
+    email: tag@biostat.ku.dk
+  year: '2026'
+  doi: 10.32614/CRAN.package.pec
+- type: software
+  title: riskRegression
+  abstract: 'riskRegression: Risk Regression Models and Prediction Scores for Survival
+    Analysis with Competing Risks'
+  notes: Imports
+  url: https://github.com/tagteam/riskRegression
+  repository: https://CRAN.R-project.org/package=riskRegression
+  authors:
+  - family-names: Gerds
+    given-names: Thomas Alexander
+    email: tag@biostat.ku.dk
+  - family-names: Ohlendorff
+    given-names: Johan Sebastian
+  - family-names: Ozenne
+    given-names: Brice
+    email: broz@sund.ku.dk
+  year: '2026'
+  doi: 10.32614/CRAN.package.riskRegression
+- type: software
+  title: survival
+  abstract: 'survival: Survival Analysis'
+  notes: Imports
+  url: https://github.com/therneau/survival
+  repository: https://CRAN.R-project.org/package=survival
+  authors:
+  - family-names: Therneau
+    given-names: Terry M
+    email: therneau.terry@mayo.edu
+  year: '2026'
+  doi: 10.32614/CRAN.package.survival
+- type: software
+  title: lcmm
+  abstract: 'lcmm: Extended Mixed Models Using Latent Classes and Latent Processes'
+  notes: Imports
+  url: https://cecileproust-lima.github.io/lcmm/
+  repository: https://CRAN.R-project.org/package=lcmm
+  authors:
+  - family-names: Proust-Lima
+    given-names: Cecile
+    email: cecile.proust-lima@u-bordeaux.fr
+  - family-names: Philipps
+    given-names: Viviane
+  year: '2026'
+  doi: 10.32614/CRAN.package.lcmm
+  version: '>= 2.2.2'
+- type: software
+  title: doParallel
+  abstract: 'doParallel: Foreach Parallel Adaptor for the ''parallel'' Package'
+  notes: Imports
+  url: https://github.com/RevolutionAnalytics/doparallel
+  repository: https://CRAN.R-project.org/package=doParallel
+  authors:
+  - family-names: Corporation
+    given-names: Microsoft
+  - family-names: Weston
+    given-names: Steve
+  year: '2026'
+  doi: 10.32614/CRAN.package.doParallel
+- type: software
+  title: foreach
+  abstract: 'foreach: Provides Foreach Looping Construct'
+  notes: Imports
+  url: https://github.com/RevolutionAnalytics/foreach
+  repository: https://CRAN.R-project.org/package=foreach
+  authors:
+  - name: Microsoft
+  - family-names: Weston
+    given-names: Steve
+  year: '2026'
+  doi: 10.32614/CRAN.package.foreach
+- type: software
+  title: utils
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  institution:
+    name: R Foundation for Statistical Computing
+    address: Vienna, Austria
+  year: '2026'
+- type: software
+  title: timeROC
+  abstract: 'timeROC: Time-Dependent ROC Curve and AUC for Censored Survival Data'
+  notes: Imports
+  repository: https://CRAN.R-project.org/package=timeROC
+  authors:
+  - family-names: Blanche
+    given-names: Paul
+  year: '2026'
+  doi: 10.32614/CRAN.package.timeROC
+- type: software
+  title: knitr
+  abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
+  notes: Suggests
+  url: https://yihui.org/knitr/
+  repository: https://CRAN.R-project.org/package=knitr
+  authors:
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  year: '2026'
+  doi: 10.32614/CRAN.package.knitr
+- type: software
+  title: rmarkdown
+  abstract: 'rmarkdown: Dynamic Documents for R'
+  notes: Suggests
+  url: https://pkgs.rstudio.com/rmarkdown/
+  repository: https://CRAN.R-project.org/package=rmarkdown
+  authors:
+  - family-names: Allaire
+    given-names: JJ
+    email: jj@posit.co
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  - family-names: Dervieux
+    given-names: Christophe
+    email: cderv@posit.co
+    orcid: https://orcid.org/0000-0003-4474-2498
+  - family-names: McPherson
+    given-names: Jonathan
+    email: jonathan@posit.co
+  - family-names: Luraschi
+    given-names: Javier
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevin@posit.co
+  - family-names: Atkins
+    given-names: Aron
+    email: aron@posit.co
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Cheng
+    given-names: Joe
+    email: joe@posit.co
+  - family-names: Chang
+    given-names: Winston
+    email: winston@posit.co
+  - family-names: Iannone
+    given-names: Richard
+    email: rich@posit.co
+    orcid: https://orcid.org/0000-0003-3925-190X
+  year: '2026'
+  doi: 10.32614/CRAN.package.rmarkdown
+- type: software
+  title: testthat
+  abstract: 'testthat: Unit Testing for R'
+  notes: Suggests
+  url: https://testthat.r-lib.org
+  repository: https://CRAN.R-project.org/package=testthat
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  year: '2026'
+  doi: 10.32614/CRAN.package.testthat
+  version: '>= 3.0.0'
+- type: software
+  title: xml2
+  abstract: 'xml2: Parse XML'
+  notes: Suggests
+  url: https://xml2.r-lib.org
+  repository: https://CRAN.R-project.org/package=xml2
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+  - family-names: Hester
+    given-names: Jim
+  - family-names: Ooms
+    given-names: Jeroen
+    email: jeroenooms@gmail.com
+  year: '2026'
+  doi: 10.32614/CRAN.package.xml2
+- type: software
+  title: tidyverse
+  abstract: 'tidyverse: Easily Install and Load the ''Tidyverse'''
+  notes: Suggests
+  url: https://tidyverse.tidyverse.org
+  repository: https://CRAN.R-project.org/package=tidyverse
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2026'
+  doi: 10.32614/CRAN.package.tidyverse
+- type: software
+  title: spelling
+  abstract: 'spelling: Tools for Spell Checking in R'
+  notes: Suggests
+  url: https://ropensci.r-universe.dev/spelling
+  repository: https://CRAN.R-project.org/package=spelling
+  authors:
+  - family-names: Ooms
+    given-names: Jeroen
+    email: jeroenooms@gmail.com
+    orcid: https://orcid.org/0000-0002-4035-0289
+  - family-names: Hester
+    given-names: Jim
+    email: james.hester@rstudio.com
+  year: '2026'
+  doi: 10.32614/CRAN.package.spelling
+- type: software
+  title: joineR
+  abstract: 'joineR: Joint Modelling of Repeated Measurements and Time-to-Event Data'
+  notes: Suggests
+  url: https://github.com/graemeleehickey/joineR/
+  repository: https://CRAN.R-project.org/package=joineR
+  authors:
+  - family-names: Philipson
+    given-names: Pete
+    email: peter.philipson1@newcastle.ac.uk
+    orcid: https://orcid.org/0000-0001-7846-0208
+  - family-names: Sousa
+    given-names: Ines
+    email: isousa@mct.uminho.pt
+    orcid: https://orcid.org/0000-0002-2712-1713
+  - family-names: Diggle
+    given-names: Peter J.
+    email: p.diggle@lancaster.ac.uk
+    orcid: https://orcid.org/0000-0003-3521-5020
+  - family-names: Williamson
+    given-names: Paula
+    email: p.r.williamson@liverpool.ac.uk
+    orcid: https://orcid.org/0000-0001-9802-6636
+  - family-names: Kolamunnage-Dona
+    given-names: Ruwanthi
+    email: kdrr@liverpool.ac.uk
+    orcid: https://orcid.org/0000-0003-3886-6208
+  - family-names: Henderson
+    given-names: Robin
+    email: robin.henderson@ncl.ac.uk
+  - family-names: Hickey
+    given-names: Graeme L.
+    email: graemeleehickey@gmail.com
+    orcid: https://orcid.org/0000-0002-4989-0054
+  year: '2026'
+  doi: 10.32614/CRAN.package.joineR
+- type: software
+  title: survminer
+  abstract: 'survminer: Drawing Survival Curves using ''ggplot2'''
+  notes: Suggests
+  url: https://rpkgs.datanovia.com/survminer/index.html
+  repository: https://CRAN.R-project.org/package=survminer
+  authors:
+  - family-names: Kassambara
+    given-names: Alboukadel
+    email: alboukadel.kassambara@gmail.com
+  - family-names: Kosinski
+    given-names: Marcin
+    email: m.p.kosinski@gmail.com
+  - family-names: Biecek
+    given-names: Przemyslaw
+    email: przemyslaw.biecek@gmail.com
+  year: '2026'
+  doi: 10.32614/CRAN.package.survminer
+- type: software
+  title: prodlim
+  abstract: 'prodlim: Product-Limit Estimation for Censored Event History Analysis'
+  notes: Suggests
+  url: https://github.com/tagteam/prodlim
+  repository: https://CRAN.R-project.org/package=prodlim
+  authors:
+  - family-names: Gerds
+    given-names: Thomas A.
+    email: tag@biostat.ku.dk
+  year: '2026'
+  doi: 10.32614/CRAN.package.prodlim
+
