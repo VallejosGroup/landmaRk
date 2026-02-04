@@ -17,21 +17,16 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Nathan Constantine-Cooke
-<nathan.constantine-cooke@ed.ac.uk>
-([ORCID](https://orcid.org/0000-0002-4437-8713))
+**Maintainer**: Victor Velasco-Pardo <vvelasco@ed.ac.uk>
+([ORCID](https://orcid.org/0000-0002-7166-1573))
 
 Authors:
 
-- Victor Velasco-Pardo <vvelasco@ed.ac.uk>
-  ([ORCID](https://orcid.org/0000-0002-7166-1573))
+- Nathan Constantine-Cooke <nathan.constantine-cooke@ed.ac.uk>
+  ([ORCID](https://orcid.org/0000-0002-4437-8713))
 
 - Catalina Vallejos <catalina.vallejos@ed.ac.uk>
   ([ORCID](https://orcid.org/0000-0003-3638-1960))
 
 - Charlie Lees <charlie.lees@ed.ac.uk>
   ([ORCID](https://orcid.org/0000-0002-0732-8215))
-
-Other contributors:
-
-- Begoña Bolos Sierra \[contributor\]

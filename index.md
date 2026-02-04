@@ -32,9 +32,15 @@ incorporate their own models.
 
 ## Installation
 
-We are planning to release the package on CRAN once the software is
-mature. For now, you can get a CRAN-like experience by installing from
-our r-universe
+The easiest way to install the package is from CRAN, which can be done
+in R via
+
+``` r
+install.packages("landmaRk")
+```
+
+The development version of the package can be installed via our
+r-universe
 
 ``` r
 install.packages("landmaRk",

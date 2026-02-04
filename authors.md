@@ -2,13 +2,11 @@
 
 ## Authors
 
-- **Nathan Constantine-Cooke**. Author, maintainer.
-  [](https://orcid.org/0000-0002-4437-8713)
-
-- **Victor Velasco-Pardo**. Author.
+- **Victor Velasco-Pardo**. Author, maintainer.
   [](https://orcid.org/0000-0002-7166-1573)
 
-- **Begoña Bolos Sierra**. Contributor.
+- **Nathan Constantine-Cooke**. Author.
+  [](https://orcid.org/0000-0002-4437-8713)
 
 - **Catalina Vallejos**. Author.
   [](https://orcid.org/0000-0003-3638-1960)
@@ -20,15 +18,15 @@
 Source:
 [`DESCRIPTION`](https://github.com/VallejosGroup/landmaRk/blob/main/DESCRIPTION)
 
-Constantine-Cooke N, Velasco-Pardo V, Vallejos C, Lees C (2026).
+Velasco-Pardo V, Constantine-Cooke N, Vallejos C, Lees C (2026).
 *landmaRk: Time-to-Event Landmark Analysis using an Array of
-Longitudinal and Survival Sub-Models*. R package version 0.0.0.9000,
+Longitudinal and Survival Sub-Models*. R package version 0.1.1.0,
 <https://vallejosgroup.github.io/landmaRk/>.
 
     @Manual{,
       title = {landmaRk: Time-to-Event Landmark Analysis using an Array of Longitudinal and Survival Sub-Models},
-      author = {Nathan Constantine-Cooke and Victor Velasco-Pardo and Catalina Vallejos and Charlie Lees},
+      author = {Victor Velasco-Pardo and Nathan Constantine-Cooke and Catalina Vallejos and Charlie Lees},
       year = {2026},
-      note = {R package version 0.0.0.9000},
+      note = {R package version 0.1.1.0},
       url = {https://vallejosgroup.github.io/landmaRk/},
     }
