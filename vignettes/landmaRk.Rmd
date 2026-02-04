@@ -106,15 +106,20 @@ The dataset contains the following variables:
 
 First, we split the dataset into two, one containing static 
 covariates, event time and indicator of event/censoring, and another one 
-containing dynamic covariates. To that end, we use the function split_wide_df.
+containing dynamic covariates. To that end, we use the function `split_wide_df`.
 That function returns a named list with the following elements:
 
-- Under the name df_static, a dataframe containing static  covariates, event 
-time and indicator of event/censoring.
+- Under the name `df_static`, a dataframe containing static covariates, event 
+times and a binary indicator of event/censoring.
 
-- Under the name df_dynamic, a named list of dataframes, mapping dynamic 
+- Under the name `df_dynamic`, a named list of dataframes, mapping dynamic 
 covariates to dataframes in long format containing longitudinal measurement of 
 the relevant dynamic covariate.
+
+The above split reduces data storage requirements, particularly for large 
+datasets with a large number of individuals or longitudinal measurements. This
+is because static covariate values are stored only once per individual, rather 
+than repeatedly for each longitudinal measurement.
 
 
 ```{r}
@@ -155,17 +160,19 @@ landmarking_object <- LandmarkAnalysis(
 
 Arguments to the helper function are the following:
 
--   data_static and data_dynamic: the two datasets that were just created.
+-   `data_static` and `data_dynamic`: two datasets containig static and dynamic
+covariates, respectively (as created above using the `split_wide_df` function. 
+Both datasets must contain a column with individual ids.
 
--   event_indicator: name of the column that indicates the censoring indicator 
-in the static dataset.
+-   `event_indicator`: name of the column that indicates the censoring indicator 
+in `data_static`.
 
--   dynamic_covariates: array column names in the dynamic dataset indicating 
+-   `measurements`: array column names in the dynamic dataset indicating 
 time-varying covariates.
 
--   ids: name of the column that identifies patients in both datasets.
+-   `ids`: name of the column that identifies patients in both datasets.
 
--   event_time: name of the column that identifies time of event/censoring 
+-   `event_time`: name of the column that identifies time of event/censoring 
 in the static dataset.
 
 # Baseline survival analysis (without time-varying covariates)
