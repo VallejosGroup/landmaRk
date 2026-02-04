@@ -167,9 +167,11 @@ Both datasets must contain a column with individual ids.
 -   `event_indicator`: name of the column that indicates the censoring indicator 
 in `data_static`.
 
--   `measurements`: array column names in the dynamic dataset indicating 
-time-varying covariates.
+-   `measurements`: name of the column in `data_dynamic` that contains the
+recorded values of the time-varying covariates (e.g., `"value"`).
 
+-   `times`: name of the column in `data_dynamic` that contains the
+measurement times associated with the time-varying covariates (e.g., `"time"`).
 -   `ids`: name of the column that identifies patients in both datasets.
 
 -   `event_time`: name of the column that identifies time of event/censoring 
