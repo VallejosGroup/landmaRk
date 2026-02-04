@@ -20,8 +20,10 @@ knitr::opts_chunk$set(
 # Overview
 
 The landmaRk package provides a framework for landmarking analysis of
-time-to-event data with time-varying covariates. It allows users to perform
-survival analysis using longitudinal data, fitting models to the time-varying
+time-to-event and longitudinal data. It allows users to perform
+dynamic risk prediction for time-to-event outcomes whilst taking into account
+longitudinal measurements (e.g. biomarkers measured over time). Landmarking
+consists of a two-step framework. First, fitting models to the time-varying
 covariates, and then using these predictions in survival models.
 
 Given a time-to-event outcome $T_i$, a landmark time $s$ and a time horizon 
