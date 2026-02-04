@@ -1,6 +1,6 @@
 Package: landmaRk
 Title: Time-to-Event Landmark Analysis using an Array of Longitudinal and Survival Sub-Models
-Version: 0.1.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Victor", "Velasco-Pardo", , "vvelasco@ed.ac.uk",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0002-7166-1573")),
