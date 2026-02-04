@@ -43,6 +43,47 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1" id="landmark-011">landmaRk 0.1.1<a class="anchor" aria-label="anchor" href="#landmark-011"></a></h2>
+<ul><li>Package is made publicly available via CRAN.</li>
+</ul><div class="section level3">
+<h3 id="new-features-0-1-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1"></a></h3>
+<ul><li>AUC(t) metric for evaluating landmark models.</li>
+<li>Cross-validation support for model evaluation.</li>
+<li>Subject-specific predictions with LCMM.</li>
+<li>Cluster assignment from LCMM fits can be used in the survival step.</li>
+<li>
+<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> method for <code>LandmarkAnalysis</code> class.</li>
+<li>
+<code><a href="../reference/prune.html">prune()</a></code> method for <code>LandmarkAnalysis</code> class.</li>
+<li>Parallelised longitudinal model fitting.</li>
+<li>Survival plots via <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> method.</li>
+<li>Convergence messages for fitted models.</li>
+<li>Print number of subjects in each risk set for <code><a href="https://rdrr.io/r/methods/show.html" class="external-link">show()</a></code> method.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-1-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1"></a></h3>
+<ul><li>Fixed cross-validation not working correctly with LCMM.</li>
+<li>Fixed LOCF (last observation carried forward) issues.</li>
+<li>Fixed bug where static covariates were not used in Cox PH models.</li>
+<li>Fixed bug selecting IDs for survival analysis.</li>
+<li>Fixed bugs in working out risk sets.</li>
+<li>Fixed Windows parallelism issues.</li>
+<li>Better error handling for <code><a href="../reference/fit_survival.html">fit_survival()</a></code> when predictions are not available.</li>
+<li>Character covariates are now converted to factors.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-changes-0-1-1">Other Changes<a class="anchor" aria-label="anchor" href="#other-changes-0-1-1"></a></h3>
+<ul><li>Renamed package from landmarkR to landmaRk.</li>
+<li>Renamed main class to <code>LandmarkAnalysis</code>.</li>
+<li>Standardised horizon parameter handling.</li>
+<li>Now depends on release version of lcmm (&gt;= 2.2.2).</li>
+<li>Baseline set to 0 for all survival models.</li>
+<li>Internal functions refactored into smaller functions.</li>
+<li>Code formatted using Air.</li>
+<li>Added CODE_OF_CONDUCT.md.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.0.9000" id="landmark-0009000">landmaRk 0.0.0.9000<a class="anchor" aria-label="anchor" href="#landmark-0009000"></a></h2>
 <ul><li>Package is made publicly available via r-universe and GitHub.</li>
 </ul><div class="section level3">
