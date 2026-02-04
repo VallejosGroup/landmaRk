@@ -11,3 +11,5 @@ devel/
 ^cran-comments\.md$
 CODE_OF_CONDUCT.md
 codecov.yml
+^codemeta\.json$
+^CITATION\.cff$
