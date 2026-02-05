@@ -11,10 +11,11 @@ Authors@R: c(
     person("Charlie", "Lees", , "charlie.lees@ed.ac.uk", role = "aut",
            comment = c(ORCID = "0000-0002-0732-8215"))
   )
-Description: Provides a comprehensive framework for conducting time-to-event
-  landmarking analysis using a variety of longitudinal and survival sub-models.
-  It aims to facilitate the analysis of time-to-event data with time-dependent
-  covariates.
+Description: Provides a modular end-to-end framework for dynamic risk prediction 
+  based on time-to-event and longitudinal data. This allows flexible specifications
+  for the longitudinal and survival sub-models. The 'landmaRk' package enables 
+  reproducible benchmarks of different model choices, including cross-validation 
+  to assess out-of-sample predictive performance.
 License: GPL (>= 3)
 BugReports: https://github.com/VallejosGroup/landmaRk/issues
 Encoding: UTF-8
