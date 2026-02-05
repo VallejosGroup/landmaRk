@@ -29,15 +29,17 @@ library(survival)
 library(prodlim)
 ```
 
-## Example: epileptic data
+## Example: `aids` data
 
 As in the first vignette, we use the epileptic dataset to perform landmarking
 analysis  of time-to-event data with time-varying covariates. Here is the
 structure of  the dataset.
 
 ```{r}
-data("epileptic")
-str(epileptic)
+library(JMbayes2)
+data("aids")
+aids$patient <- as.numeric(aids$patient)
+str(aids)
 ```
 
 
@@ -49,22 +51,22 @@ covariates.
 
 ```{r}
 # DF with Static covariates
-epileptic_dfs <- split_wide_df(
-  epileptic,
-  ids = "id",
-  times = "time",
-  static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
-  dynamic = c("dose"),
+aids_dfs <- split_wide_df(
+  aids,
+  ids = "patient",
+  times = "obstime",
+  static = c("Time", "death", "drug", "gender", "prevOI"),
+  dynamic = c("CD4"),
   measurement_name = "value"
 )
-static <- epileptic_dfs$df_static
+static <- aids_dfs$df_static
 head(static)
 ```
 
 ```{r}
 # DF with Dynamic covariates
-dynamic <- epileptic_dfs$df_dynamic
-head(dynamic[["dose"]])
+dynamic <- aids_dfs$df_dynamic
+head(dynamic[["CD4"]])
 ```
 
 
@@ -78,18 +80,16 @@ We then calculate the risk sets using `compute_risk_sets()`.
 landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
-  event_indicator = "with.status",
-  ids = "id",
-  event_time = "with.time",
-  times = "time",
+  event_indicator = "death",
+  ids = "patient",
+  event_time = "Time",
+  times = "obstime",
   measurements = "value",
   K = 5
 )
 
 landmarking_object <- landmarking_object |>
-  compute_risk_sets(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25)
-  )
+  compute_risk_sets(landmarks = c(6, 8))
 ```
 
 ## Performance evaluation in hold-out dataset
@@ -104,34 +104,32 @@ that you  want to use as test set when calling `fit_longitudinal()`,
 ```{r}
 landmarking_object <- landmarking_object |>
   fit_longitudinal(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+    landmarks = c(6, 8),
     method = "lme4",
-    formula = value ~ treat + age + gender + learn.dis + (time | id),
-    dynamic_covariates = c("dose"),
+    formula = value ~ prevOI + obstime + (obstime | patient),
+    dynamic_covariates = c("CD4"),
     validation_fold = 5
   ) |>
   predict_longitudinal(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+    landmarks = c(6, 8),
     method = "lme4",
-    dynamic_covariates = c("dose"),
+    dynamic_covariates = c("CD4"),
     validation_fold = 5,
     allow.new.levels = TRUE
   ) |>
   fit_survival(
-    formula = Surv(event_time, event_status) ~
-      treat + age + gender + learn.dis + dose,
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-    horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
+    formula = Surv(event_time, event_status) ~ drug,
+    landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
     method = "coxph",
-    dynamic_covariates = c("dose"),
+    dynamic_covariates = c("CD4"),
     validation_fold = 5
   ) |>
   predict_survival(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-    horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
+    landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
     method = "coxph",
-    type = "survival",
-    dynamic_covariates = c("dose"),
+    type = "lp",
     validation_fold = 5
   )
 ```
@@ -142,17 +140,11 @@ original dataset for validation.
 
 
 ```{r}
-summary(landmarking_object,
-        type = "longitudinal",
-        landmark = 365.25,
-        dynamic_covariate = "dose")
+summary(landmarking_object, type = "longitudinal", landmark = 6, dynamic_covariate = "CD4")
 ```
 
 ```{r}
-summary(landmarking_object,
-        type = "survival",
-        landmark = 365.25,
-        horizon = 730.5)
+summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 ```
 
 Here are the in-sample performance metrics: 
@@ -160,9 +152,10 @@ Here are the in-sample performance metrics:
 ```{r}
 performance_metrics(
   landmarking_object,
-  landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-  horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-  auc_t = TRUE
+  landmarks = c(6, 8),
+  horizons = c(18, 20), 
+  auc_t = TRUE, c_index = FALSE,
+  h_times = c(3, 6, 12)
 )
 ```
 
@@ -171,9 +164,10 @@ Out-of-sample performance metrics can be obtained by specifying `train = FALSE`:
 ```{r}
 performance_metrics(
   landmarking_object,
-  landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-  horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-  auc_t = TRUE,
+  landmarks = c(6, 8),
+  horizons = c(18, 20), 
+  auc_t = TRUE, c_index = FALSE,
+  h_times = c(3, 6, 12),
   train = FALSE
 )
 ```
@@ -186,18 +180,16 @@ Now, we can embed the above pipeline in a for loop to perform cross-validation:
 landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
-  event_indicator = "with.status",
-  ids = "id",
-  event_time = "with.time",
-  times = "time",
+  event_indicator = "death",
+  ids = "patient",
+  event_time = "Time",
+  times = "obstime",
   measurements = "value",
   K = 5
 )
 
 landmarking_object <- landmarking_object |>
-  compute_risk_sets(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25)
-  )
+  compute_risk_sets(landmarks = c(6, 8))
 ```
 
 ```{r}
@@ -205,40 +197,39 @@ metrics <- list()
 for (k in 1:5) {
   metrics[[k]] <- landmarking_object |>
     fit_longitudinal(
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      method = "lme4",
-      formula = value ~ treat + age + gender + learn.dis + (time | id),
-      dynamic_covariates = c("dose"),
-      validation_fold = k
-    ) |>
-    predict_longitudinal(
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      method = "lme4",
-      allow.new.levels = TRUE,
-      dynamic_covariates = c("dose"),
-      validation_fold = k
-    ) |>
-    fit_survival(
-      formula = Surv(event_time, event_status) ~
-        treat + age + gender + learn.dis + dose,
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-      method = "coxph",
-      dynamic_covariates = c("dose"),
-      validation_fold = k
-    ) |>
-    predict_survival(
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-      method = "coxph",
-      type = "survival",
-      dynamic_covariates = c("dose"),
-      validation_fold = k
-    ) |>
+    landmarks = c(6, 8),
+    method = "lme4",
+    formula = value ~ prevOI + obstime + (obstime | patient),
+    dynamic_covariates = c("CD4"),
+    validation_fold = k
+  ) |>
+  predict_longitudinal(
+    landmarks = c(6, 8),
+    method = "lme4",
+    dynamic_covariates = c("CD4"),
+    validation_fold = k,
+    allow.new.levels = TRUE
+  ) |>
+  fit_survival(
+    formula = Surv(event_time, event_status) ~ drug,
+    landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
+    method = "coxph",
+    dynamic_covariates = c("CD4"),
+    validation_fold = k
+  ) |>
+  predict_survival(
+    landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
+    method = "coxph",
+    type = "lp",
+    validation_fold = k
+  ) |>
     performance_metrics(
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-      auc_t = TRUE
+      landmarks = c(6, 8),
+      horizons = c(18, 20), 
+      auc_t = TRUE, brier = TRUE, c_index = FALSE,
+      h_times = c(3, 6, 12)
     )
 }
 
