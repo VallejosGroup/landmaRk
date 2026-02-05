@@ -75,10 +75,12 @@
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>The landmaRk package provides a framework for landmarking analysis of
-time-to-event data with time-varying covariates. It allows users to
-perform survival analysis using longitudinal data, fitting models to the
-time-varying covariates, and then using these predictions in survival
-models.</p>
+time-to-event and longitudinal data. It allows users to perform dynamic
+risk prediction for time-to-event outcomes whilst taking into account
+longitudinal measurements (e.g. biomarkers measured over time).
+Landmarking consists of a two-step framework. First, fitting models to
+the time-varying covariates, and then using these predictions in
+survival models.</p>
 <p>Given a time-to-event outcome <span class="math inline">\(T_i\)</span>, a landmark time <span class="math inline">\(s\)</span> and a time horizon <span class="math inline">\(s + w\)</span>, the goal of a landmarking analysis
 is to estimate <span class="math display">\[
 \pi_i(s+w \vert s) = P(T_i &gt; s+w \vert T_i \ge s, X_i(s)),
@@ -131,7 +133,7 @@ Diagram of the landmaRk package pipeline
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr    </span> 1.2.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr    </span> 2.1.6</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats  </span> 1.0.1     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr  </span> 1.6.0</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ggplot2  </span> 4.0.2     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tibble   </span> 3.3.1</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">lubridate</span> 1.9.4     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr    </span> 1.3.2</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">lubridate</span> 1.9.5     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr    </span> 1.3.2</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr    </span> 1.2.1     </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Conflicts</span> ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
@@ -178,15 +180,22 @@ covariates</p></li>
 <p>First, we split the dataset into two, one containing static
 covariates, event time and indicator of event/censoring, and another one
 containing dynamic covariates. To that end, we use the function
-split_wide_df. That function returns a named list with the following
-elements:</p>
+<code>split_wide_df</code>. That function returns a named list with the
+following elements:</p>
 <ul>
-<li><p>Under the name df_static, a dataframe containing static
-covariates, event time and indicator of event/censoring.</p></li>
-<li><p>Under the name df_dynamic, a named list of dataframes, mapping
-dynamic covariates to dataframes in long format containing longitudinal
-measurement of the relevant dynamic covariate.</p></li>
+<li><p>Under the name <code>df_static</code>, a dataframe containing
+static covariates, event times and a binary indicator of
+event/censoring.</p></li>
+<li><p>Under the name <code>df_dynamic</code>, a named list of
+dataframes, mapping dynamic covariates to dataframes in long format
+containing longitudinal measurement of the relevant dynamic
+covariate.</p></li>
 </ul>
+<p>The above split reduces data storage requirements, particularly for
+large datasets with a large number of individuals or longitudinal
+measurements. This is because static covariate values are stored only
+once per individual, rather than repeatedly for each longitudinal
+measurement.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># DF with Static covariates</span></span>
 <span><span class="va">epileptic_dfs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/split_wide_df.html">split_wide_df</a></span><span class="op">(</span></span>
@@ -231,16 +240,22 @@ using the helper function of the same name.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Arguments to the helper function are the following:</p>
 <ul>
-<li><p>data_static and data_dynamic: the two datasets that were just
-created.</p></li>
-<li><p>event_indicator: name of the column that indicates the censoring
-indicator in the static dataset.</p></li>
-<li><p>dynamic_covariates: array column names in the dynamic dataset
-indicating time-varying covariates.</p></li>
-<li><p>ids: name of the column that identifies patients in both
-datasets.</p></li>
-<li><p>event_time: name of the column that identifies time of
-event/censoring in the static dataset.</p></li>
+<li><p><code>data_static</code> and <code>data_dynamic</code>: two
+datasets containing static and dynamic covariates, respectively (as
+created above using the <code>split_wide_df</code> function). Both
+datasets must contain a column with individual ids.</p></li>
+<li><p><code>event_indicator</code>: name of the column that indicates
+the censoring indicator in <code>data_static</code>.</p></li>
+<li><p><code>measurements</code>: name of the column in
+<code>data_dynamic</code> that contains the recorded values of the
+time-varying covariates (e.g., <code>"value"</code>).</p></li>
+<li><p><code>times</code>: name of the column in
+<code>data_dynamic</code> that contains the measurement times associated
+with the time-varying covariates (e.g., <code>"time"</code>).</p></li>
+<li><p><code>ids</code>: name of the column that identifies patients in
+both datasets.</p></li>
+<li><p><code>event_time</code>: name of the column that identifies time
+of event/censoring in the static dataset.</p></li>
 </ul>
 </div>
 <div class="section level2">

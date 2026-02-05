@@ -3,10 +3,12 @@
 ## Overview
 
 The landmaRk package provides a framework for landmarking analysis of
-time-to-event data with time-varying covariates. It allows users to
-perform survival analysis using longitudinal data, fitting models to the
-time-varying covariates, and then using these predictions in survival
-models.
+time-to-event and longitudinal data. It allows users to perform dynamic
+risk prediction for time-to-event outcomes whilst taking into account
+longitudinal measurements (e.g. biomarkers measured over time).
+Landmarking consists of a two-step framework. First, fitting models to
+the time-varying covariates, and then using these predictions in
+survival models.
 
 Given a time-to-event outcome \\T_i\\, a landmark time \\s\\ and a time
 horizon \\s + w\\, the goal of a landmarking analysis is to estimate \\
@@ -59,7 +61,7 @@ library(tidyverse)
 #> ✔ dplyr     1.2.0     ✔ readr     2.1.6
 #> ✔ forcats   1.0.1     ✔ stringr   1.6.0
 #> ✔ ggplot2   4.0.2     ✔ tibble    3.3.1
-#> ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+#> ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
 #> ✔ purrr     1.2.1     
 #> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::filter() masks stats::filter()
@@ -107,15 +109,21 @@ The dataset contains the following variables:
 
 First, we split the dataset into two, one containing static covariates,
 event time and indicator of event/censoring, and another one containing
-dynamic covariates. To that end, we use the function split_wide_df. That
-function returns a named list with the following elements:
+dynamic covariates. To that end, we use the function `split_wide_df`.
+That function returns a named list with the following elements:
 
-- Under the name df_static, a dataframe containing static covariates,
-  event time and indicator of event/censoring.
+- Under the name `df_static`, a dataframe containing static covariates,
+  event times and a binary indicator of event/censoring.
 
-- Under the name df_dynamic, a named list of dataframes, mapping dynamic
-  covariates to dataframes in long format containing longitudinal
-  measurement of the relevant dynamic covariate.
+- Under the name `df_dynamic`, a named list of dataframes, mapping
+  dynamic covariates to dataframes in long format containing
+  longitudinal measurement of the relevant dynamic covariate.
+
+The above split reduces data storage requirements, particularly for
+large datasets with a large number of individuals or longitudinal
+measurements. This is because static covariate values are stored only
+once per individual, rather than repeatedly for each longitudinal
+measurement.
 
 ``` r
 # DF with Static covariates
@@ -168,18 +176,25 @@ landmarking_object <- LandmarkAnalysis(
 
 Arguments to the helper function are the following:
 
-- data_static and data_dynamic: the two datasets that were just created.
+- `data_static` and `data_dynamic`: two datasets containing static and
+  dynamic covariates, respectively (as created above using the
+  `split_wide_df` function). Both datasets must contain a column with
+  individual ids.
 
-- event_indicator: name of the column that indicates the censoring
-  indicator in the static dataset.
+- `event_indicator`: name of the column that indicates the censoring
+  indicator in `data_static`.
 
-- dynamic_covariates: array column names in the dynamic dataset
-  indicating time-varying covariates.
+- `measurements`: name of the column in `data_dynamic` that contains the
+  recorded values of the time-varying covariates (e.g., `"value"`).
 
-- ids: name of the column that identifies patients in both datasets.
+- `times`: name of the column in `data_dynamic` that contains the
+  measurement times associated with the time-varying covariates (e.g.,
+  `"time"`).
 
-- event_time: name of the column that identifies time of event/censoring
-  in the static dataset.
+- `ids`: name of the column that identifies patients in both datasets.
+
+- `event_time`: name of the column that identifies time of
+  event/censoring in the static dataset.
 
 ## Baseline survival analysis (without time-varying covariates)
 
