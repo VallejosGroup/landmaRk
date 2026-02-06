@@ -74,8 +74,8 @@
   horizons,
   dynamic_covariates = c(),
   include_clusters = FALSE,
-  validation_fold = 0,
   censor_at_horizon = FALSE,
+  validation_fold = 0,
   train = TRUE
 ) {
   fold <- NULL

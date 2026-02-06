@@ -100,8 +100,8 @@ setMethod(
           horizons,
           dynamic_covariates,
           include_clusters,
-          validation_fold,
           censor_at_horizon,
+          validation_fold,
           train = TRUE
         )
 

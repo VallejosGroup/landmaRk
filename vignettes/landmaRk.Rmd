@@ -290,6 +290,7 @@ landmarking_object <- landmarking_object |>
   ) |>
   predict_longitudinal(
     landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
     method = "lme4",
     allow.new.levels = TRUE,
     dynamic_covariates = c("dose")
@@ -378,6 +379,7 @@ landmarking_object <- landmarking_object |>
   ) |>
   predict_longitudinal(
     landmarks = seq(from = 365.25, to = 4 * 365.25, by = 365.25),
+    horizons = seq(from = 2 * 365.25, to = 6 * 365.25, by = 365.25),
     method = "lcmm",
     subject = "id",
     avg = TRUE,

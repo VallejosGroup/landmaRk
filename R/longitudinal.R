@@ -168,9 +168,13 @@ setMethod(
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
+#' @param horizons Vector of prediction horizons up to when the survival submodel
+#'   is fitted.
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
+#' @param censor_at_horizon boolean indicating whether to censor observations
+#'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed in the complete dataset.
 #' @param ... Additional arguments passed to the prediction function (e.g.
@@ -182,7 +186,7 @@ setMethod(
 #' @examples
 setGeneric(
   "predict_longitudinal",
-  function(x, landmarks, method, dynamic_covariates, validation_fold = 0, ...) {
+  function(x, landmarks, horizons, method, dynamic_covariates, censor_at_horizon = FALSE, validation_fold = 0, ...) {
     standardGeneric("predict_longitudinal")
   }
 )
@@ -198,7 +202,7 @@ setGeneric(
 setMethod(
   "predict_longitudinal",
   "LandmarkAnalysis",
-  function(x, landmarks, method, dynamic_covariates, validation_fold = 0, ...) {
+  function(x, landmarks, horizons, method, dynamic_covariates, censor_at_horizon = FALSE, validation_fold = 0, ...) {
     value <- NULL # Global var
     fold <- NULL # Global var
 
@@ -271,8 +275,12 @@ setMethod(
             # Fit longitudinal model according to chosen method
             newdata <- data.frame(risk_set, landmarks)
             colnames(newdata) <- c(x@ids, x@times)
-            newdata <- newdata |>
-              left_join(x@data_static, by = stats::setNames(x@ids, x@ids))
+            if (censor_at_horizon) {
+              newdata <- newdata |> inner_join(x@data_static |> filter(get(x@event_time) <= horizons), by = join_by(!!x@ids))
+            } else {
+              newdata <- newdata |>
+                left_join(x@data_static, by = stats::setNames(x@ids, x@ids))
+            }
 
             newdata_train <- newdata |>
               inner_join(
@@ -359,16 +367,20 @@ setMethod(
       x <- predict_longitudinal(
         x,
         landmarks[1],
+        horizons[1],
         method,
         dynamic_covariates,
+        censor_at_horizon,
         validation_fold,
         ...
       )
       x <- predict_longitudinal(
         x,
         landmarks[-1],
+        horizons[-1],
         method,
         dynamic_covariates,
+        censor_at_horizon,
         validation_fold,
         ...
       )
