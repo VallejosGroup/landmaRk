@@ -112,6 +112,7 @@ landmarking_object <- landmarking_object |>
   ) |>
   predict_longitudinal(
     landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
     method = "lme4",
     dynamic_covariates = c("CD4"),
     validation_fold = 5,
@@ -205,6 +206,7 @@ for (k in 1:5) {
   ) |>
   predict_longitudinal(
     landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
     method = "lme4",
     dynamic_covariates = c("CD4"),
     validation_fold = k,
@@ -235,3 +237,4 @@ for (k in 1:5) {
 
 metrics
 ```
+
