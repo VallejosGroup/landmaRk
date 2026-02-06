@@ -171,7 +171,6 @@ setMethod(
 #' @param landmarks A numeric vector of landmark times.
 #' @param horizons Vector of prediction horizons up to when the survival submodel
 #'   is fitted.
-#' @param method R function that is used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be used
 #'   in the survival model.
 #' @param include_clusters Boolean indicating whether to propagate cluster
@@ -191,7 +190,6 @@ setGeneric(
     x,
     landmarks,
     horizons,
-    method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
     validation_fold = 0,
@@ -216,23 +214,12 @@ setMethod(
     x,
     landmarks,
     horizons,
-    method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
     validation_fold = 0,
     ...
   ) {
-    # Check that method is a function with arguments formula, data, ...
-    if (is(method)[1] == "character" && method == "coxph") {
-      method <- predict
-    }
-    if (!(is(method)[1] == "function")) {
-      stop(
-        "Argument method",
-        " must be a function",
-        "\n"
-      )
-    }
+
     if (length(landmarks) != length(horizons)) {
       stop("@landmarks and @horizons must be of the same length.")
     } else if (length(landmarks) == 1) {
@@ -257,7 +244,7 @@ setMethod(
         )
       }
 
-      x@survival_predictions[[model_name]] <- method(
+      x@survival_predictions[[model_name]] <- survival::survfit(
         x@survival_fits[[model_name]],
         ...
       )
@@ -273,9 +260,9 @@ setMethod(
             validation_fold,
             train = FALSE
           )
-        x@survival_predictions_test[[model_name]] <- method(
+        x@survival_predictions[[model_name]] <- survival::survfit(
           x@survival_fits[[model_name]],
-          x@survival_datasets_test[[model_name]],
+          newdata = x@survival_datasets_test[[model_name]],
           ...
         )
       }
@@ -285,7 +272,6 @@ setMethod(
         x,
         landmarks[1],
         horizons[1],
-        method,
         dynamic_covariates,
         include_clusters,
         validation_fold,
@@ -295,7 +281,6 @@ setMethod(
         x,
         landmarks[-1],
         horizons[-1],
-        method,
         dynamic_covariates,
         include_clusters,
         validation_fold,

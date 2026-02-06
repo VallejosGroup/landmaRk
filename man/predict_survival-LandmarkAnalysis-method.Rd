@@ -8,7 +8,6 @@
   x,
   landmarks,
   horizons,
-  method,
   dynamic_covariates = c(),
   include_clusters = FALSE,
   validation_fold = 0,
@@ -22,8 +21,6 @@
 
 \item{horizons}{Vector of prediction horizons up to when the survival submodel
 is fitted.}
-
-\item{method}{R function that is used to make predictions}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be used
 in the survival model.}
