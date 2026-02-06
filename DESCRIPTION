@@ -1,12 +1,11 @@
 Package: landmaRk
 Title: Time-to-Event Landmark Analysis using an Array of Longitudinal and Survival Sub-Models
-Version: 0.0.0.9000
+Version: 0.1.1
 Authors@R: c(
-    person("Nathan", "Constantine-Cooke", , "nathan.constantine-cooke@ed.ac.uk", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-4437-8713")),
-    person("Victor", "Velasco-Pardo", , "vvelasco@ed.ac.uk", role = "aut",
-           comment = c(ORCID = "0000-0002-7166-1573")),
-    person("Begoña", "Bolos Sierra", role = "ctb"),
+    person("Victor", "Velasco-Pardo", , "vvelasco@ed.ac.uk",
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-7166-1573")),
+    person("Nathan", "Constantine-Cooke", , "nathan.constantine-cooke@ed.ac.uk",
+           role = "aut", comment = c(ORCID = "0000-0002-4437-8713")),
     person("Catalina", "Vallejos", , "catalina.vallejos@ed.ac.uk", role = "aut",
            comment = c(ORCID = "0000-0003-3638-1960")),
     person("Charlie", "Lees", , "charlie.lees@ed.ac.uk", role = "aut",
