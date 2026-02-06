@@ -36,6 +36,7 @@ Imports:
     utils,
     timeROC
 Suggests: 
+    JMbayes2,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
