@@ -89,11 +89,10 @@
   ]
   # If censor_at_horizon=TRUE, censor obervations at horizons
   if (censor_at_horizon) {
-    survival_df <-survival_df[
+    survival_df <- survival_df[
       which(survival_df[, x@event_time] <= horizons),
     ]
   }
-
 
   # Select individuals for train or for test
   if (train) {

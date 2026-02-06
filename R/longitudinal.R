@@ -186,7 +186,16 @@ setMethod(
 #' @examples
 setGeneric(
   "predict_longitudinal",
-  function(x, landmarks, horizons, method, dynamic_covariates, censor_at_horizon = FALSE, validation_fold = 0, ...) {
+  function(
+    x,
+    landmarks,
+    horizons,
+    method,
+    dynamic_covariates,
+    censor_at_horizon = FALSE,
+    validation_fold = 0,
+    ...
+  ) {
     standardGeneric("predict_longitudinal")
   }
 )
@@ -202,7 +211,16 @@ setGeneric(
 setMethod(
   "predict_longitudinal",
   "LandmarkAnalysis",
-  function(x, landmarks, horizons, method, dynamic_covariates, censor_at_horizon = FALSE, validation_fold = 0, ...) {
+  function(
+    x,
+    landmarks,
+    horizons,
+    method,
+    dynamic_covariates,
+    censor_at_horizon = FALSE,
+    validation_fold = 0,
+    ...
+  ) {
     value <- NULL # Global var
     fold <- NULL # Global var
 
@@ -276,7 +294,11 @@ setMethod(
             newdata <- data.frame(risk_set, landmarks)
             colnames(newdata) <- c(x@ids, x@times)
             if (censor_at_horizon) {
-              newdata <- newdata |> inner_join(x@data_static |> filter(get(x@event_time) <= horizons), by = join_by(!!x@ids))
+              newdata <- newdata |>
+                inner_join(
+                  x@data_static |> filter(get(x@event_time) <= horizons),
+                  by = join_by(!!x@ids)
+                )
             } else {
               newdata <- newdata |>
                 left_join(x@data_static, by = stats::setNames(x@ids, x@ids))
