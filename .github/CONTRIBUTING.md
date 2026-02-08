@@ -2,7 +2,7 @@
 
 <!-- This CONTRIBUTING.md is adapted from https://gist.github.com/peterdesmet/e90a1b0dc17af6c12daf6e8b2f044e7c -->
 
-First of all, thanks for considering contributing to our package!
+First of all, thanks for considering contributing to landmaRk!
 
 [repo]: https://github.com/vallejosgroup/landmaRk
 [issues]: https://github.com/vallejosgroup/landmaRk/issues
@@ -21,7 +21,7 @@ Using landmaRk for a paper you are writing? Consider [citing it][citation].
 
 ### Ask a question ⁉️
 
-Using ladnmaRk and got stuck? Browse the [documentation][website] to see if you can find a solution. Still stuck? Post your question as an [issue on GitHub][new_issue]. While we cannot offer user support, we'll try to do our best to address it, as questions often lead to better documentation or the discovery of bugs.
+Using landmaRk and got stuck? Browse the [documentation][website] to see if you can find a solution. Still stuck? Post your question as an [issue on GitHub][new_issue]. While we cannot offer user support, we'll try to do our best to address it, as questions often lead to better documentation or the discovery of bugs.
 
 Want to ask a question in private? Contact the package maintainer by [email][email].
 
@@ -48,7 +48,7 @@ Noticed a typo on the website? Think a function could use a better example? Good
 
 #### The website
 
-[This website][website] is generated with [`pkgdown`](http://pkgdown.r-lib.org/). That means we don't have to write any html: content is pulled together from documentation in the code, vignettes, [Markdown](https://guides.github.com/features/mastering-markdown/) files, the package `DESCRIPTION` and `_pkgdown.yml` settings. If you know your way around `pkgdown`, you can [propose a file change](https://help.github.com/articles/editing-files-in-another-user-s-repository/) to improve documentation. If not, [report an issue][new_issue] and we can point you in the right direction.
+[This website][website] is generated with [`pkgdown`](https://pkgdown.r-lib.org/). That means we don't have to write any html: content is pulled together from documentation in the code, vignettes, [Markdown](https://guides.github.com/features/mastering-markdown/) files, the package `DESCRIPTION` and `_pkgdown.yml` settings. If you know your way around `pkgdown`, you can [propose a file change](https://help.github.com/articles/editing-files-in-another-user-s-repository/) to improve documentation. If not, [report an issue][new_issue] and we can point you in the right direction.
 
 #### Function documentation
 
@@ -56,8 +56,8 @@ Functions are described as comments near their code and translated to documentat
 
 1. Go to `R/` directory in the [code repository][repo].
 2. Look for the file with the name of the function.
-3. [Propose a file change](https://help.github.com/articles/editing-files-in-another-user-s-repository/) to update the function documentation in the roxygen comments (starting with `#'`).
+3. [Propose a file change](https://docs.github.com/en/repositories/working-with-files/managing-files/editing-files) to update the function documentation in the roxygen comments (starting with `#'`).
 
 ### Contribute code 📝
 
-Care to fix bugs or implement new functionality for our_package? Awesome! 👏 Have a look at the [issue list][issues] and leave a comment on the things you want to work on. 
+Care to fix bugs or implement new functionality for our_package? Awesome! 👏 Have a look at the [issue list][issues] and leave a comment on the things you want to work on.
