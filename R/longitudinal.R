@@ -168,12 +168,17 @@ setMethod(
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
-#' @param horizons Vector of prediction horizons up to when the survival submodel
-#'   is fitted.
+#' @param horizons Vector of prediction horizons used in the fitted survival
+#'   submodel. This should match the horizons used when fitting the survival
+#'   model to ensure consistency. The \code{horizons} argument is only used
+#'   when \code{censor_at_horizon = TRUE}, in which case observations are
+#'   censored at the specified horizon times. When \code{censor_at_horizon =
+#'   FALSE} (the default), \code{horizons} is stored in the resulting object
+#'   but is not used in computing the longitudinal predictions.
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
-#' @param censor_at_horizon boolean indicating whether to censor observations
+#' @param censor_at_horizon Boolean indicating whether to censor observations
 #'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed in the complete dataset.
@@ -296,7 +301,11 @@ setMethod(
             if (censor_at_horizon) {
               newdata <- newdata |>
                 inner_join(
-                  x@data_static |> filter(get(x@event_time) <= horizons),
+                  x@data_static |>
+                    filter(
+                      (get(x@event_status) == 1 & get(x@event_time) <= horizons) |
+                      (get(x@event_status) == 0)
+                    ),
                   by = join_by(!!x@ids)
                 )
             } else {
