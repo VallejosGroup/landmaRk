@@ -72,7 +72,7 @@ test_that("Hist is available without attaching prodlim", {
   # which evaluates formulas that may contain Hist()
   # Without the import, this would fail with "could not find function 'Hist'"
   expect_no_error(
-    performance_metrics(
+    metrics <- performance_metrics(
       landmarking_object,
       landmarks = 365.25,
       horizons = 2 * 365.25,
@@ -80,16 +80,6 @@ test_that("Hist is available without attaching prodlim", {
       brier = TRUE,
       train = TRUE
     )
-  )
-  
-  # Verify the result is valid
-  metrics <- performance_metrics(
-    landmarking_object,
-    landmarks = 365.25,
-    horizons = 2 * 365.25,
-    c_index = TRUE,
-    brier = TRUE,
-    train = TRUE
   )
   
   expect_true(is.data.frame(metrics) || is.matrix(metrics))
