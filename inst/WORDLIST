@@ -22,6 +22,7 @@ Schaar
 Velasco
 WIP
 aje
+auc
 bimj
 codecov
 coxph
@@ -35,5 +36,6 @@ lcmm
 lme
 lmer
 modeling
-newdata
 survfit
+landmarkR
+md
