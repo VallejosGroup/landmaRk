@@ -303,8 +303,9 @@ setMethod(
                 inner_join(
                   x@data_static |>
                     filter(
-                      (get(x@event_status) == 1 & get(x@event_time) <= horizons) |
-                      (get(x@event_status) == 0)
+                      (get(x@event_status) == 1 &
+                        get(x@event_time) <= horizons) |
+                        (get(x@event_status) == 0)
                     ),
                   by = join_by(!!x@ids)
                 )
