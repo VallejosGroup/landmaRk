@@ -87,7 +87,7 @@
   )]] <- x@data_static[
     which(x@data_static[, x@event_time] >= landmarks),
   ]
-  # If censor_at_horizon=TRUE, censor obervations at horizons
+  # If censor_at_horizon=TRUE, censor observations at horizons
   if (censor_at_horizon) {
     survival_df <- survival_df |> mutate(
       !!sym(x@event_indicator) := ifelse(get(x@event_time) > horizons, 0, get(x@event_indicator)),

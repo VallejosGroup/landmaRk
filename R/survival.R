@@ -22,7 +22,7 @@
 #'   in the survival model.
 #' @param include_clusters Boolean indicating whether to propagate cluster
 #'   membership to survival analysis.
-#' @param censor_at_horizon boolean indicating whether to censor observations
+#' @param censor_at_horizon Boolean indicating whether to censor observations
 #'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed on the complete dataset.
@@ -183,7 +183,7 @@ setMethod(
 #'   in the survival model.
 #' @param include_clusters Boolean indicating whether to propagate cluster
 #'   membership to survival analysis.
-#' @param censor_at_horizon boolean indicating whether to censor observations
+#' @param censor_at_horizon Boolean indicating whether to censor observations
 #'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed on the complete dataset.
