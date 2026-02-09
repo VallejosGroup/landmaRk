@@ -35,7 +35,8 @@ Imports:
     doParallel,
     foreach,
     utils,
-    timeROC
+    timeROC,
+    prodlim
 Suggests: 
     JMbayes2,
     knitr,
@@ -45,8 +46,7 @@ Suggests:
     tidyverse,
     spelling,
     joineR,
-    survminer,
-    prodlim
+    survminer
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 LazyData: true
