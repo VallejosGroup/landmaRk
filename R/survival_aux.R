@@ -89,10 +89,19 @@
   ]
   # If censor_at_horizon=TRUE, censor observations at horizons
   if (censor_at_horizon) {
-    survival_df <- survival_df |> mutate(
-      !!sym(x@event_indicator) := ifelse(get(x@event_time) > horizons, 0, get(x@event_indicator)),
-      !!sym(x@event_time) := ifelse(get(x@event_time) > horizons, horizons, get(x@event_time))
-    )
+    survival_df <- survival_df |>
+      mutate(
+        !!sym(x@event_indicator) := ifelse(
+          get(x@event_time) > horizons,
+          0,
+          get(x@event_indicator)
+        ),
+        !!sym(x@event_time) := ifelse(
+          get(x@event_time) > horizons,
+          horizons,
+          get(x@event_time)
+        )
+      )
   }
 
   # Select individuals for train or for test
