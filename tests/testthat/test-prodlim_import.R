@@ -2,13 +2,13 @@ test_that("Hist is available without attaching prodlim", {
   # Regression test for issue #149
   # Ensures that Hist from prodlim can be used in formulas without
   # requiring users to call library(prodlim)
-  
+
   # Verify prodlim is NOT attached (not in search path)
   expect_false("package:prodlim" %in% search())
-  
+
   # Data manipulation
   data(epileptic)
-  
+
   epileptic_dfs <- split_wide_df(
     epileptic,
     ids = "id",
@@ -24,10 +24,10 @@ test_that("Hist is available without attaching prodlim", {
     dynamic = c("dose"),
     measurement_name = "value"
   )
-  
+
   static <- epileptic_dfs$df_static
   dynamic <- epileptic_dfs$df_dynamic
-  
+
   # Create LandmarkAnalysis object and run through pipeline
   landmarking_object <- LandmarkAnalysis(
     data_static = static,
@@ -38,7 +38,7 @@ test_that("Hist is available without attaching prodlim", {
     times = "time",
     measurements = "value"
   )
-  
+
   landmarking_object <- landmarking_object |>
     compute_risk_sets(landmarks = 365.25) |>
     fit_longitudinal(
@@ -67,7 +67,7 @@ test_that("Hist is available without attaching prodlim", {
       method = "coxph",
       type = "survival"
     )
-  
+
   # Test performance_metrics - this calls riskRegression::Score
   # which evaluates formulas that may contain Hist()
   # Without the import, this would fail with "could not find function 'Hist'"
@@ -81,11 +81,11 @@ test_that("Hist is available without attaching prodlim", {
       train = TRUE
     )
   )
-  
+
   expect_true(is.data.frame(metrics) || is.matrix(metrics))
   expect_true("cindex" %in% colnames(metrics))
   expect_true("Brier" %in% colnames(metrics))
-  
+
   # Verify prodlim is still NOT attached after the test
   expect_false("package:prodlim" %in% search())
 })
