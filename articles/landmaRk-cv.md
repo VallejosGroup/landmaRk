@@ -22,25 +22,49 @@ library(survival)
 library(prodlim)
 ```
 
-## Example: epileptic data
+## Example: `aids` data
 
 As in the first vignette, we use the epileptic dataset to perform
 landmarking analysis of time-to-event data with time-varying covariates.
 Here is the structure of the dataset.
 
 ``` r
-data("epileptic")
-str(epileptic)
-#> 'data.frame':    2797 obs. of  9 variables:
-#>  $ id         : int  1 1 1 1 1 1 1 1 1 1 ...
-#>  $ time       : int  86 119 268 451 535 770 1515 1829 2022 2194 ...
-#>  $ with.time  : int  2400 2400 2400 2400 2400 2400 2400 2400 2400 2400 ...
-#>  $ with.status: int  0 0 0 0 0 0 0 0 0 0 ...
-#>  $ dose       : num  2 2 2 2.67 2.67 2.67 2.67 2.67 3.33 2.67 ...
-#>  $ treat      : Factor w/ 2 levels "CBZ","LTG": 1 1 1 1 1 1 1 1 1 1 ...
-#>  $ age        : num  75.7 75.7 75.7 75.7 75.7 ...
-#>  $ gender     : Factor w/ 2 levels "F","M": 2 2 2 2 2 2 2 2 2 2 ...
-#>  $ learn.dis  : Factor w/ 2 levels "No","Yes": 1 1 1 1 1 1 1 1 1 1 ...
+library(JMbayes2)
+#> Loading required package: nlme
+#> 
+#> Attaching package: 'nlme'
+#> The following object is masked from 'package:dplyr':
+#> 
+#>     collapse
+#> Loading required package: GLMMadaptive
+#> Loading required package: splines
+#> 
+#> Attaching package: 'JMbayes2'
+#> The following object is masked from 'package:GLMMadaptive':
+#> 
+#>     mixed_model
+#> The following object is masked from 'package:nlme':
+#> 
+#>     lme
+#> The following object is masked from 'package:survival':
+#> 
+#>     coxph
+data("aids")
+aids$patient <- as.numeric(aids$patient)
+str(aids)
+#> 'data.frame':    1405 obs. of  12 variables:
+#>  $ patient: num  1 1 1 2 2 2 2 3 3 3 ...
+#>  $ Time   : num  17 17 17 19 19 ...
+#>  $ death  : int  0 0 0 0 0 0 0 1 1 1 ...
+#>  $ CD4    : num  10.68 8.43 9.43 6.32 8.12 ...
+#>  $ obstime: int  0 6 12 0 6 12 18 0 2 6 ...
+#>  $ drug   : Factor w/ 2 levels "ddC","ddI": 1 1 1 2 2 2 2 2 2 2 ...
+#>  $ gender : Factor w/ 2 levels "female","male": 2 2 2 2 2 2 2 1 1 1 ...
+#>  $ prevOI : Factor w/ 2 levels "noAIDS","AIDS": 2 2 2 1 1 1 1 2 2 2 ...
+#>  $ AZT    : Factor w/ 2 levels "intolerance",..: 1 1 1 1 1 1 1 1 1 1 ...
+#>  $ start  : int  0 6 12 0 6 12 18 0 2 6 ...
+#>  $ stop   : num  6 12 17 6 12 ...
+#>  $ event  : num  0 0 0 0 0 0 0 0 0 1 ...
 ```
 
 ## Initialising the landmarking analysis for cross-validation
@@ -51,36 +75,36 @@ one for dynamic covariates.
 
 ``` r
 # DF with Static covariates
-epileptic_dfs <- split_wide_df(
-  epileptic,
-  ids = "id",
-  times = "time",
-  static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
-  dynamic = c("dose"),
+aids_dfs <- split_wide_df(
+  aids,
+  ids = "patient",
+  times = "obstime",
+  static = c("Time", "death", "drug", "gender", "prevOI"),
+  dynamic = c("CD4"),
   measurement_name = "value"
 )
-static <- epileptic_dfs$df_static
+static <- aids_dfs$df_static
 head(static)
-#>    id with.time with.status treat   age gender learn.dis
-#> 1   1      2400           0   CBZ 75.67      M        No
-#> 12  2      2324           0   LTG 32.96      M        No
-#> 25  3       802           0   LTG 29.31      M        No
-#> 29  4      2364           0   CBZ 44.59      M        No
-#> 42  5       821           1   LTG 40.61      F        No
-#> 45  6      2237           0   LTG 28.06      M       Yes
+#>    patient  Time death drug gender prevOI
+#> 1        1 16.97     0  ddC   male   AIDS
+#> 4        2 19.00     0  ddI   male noAIDS
+#> 8        3 18.53     1  ddI female   AIDS
+#> 11       4 12.70     0  ddC   male   AIDS
+#> 15       5 15.13     0  ddI   male   AIDS
+#> 19       6  1.90     1  ddC female   AIDS
 ```
 
 ``` r
 # DF with Dynamic covariates
-dynamic <- epileptic_dfs$df_dynamic
-head(dynamic[["dose"]])
-#>   id time value
-#> 1  1   86  2.00
-#> 2  1  119  2.00
-#> 3  1  268  2.00
-#> 4  1  451  2.67
-#> 5  1  535  2.67
-#> 6  1  770  2.67
+dynamic <- aids_dfs$df_dynamic
+head(dynamic[["CD4"]])
+#>   patient obstime     value
+#> 1       1       0 10.677078
+#> 2       1       6  8.426150
+#> 3       1      12  9.433981
+#> 4       2       0  6.324555
+#> 5       2       6  8.124038
+#> 6       2      12  4.582576
 ```
 
 As in the introductory vignette, we create an object of class
@@ -95,18 +119,16 @@ We then calculate the risk sets using
 landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
-  event_indicator = "with.status",
-  ids = "id",
-  event_time = "with.time",
-  times = "time",
+  event_indicator = "death",
+  ids = "patient",
+  event_time = "Time",
+  times = "obstime",
   measurements = "value",
   K = 5
 )
 
 landmarking_object <- landmarking_object |>
-  compute_risk_sets(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25)
-  )
+  compute_risk_sets(landmarks = c(6, 8))
 ```
 
 ## Performance evaluation in hold-out dataset
@@ -125,34 +147,32 @@ and
 ``` r
 landmarking_object <- landmarking_object |>
   fit_longitudinal(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+    landmarks = c(6, 8),
     method = "lme4",
-    formula = value ~ treat + age + gender + learn.dis + (time | id),
-    dynamic_covariates = c("dose"),
+    formula = value ~ prevOI + obstime + (obstime | patient),
+    dynamic_covariates = c("CD4"),
     validation_fold = 5
   ) |>
   predict_longitudinal(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
+    landmarks = c(6, 8),
     method = "lme4",
-    dynamic_covariates = c("dose"),
+    dynamic_covariates = c("CD4"),
     validation_fold = 5,
     allow.new.levels = TRUE
   ) |>
   fit_survival(
-    formula = Surv(event_time, event_status) ~
-      treat + age + gender + learn.dis + dose,
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-    horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
+    formula = Surv(event_time, event_status) ~ drug,
+    landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
     method = "coxph",
-    dynamic_covariates = c("dose"),
+    dynamic_covariates = c("CD4"),
     validation_fold = 5
   ) |>
   predict_survival(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-    horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
+    landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
     method = "coxph",
-    type = "survival",
-    dynamic_covariates = c("dose"),
+    type = "lp",
     validation_fold = 5
   )
 #> Warning in
@@ -161,16 +181,9 @@ landmarking_object <- landmarking_object |>
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
 #> New names:
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
+#> • `` -> `...9`
 ```
 
 We can also use [`summary()`](https://rdrr.io/r/base/summary.html) to
@@ -179,44 +192,33 @@ smaller, because we have held out part of the original dataset for
 validation.
 
 ``` r
-summary(landmarking_object,
-        type = "longitudinal",
-        landmark = 365.25,
-        dynamic_covariate = "dose")
+summary(landmarking_object, type = "longitudinal", landmark = 6, dynamic_covariate = "CD4")
 #> Linear mixed model fit by REML ['lmerMod']
-#> Formula: value ~ treat + age + gender + learn.dis + (time | id)
+#> Formula: value ~ prevOI + obstime + (obstime | patient)
 #>    Data: dataframe
-#> REML criterion at convergence: 1785.048
+#> REML criterion at convergence: 4263.201
 #> Random effects:
 #>  Groups   Name        Std.Dev. Corr 
-#>  id       (Intercept) 0.744917      
-#>           time        0.003186 -0.16
-#>  Residual             0.337911      
-#> Number of obs: 862, groups:  id, 343
+#>  patient  (Intercept) 4.1584        
+#>           obstime     0.2392   -0.09
+#>  Residual             1.6223        
+#> Number of obs: 853, groups:  patient, 321
 #> Fixed Effects:
-#>  (Intercept)      treatLTG           age       genderM  learn.disYes  
-#>    1.8730975    -0.1033299     0.0005706     0.1430885    -0.2732108  
-#> optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 2 lme4 warnings
+#> (Intercept)   prevOIAIDS      obstime  
+#>     10.3201      -4.3287      -0.1757
 ```
 
 ``` r
-summary(landmarking_object,
-        type = "survival",
-        landmark = 365.25,
-        horizon = 730.5)
+summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> Call:
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
 #>     "-", horizons)]], model = TRUE, x = TRUE)
 #> 
-#>                   coef exp(coef)  se(coef)      z       p
-#> treatLTG      0.050993  1.052316  0.214191  0.238 0.81182
-#> age          -0.016284  0.983848  0.006482 -2.512 0.01199
-#> genderM      -0.189162  0.827652  0.214458 -0.882 0.37775
-#> learn.disYes -0.430140  0.650418  0.438529 -0.981 0.32666
-#> dose          0.275454  1.317129  0.085492  3.222 0.00127
+#>           coef exp(coef) se(coef)     z   p
+#> drugddI 0.2081    1.2313   0.2007 1.037 0.3
 #> 
-#> Likelihood ratio test=16.25  on 5 df, p=0.006154
-#> n= 346, number of events= 90
+#> Likelihood ratio test=1.08  on 1 df, p=0.299
+#> n= 321, number of events= 100
 ```
 
 Here are the in-sample performance metrics:
@@ -224,14 +226,17 @@ Here are the in-sample performance metrics:
 ``` r
 performance_metrics(
   landmarking_object,
-  landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-  horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-  auc_t = TRUE
+  landmarks = c(6, 8),
+  horizons = c(18, 20), 
+  auc_t = TRUE, c_index = FALSE,
+  h_times = c(3, 6, 12)
 )
-#>               landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5    365.25  730.50 0.6225997 0.5262495 0.9387698
-#> 730.5-1095.75   730.50 1095.75 0.6432658 0.6500848 0.8958094
-#> 1095.75-1461   1095.75 1461.00 0.6918492 0.6673227 0.8455752
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
+#> 6-18        6      18 0.07967156 0.1630371 0.2313983 0.5194303 0.5381293
+#> 8-20        8      20 0.10531988 0.1699368 0.2449021 0.5118598 0.5353575
+#>        AUC(12)
+#> 6-18 0.4853891
+#> 8-20 0.4644064
 ```
 
 Out-of-sample performance metrics can be obtained by specifying
@@ -240,15 +245,18 @@ Out-of-sample performance metrics can be obtained by specifying
 ``` r
 performance_metrics(
   landmarking_object,
-  landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-  horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-  auc_t = TRUE,
+  landmarks = c(6, 8),
+  horizons = c(18, 20), 
+  auc_t = TRUE, c_index = FALSE,
+  h_times = c(3, 6, 12),
   train = FALSE
 )
-#>               landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5    365.25  730.50 0.5113732 0.5906314 0.9646766
-#> 730.5-1095.75   730.50 1095.75 0.5475362 0.6748556 0.9823438
-#> 1095.75-1461   1095.75 1461.00 0.1200000 0.7517810 1.0000000
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
+#> 6-18        6      18 0.07655582 0.1744548 0.2385842 0.6400376 0.6126645
+#> 8-20        8      20 0.08189975 0.1732424 0.2365391 0.6458753 0.6614730
+#>        AUC(12)
+#> 6-18 0.5646015
+#> 8-20 0.4347708
 ```
 
 ## Cross-validation
@@ -260,18 +268,16 @@ cross-validation:
 landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
-  event_indicator = "with.status",
-  ids = "id",
-  event_time = "with.time",
-  times = "time",
+  event_indicator = "death",
+  ids = "patient",
+  event_time = "Time",
+  times = "obstime",
   measurements = "value",
   K = 5
 )
 
 landmarking_object <- landmarking_object |>
-  compute_risk_sets(
-    landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25)
-  )
+  compute_risk_sets(landmarks = c(6, 8))
 ```
 
 ``` r
@@ -279,40 +285,39 @@ metrics <- list()
 for (k in 1:5) {
   metrics[[k]] <- landmarking_object |>
     fit_longitudinal(
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      method = "lme4",
-      formula = value ~ treat + age + gender + learn.dis + (time | id),
-      dynamic_covariates = c("dose"),
-      validation_fold = k
-    ) |>
-    predict_longitudinal(
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      method = "lme4",
-      allow.new.levels = TRUE,
-      dynamic_covariates = c("dose"),
-      validation_fold = k
-    ) |>
-    fit_survival(
-      formula = Surv(event_time, event_status) ~
-        treat + age + gender + learn.dis + dose,
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-      method = "coxph",
-      dynamic_covariates = c("dose"),
-      validation_fold = k
-    ) |>
-    predict_survival(
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-      method = "coxph",
-      type = "survival",
-      dynamic_covariates = c("dose"),
-      validation_fold = k
-    ) |>
+    landmarks = c(6, 8),
+    method = "lme4",
+    formula = value ~ prevOI + obstime + (obstime | patient),
+    dynamic_covariates = c("CD4"),
+    validation_fold = k
+  ) |>
+  predict_longitudinal(
+    landmarks = c(6, 8),
+    method = "lme4",
+    dynamic_covariates = c("CD4"),
+    validation_fold = k,
+    allow.new.levels = TRUE
+  ) |>
+  fit_survival(
+    formula = Surv(event_time, event_status) ~ drug,
+    landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
+    method = "coxph",
+    dynamic_covariates = c("CD4"),
+    validation_fold = k
+  ) |>
+  predict_survival(
+    landmarks = c(6, 8),
+    horizons = 12 + c(6, 8),
+    method = "coxph",
+    type = "lp",
+    validation_fold = k
+  ) |>
     performance_metrics(
-      landmarks = seq(from = 365.25, to = 3 * 365.25, by = 365.25),
-      horizons = seq(from = 2 * 365.25, to = 4 * 365.25, by = 365.25),
-      auc_t = TRUE
+      landmarks = c(6, 8),
+      horizons = c(18, 20), 
+      auc_t = TRUE, brier = TRUE, c_index = FALSE,
+      h_times = c(3, 6, 12)
     )
 }
 #> Warning in
@@ -321,19 +326,9 @@ for (k in 1:5) {
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
 #> New names:
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
+#> • `` -> `...9`
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
@@ -342,14 +337,7 @@ for (k in 1:5) {
 #> : unused arguments ignored
 #> New names:
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
+#> • `` -> `...9`
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
@@ -358,14 +346,7 @@ for (k in 1:5) {
 #> : unused arguments ignored
 #> New names:
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
+#> • `` -> `...9`
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
@@ -374,14 +355,7 @@ for (k in 1:5) {
 #> : unused arguments ignored
 #> New names:
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
+#> • `` -> `...9`
 #> Warning in
 #> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
 #> : unused arguments ignored
@@ -390,40 +364,46 @@ for (k in 1:5) {
 #> : unused arguments ignored
 #> New names:
 #> New names:
-#> New names:
-#> New names:
-#> New names:
-#> New names:
-#> • `` -> `...10`
+#> • `` -> `...9`
 
 metrics
 #> [[1]]
-#>               landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5    365.25  730.50 0.6336712 0.5476312 0.9343432
-#> 730.5-1095.75   730.50 1095.75 0.6681284 0.6626849 0.8324416
-#> 1095.75-1461   1095.75 1461.00 0.6973781 0.7012488 0.7499993
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
+#> 6-18        6      18 0.07430174 0.1628066 0.2331222 0.5165677 0.5332049
+#> 8-20        8      20 0.10693845 0.1686616 0.2472218 0.5129526 0.5464116
+#>        AUC(12)
+#> 6-18 0.4909934
+#> 8-20 0.4711122
 #> 
 #> [[2]]
-#>               landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5    365.25  730.50 0.6605406 0.5471592 0.9127225
-#> 730.5-1095.75   730.50 1095.75 0.7141958 0.6657560 0.7919147
-#> 1095.75-1461   1095.75 1461.00 0.7495549 0.7535546 0.7120984
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
+#> 6-18        6      18 0.07878887 0.1649606 0.2357098 0.5245006 0.5430452
+#> 8-20        8      20 0.10599282 0.1717609 0.2397350 0.5231481 0.5536476
+#>        AUC(12)
+#> 6-18 0.5008851
+#> 8-20 0.4908798
 #> 
 #> [[3]]
-#>               landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5    365.25  730.50 0.6212185 0.5485583 0.9260363
-#> 730.5-1095.75   730.50 1095.75 0.6373537 0.6610433 0.9083269
-#> 1095.75-1461   1095.75 1461.00 0.6475242 0.7164068 0.9113404
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
+#> 6-18        6      18 0.07071204 0.1598846 0.2288635 0.5448391 0.5714684
+#> 8-20        8      20 0.09567283 0.1690807 0.2444550 0.5446251 0.5772778
+#>        AUC(12)
+#> 6-18 0.5021795
+#> 8-20 0.4210204
 #> 
 #> [[4]]
-#>               landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5    365.25  730.50 0.5897559 0.5373165 0.9603579
-#> 730.5-1095.75   730.50 1095.75 0.6387605 0.6681717 0.9376969
-#> 1095.75-1461   1095.75 1461.00 0.7001645 0.7201016 0.7234967
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
+#> 6-18        6      18 0.08955414 0.1686272 0.2363873 0.5502151 0.5302593
+#> 8-20        8      20 0.09355146 0.1656261 0.2322180 0.5037594 0.5340163
+#>        AUC(12)
+#> 6-18 0.4867656
+#> 8-20 0.4807579
 #> 
 #> [[5]]
-#>               landmark horizon    cindex     brier      AUCt
-#> 365.25-730.5    365.25  730.50 0.6059305 0.5527893 0.9467284
-#> 730.5-1095.75   730.50 1095.75 0.6399187 0.6476502 0.8580302
-#> 1095.75-1461   1095.75 1461.00 0.6417725 0.6504718 0.8576403
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
+#> 6-18        6      18 0.08130580 0.1681432 0.2359809 0.5782629 0.5907356
+#> 8-20        8      20 0.09911599 0.1739465 0.2599817 0.5934627 0.5997129
+#>        AUC(12)
+#> 6-18 0.5300017
+#> 8-20 0.4345596
 ```

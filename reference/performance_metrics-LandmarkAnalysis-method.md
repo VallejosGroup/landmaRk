@@ -54,5 +54,5 @@ performance_metrics(
 
 - h_times:
 
-  A numeric vector of horizon times relative to the landmark times at
-  which auc_t and Brier score are calculated.
+  A numeric vector of prediction horizon times, specified relative to
+  each landmark time, at which auc_t and Brier scores are calculated.

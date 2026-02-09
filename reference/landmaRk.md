@@ -1,9 +1,11 @@
 # landmaRk
 
-Provides a comprehensive framework for conducting time-to-event
-landmarking analysis using a variety of longitudinal and survival
-sub-models. It aims to facilitate the analysis of time-to-event data
-with time-dependent covariates.
+Provides a modular end-to-end framework for dynamic risk prediction
+based on time-to-event and longitudinal data. This allows flexible
+specifications for the longitudinal and survival sub-models. The
+'landmaRk' package enables reproducible benchmarks of different model
+choices, including cross-validation to assess out-of-sample predictive
+performance.
 
 ## See also
 

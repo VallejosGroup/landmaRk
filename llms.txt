@@ -68,6 +68,12 @@ vignette("landmaRk")
 Alternatively, you can view the vignette
 [online](https://vallejosgroup.github.io/landmaRk/articles/landmaRk.html).
 
+## Contributing to landmaRk
+
+If you are interested in contributing to `landmaRk`, please read our
+[contributing
+guide](https://vallejosgroup.github.io/landmaRk/CONTRIBUTING.md).
+
 ## References
 
 ------------------------------------------------------------------------

@@ -14,6 +14,7 @@ fit_survival(
   method,
   dynamic_covariates = c(),
   include_clusters = FALSE,
+  censor_at_horizon = FALSE,
   validation_fold = 0
 )
 ```
@@ -50,6 +51,10 @@ fit_survival(
 
   Boolean indicating whether to propagate cluster membership to survival
   analysis.
+
+- censor_at_horizon:
+
+  Boolean indicating whether to censor observations at horizon times
 
 - validation_fold:
 

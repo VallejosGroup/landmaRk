@@ -60,6 +60,7 @@ times specified by the user</p>
 <span>  <span class="va">method</span>,</span>
 <span>  dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  include_clusters <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  censor_at_horizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  validation_fold <span class="op">=</span> <span class="fl">0</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -97,6 +98,11 @@ in the survival model.</p></dd>
 <dt id="arg-include-clusters">include_clusters<a class="anchor" aria-label="anchor" href="#arg-include-clusters"></a></dt>
 <dd><p>Boolean indicating whether to propagate cluster
 membership to survival analysis.</p></dd>
+
+
+<dt id="arg-censor-at-horizon">censor_at_horizon<a class="anchor" aria-label="anchor" href="#arg-censor-at-horizon"></a></dt>
+<dd><p>Boolean indicating whether to censor observations
+at horizon times</p></dd>
 
 
 <dt id="arg-validation-fold">validation_fold<a class="anchor" aria-label="anchor" href="#arg-validation-fold"></a></dt>

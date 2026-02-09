@@ -54,6 +54,7 @@
 <span>  <span class="va">landmarks</span>,</span>
 <span>  <span class="va">method</span>,</span>
 <span>  <span class="va">dynamic_covariates</span>,</span>
+<span>  censor_at_horizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  validation_fold <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -78,6 +79,11 @@
 <dt id="arg-dynamic-covariates">dynamic_covariates<a class="anchor" aria-label="anchor" href="#arg-dynamic-covariates"></a></dt>
 <dd><p>Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.</p></dd>
+
+
+<dt id="arg-censor-at-horizon">censor_at_horizon<a class="anchor" aria-label="anchor" href="#arg-censor-at-horizon"></a></dt>
+<dd><p>Boolean indicating whether to censor observations
+at horizon times</p></dd>
 
 
 <dt id="arg-validation-fold">validation_fold<a class="anchor" aria-label="anchor" href="#arg-validation-fold"></a></dt>
