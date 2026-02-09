@@ -13,6 +13,7 @@ times specified by the user}
   method,
   dynamic_covariates = c(),
   include_clusters = FALSE,
+  censor_at_horizon = FALSE,
   validation_fold = 0
 )
 }
@@ -33,6 +34,9 @@ in the survival model.}
 
 \item{include_clusters}{Boolean indicating whether to propagate cluster
 membership to survival analysis.}
+
+\item{censor_at_horizon}{Boolean indicating whether to censor observations
+at horizon times}
 
 \item{validation_fold}{If positive, cross-validation fold where model is
 fitted. If 0 (default), model fitting is performed on the complete dataset.}

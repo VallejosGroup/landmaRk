@@ -74,6 +74,7 @@
   horizons,
   dynamic_covariates = c(),
   include_clusters = FALSE,
+  censor_at_horizon = FALSE,
   validation_fold = 0,
   train = TRUE
 ) {
@@ -86,6 +87,23 @@
   )]] <- x@data_static[
     which(x@data_static[, x@event_time] >= landmarks),
   ]
+  # If censor_at_horizon=TRUE, censor observations at horizons
+  if (censor_at_horizon) {
+    survival_df <- survival_df |>
+      mutate(
+        !!sym(x@event_indicator) := ifelse(
+          get(x@event_time) > horizons,
+          0,
+          get(x@event_indicator)
+        ),
+        !!sym(x@event_time) := ifelse(
+          get(x@event_time) > horizons,
+          horizons,
+          get(x@event_time)
+        )
+      )
+  }
+
   # Select individuals for train or for test
   if (train) {
     survival_df <- survival_df |>
