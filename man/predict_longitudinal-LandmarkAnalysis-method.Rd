@@ -7,7 +7,6 @@
 \S4method{predict_longitudinal}{LandmarkAnalysis}(
   x,
   landmarks,
-  horizons,
   method,
   dynamic_covariates,
   censor_at_horizon = FALSE,
@@ -20,15 +19,12 @@
 
 \item{landmarks}{A numeric vector of landmark times.}
 
-\item{horizons}{Vector of prediction horizons up to when the survival submodel
-is fitted.}
-
 \item{method}{Longitudinal data analysis method used to make predictions}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.}
 
-\item{censor_at_horizon}{boolean indicating whether to censor observations
+\item{censor_at_horizon}{Boolean indicating whether to censor observations
 at horizon times}
 
 \item{validation_fold}{If positive, cross-validation fold where model is

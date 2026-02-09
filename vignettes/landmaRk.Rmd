@@ -292,7 +292,6 @@ landmarking_object <- landmarking_object |>
   ) |>
   predict_longitudinal(
     landmarks = c(6, 8),
-    horizons = 12 + c(6, 8),
     method = "lme4",
     allow.new.levels = TRUE,
     dynamic_covariates = c("CD4")
@@ -383,7 +382,6 @@ landmarking_object <- landmarking_object |>
   ) |>
   predict_longitudinal(
     landmarks = c(6, 8),
-    horizons = 12 + c(6, 8),
     method = "lcmm",
     subject = "patient",
     avg = TRUE,

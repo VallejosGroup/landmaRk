@@ -168,13 +168,6 @@ setMethod(
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
-#' @param horizons Vector of prediction horizons used in the fitted survival
-#'   submodel. This should match the horizons used when fitting the survival
-#'   model to ensure consistency. The \code{horizons} argument is only used
-#'   when \code{censor_at_horizon = TRUE}, in which case observations are
-#'   censored at the specified horizon times. When \code{censor_at_horizon =
-#'   FALSE} (the default), \code{horizons} is stored in the resulting object
-#'   but is not used in computing the longitudinal predictions.
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
@@ -194,7 +187,6 @@ setGeneric(
   function(
     x,
     landmarks,
-    horizons,
     method,
     dynamic_covariates,
     censor_at_horizon = FALSE,
@@ -219,7 +211,6 @@ setMethod(
   function(
     x,
     landmarks,
-    horizons,
     method,
     dynamic_covariates,
     censor_at_horizon = FALSE,
@@ -298,21 +289,8 @@ setMethod(
             # Fit longitudinal model according to chosen method
             newdata <- data.frame(risk_set, landmarks)
             colnames(newdata) <- c(x@ids, x@times)
-            if (censor_at_horizon) {
-              newdata <- newdata |>
-                inner_join(
-                  x@data_static |>
-                    filter(
-                      (get(x@event_status) == 1 &
-                        get(x@event_time) <= horizons) |
-                        (get(x@event_status) == 0)
-                    ),
-                  by = join_by(!!x@ids)
-                )
-            } else {
-              newdata <- newdata |>
-                left_join(x@data_static, by = stats::setNames(x@ids, x@ids))
-            }
+            newdata <- newdata |>
+              left_join(x@data_static, by = stats::setNames(x@ids, x@ids))
 
             newdata_train <- newdata |>
               inner_join(
@@ -399,7 +377,6 @@ setMethod(
       x <- predict_longitudinal(
         x,
         landmarks[1],
-        horizons[1],
         method,
         dynamic_covariates,
         censor_at_horizon,
@@ -409,7 +386,6 @@ setMethod(
       x <- predict_longitudinal(
         x,
         landmarks[-1],
-        horizons[-1],
         method,
         dynamic_covariates,
         censor_at_horizon,

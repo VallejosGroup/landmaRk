@@ -32,7 +32,7 @@ in the survival model.}
 \item{include_clusters}{Boolean indicating whether to propagate cluster
 membership to survival analysis.}
 
-\item{censor_at_horizon}{boolean indicating whether to censor observations
+\item{censor_at_horizon}{Boolean indicating whether to censor observations
 at horizon times}
 
 \item{validation_fold}{If positive, cross-validation fold where model is
