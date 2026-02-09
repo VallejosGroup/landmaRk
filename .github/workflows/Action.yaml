@@ -139,6 +139,10 @@ jobs:
         with:
           extra-packages: any::pkgdown
           needs: website
+          cache-version: 2
+
+      - name: Install package
+        run: R CMD INSTALL .
 
       - name: Deploy package
         if: github.event_name != 'pull_request'
@@ -149,4 +153,4 @@ jobs:
       - name: Build site without deploying
         if: github.event_name == 'pull_request'
         run: |
-          Rscript -e 'pkgdown::build_site(preview = FALSE, install = FALSE)'
+          Rscript -e 'pkgdown::build_site(preview = FALSE, install = TRUE)'

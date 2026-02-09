@@ -9,6 +9,7 @@ predict_longitudinal(
   landmarks,
   method,
   dynamic_covariates,
+  censor_at_horizon = FALSE,
   validation_fold = 0,
   ...
 )
@@ -22,6 +23,9 @@ predict_longitudinal(
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.}
+
+\item{censor_at_horizon}{Boolean indicating whether to censor observations
+at horizon times}
 
 \item{validation_fold}{If positive, cross-validation fold where model is
 fitted. If 0 (default), model fitting is performed in the complete dataset.}

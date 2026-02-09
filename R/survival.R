@@ -22,6 +22,8 @@
 #'   in the survival model.
 #' @param include_clusters Boolean indicating whether to propagate cluster
 #'   membership to survival analysis.
+#' @param censor_at_horizon Boolean indicating whether to censor observations
+#'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed on the complete dataset.
 #'
@@ -39,6 +41,7 @@ setGeneric(
     method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
+    censor_at_horizon = FALSE,
     validation_fold = 0
   ) {
     standardGeneric("fit_survival")
@@ -76,6 +79,7 @@ setMethod(
     method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
+    censor_at_horizon = FALSE,
     validation_fold = 0
   ) {
     # Check that method is a function with arguments formula, data, ...
@@ -96,6 +100,7 @@ setMethod(
           horizons,
           dynamic_covariates,
           include_clusters,
+          censor_at_horizon,
           validation_fold,
           train = TRUE
         )
@@ -148,6 +153,7 @@ setMethod(
         method,
         dynamic_covariates,
         include_clusters,
+        censor_at_horizon,
         validation_fold
       )
       x <- fit_survival(
@@ -158,6 +164,7 @@ setMethod(
         method,
         dynamic_covariates,
         include_clusters,
+        censor_at_horizon,
         validation_fold
       )
     }
@@ -176,6 +183,8 @@ setMethod(
 #'   in the survival model.
 #' @param include_clusters Boolean indicating whether to propagate cluster
 #'   membership to survival analysis.
+#' @param censor_at_horizon Boolean indicating whether to censor observations
+#'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed on the complete dataset.
 #' @param ... Additional arguments passed to the prediction function (e.g.
@@ -194,6 +203,7 @@ setGeneric(
     method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
+    censor_at_horizon = FALSE,
     validation_fold = 0,
     ...
   ) {
@@ -219,6 +229,7 @@ setMethod(
     method,
     dynamic_covariates = c(),
     include_clusters = FALSE,
+    censor_at_horizon = FALSE,
     validation_fold = 0,
     ...
   ) {
@@ -270,6 +281,7 @@ setMethod(
             horizons,
             dynamic_covariates,
             include_clusters,
+            censor_at_horizon,
             validation_fold,
             train = FALSE
           )
@@ -288,6 +300,7 @@ setMethod(
         method,
         dynamic_covariates,
         include_clusters,
+        censor_at_horizon,
         validation_fold,
         ...
       )
@@ -298,6 +311,7 @@ setMethod(
         method,
         dynamic_covariates,
         include_clusters,
+        censor_at_horizon,
         validation_fold,
         ...
       )
