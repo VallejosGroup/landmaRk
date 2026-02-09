@@ -171,6 +171,8 @@ setMethod(
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
+#' @param censor_at_horizon Boolean indicating whether to censor observations
+#'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed in the complete dataset.
 #' @param ... Additional arguments passed to the prediction function (e.g.
@@ -182,7 +184,15 @@ setMethod(
 #' @examples
 setGeneric(
   "predict_longitudinal",
-  function(x, landmarks, method, dynamic_covariates, validation_fold = 0, ...) {
+  function(
+    x,
+    landmarks,
+    method,
+    dynamic_covariates,
+    censor_at_horizon = FALSE,
+    validation_fold = 0,
+    ...
+  ) {
     standardGeneric("predict_longitudinal")
   }
 )
@@ -198,7 +208,15 @@ setGeneric(
 setMethod(
   "predict_longitudinal",
   "LandmarkAnalysis",
-  function(x, landmarks, method, dynamic_covariates, validation_fold = 0, ...) {
+  function(
+    x,
+    landmarks,
+    method,
+    dynamic_covariates,
+    censor_at_horizon = FALSE,
+    validation_fold = 0,
+    ...
+  ) {
     value <- NULL # Global var
     fold <- NULL # Global var
 
@@ -361,6 +379,7 @@ setMethod(
         landmarks[1],
         method,
         dynamic_covariates,
+        censor_at_horizon,
         validation_fold,
         ...
       )
@@ -369,6 +388,7 @@ setMethod(
         landmarks[-1],
         method,
         dynamic_covariates,
+        censor_at_horizon,
         validation_fold,
         ...
       )
