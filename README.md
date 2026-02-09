@@ -74,6 +74,12 @@ vignette("landmaRk")
 Alternatively, you can view the vignette
 [online](https://vallejosgroup.github.io/landmaRk/articles/landmaRk.html).
 
+## Contributing to landmaRk
+
+If you are interested in contributing to `landmaRk`, please read our
+[contributing
+guide](.github/CONTRIBUTING.md).
+
 ## References
 
 [^1]: Rizopoulos D, Molenberghs G, Lesaffre EMEH. Dynamic predictions with time-dependent covariates in survival analysis using joint modeling and landmarking. Biometrical Journal. 2017;59(6):1261-1276. doi: [10.1002/bimj.201600238](https://doi.org/10.1002/bimj.201600238)
