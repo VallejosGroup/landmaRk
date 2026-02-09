@@ -141,6 +141,9 @@ jobs:
           needs: website
           cache-version: 2
 
+      - name: Install package
+        run: R CMD INSTALL .
+
       - name: Deploy package
         if: github.event_name != 'pull_request'
         run: |
