@@ -29,6 +29,7 @@ Imports:
     methods,
     pec,
     riskRegression,
+    rlang,
     survival,
     lcmm (>= 2.2.2),
     doParallel,

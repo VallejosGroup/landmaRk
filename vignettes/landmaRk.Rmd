@@ -425,3 +425,4 @@ performance_metrics(
   h_times = c(3, 6, 12)
 )
 ```
+
