@@ -317,10 +317,10 @@ setMethod(
               nms <- names(mc)
               if (
                 !is.null(nms) &&
-                 (("include_clusters" %in%
-                  names(list(...)) &&
-                  list(...)$include_clusters) ||
-                  ("avg" %in% names(list(...)) && list(...)$avg))
+                  (("include_clusters" %in%
+                    names(list(...)) &&
+                    list(...)$include_clusters) ||
+                    ("avg" %in% names(list(...)) && list(...)$avg))
               ) {
                 newdata <- newdata |>
                   left_join(
@@ -338,10 +338,14 @@ setMethod(
                 x@longitudinal_fits[[as.character(landmarks)]][[
                   dynamic_covariate
                 ]],
-                newdata = newdata |> dplyr::left_join(
-                  x@data_dynamic[[dynamic_covariate]] |>
-                    dplyr::filter(get(x@times) <= landmarks) |>
-                    dplyr::slice_max(get(x@times), by = x@ids) |> select(-!!sym(x@times)), by = stats::setNames(x@ids, x@ids)),
+                newdata = newdata |>
+                  dplyr::left_join(
+                    x@data_dynamic[[dynamic_covariate]] |>
+                      dplyr::filter(get(x@times) <= landmarks) |>
+                      dplyr::slice_max(get(x@times), by = x@ids) |>
+                      select(-!!sym(x@times)),
+                    by = stats::setNames(x@ids, x@ids)
+                  ),
                 test = TRUE,
                 newdata_long = newdata |>
                   select(-any_of(x@times)) |>

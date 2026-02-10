@@ -161,7 +161,14 @@
         )
         colnames(survival_df)[ncol(survival_df) - 1] <- dynamic_covariate
       } else {
-        survival_df <- bind_cols(survival_df, matrix(predictions, ncol = 1, dimnames = list(rownames(survival_df), dynamic_covariate)))
+        survival_df <- bind_cols(
+          survival_df,
+          matrix(
+            predictions,
+            ncol = 1,
+            dimnames = list(rownames(survival_df), dynamic_covariate)
+          )
+        )
       }
     }
   }

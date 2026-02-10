@@ -29,17 +29,17 @@
   # In the
   if (!test) {
     return(lme4_predictions)
-  # Outwith the training set, lme4 predictions are marginal predictions
-  # We make BLUP predictions and add them to the marginal predictions
+    # Outwith the training set, lme4 predictions are marginal predictions
+    # We make BLUP predictions and add them to the marginal predictions
   } else {
     sigma2 <- sigma(x)^2
-    beta_hat <- fixef(x)
+    beta_hat <- lme4::fixef(x)
     X_newdata <- model.matrix(formula(x, fixed.only = TRUE), newdata)
     attributes(X_newdata)$assign <- NULL
     attributes(X_newdata)$contrasts <- NULL
 
     # Random-effect variance-covariance matrix
-    Sigma_b <- as.matrix(unclass(VarCorr(x)[[1]]))
+    Sigma_b <- as.matrix(unclass(lme4::VarCorr(x)[[1]]))
     attributes(Sigma_b)$correlation <- NULL
     attributes(Sigma_b)$stddev <- NULL
 
@@ -52,14 +52,15 @@
 
     b_hat <- matrix(0, nrow = nrow(newdata), ncol = ncol(Z_newdata))
     for (i in 1:nrow(newdata)) {
-      Z_i <- matrix(Z_newdata[i,], nrow = 1)
+      Z_i <- matrix(Z_newdata[i, ], nrow = 1)
       b_hat[i, ] <- solve(
-        crossprod(Z_i)/sigma2 + solve(Sigma_b),
-        (t(Z_i)/sigma2) %*% (newdata[i, as.character(formula(x, fixed.only = TRUE)[[2]])] - X_newdata[i, ] %*% beta_hat)
+        crossprod(Z_i) / sigma2 + solve(Sigma_b),
+        (t(Z_i) / sigma2) %*%
+          (newdata[i, as.character(formula(x, fixed.only = TRUE)[[2]])] -
+            X_newdata[i, ] %*% beta_hat)
       )
     }
 
     return(lme4_predictions + rowSums(Z_newdata * b_hat))
   }
 }
-
