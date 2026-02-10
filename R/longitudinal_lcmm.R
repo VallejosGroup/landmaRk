@@ -159,6 +159,19 @@
         length(in_train_set)
       ))
     }
+  } else {
+    predRE <- lcmm::predictRE(x, newdata, subject = subject, classpredRE = TRUE)
+
+    if (length(unique(predRE[, subject])) != nrow(newdata)) {
+      stop(sprintf(
+        paste(
+          "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
+          "Probable reason: static covariates contain missing data.\n"
+        ),
+        length(unique(predRE[, subject])),
+        nrow(newdata)
+      ))
+    }
   }
 
   # Step 1c. Find class-specific predictions for individuals in the training set.
@@ -193,11 +206,16 @@
 
   # Step 2b. Find class-specific predictions for individuals outwith the training set.
   if (length(not_in_train_set) > 0) {
-    predictions_step2 <- lcmm::predictY(
-      x,
-      newdata = newdata |>
-        filter(!(get(subject) %in% in_train_set))
-    )$pred
+    predictions_step2 <- t(sapply(
+      not_in_train_set,
+      function(individual) {
+        lcmm::predictY(
+          x,
+          newdata = newdata |> filter(get(subject) == individual),
+          predRE = predRE |> filter(get(subject) == individual)
+        )$pred
+      }
+    ))
     predictions_step2 <- as.data.frame(predictions_step2)
     predictions_step2[, subject] <- not_in_train_set
     predictions_step2 <- predictions_step2 |> relocate(subject)
