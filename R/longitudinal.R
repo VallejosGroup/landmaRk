@@ -171,8 +171,6 @@ setMethod(
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
-#' @param censor_at_horizon Boolean indicating whether to censor observations
-#'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed in the complete dataset.
 #' @param ... Additional arguments passed to the prediction function (e.g.
@@ -189,7 +187,6 @@ setGeneric(
     landmarks,
     method,
     dynamic_covariates,
-    censor_at_horizon = FALSE,
     validation_fold = 0,
     ...
   ) {
@@ -213,7 +210,6 @@ setMethod(
     landmarks,
     method,
     dynamic_covariates,
-    censor_at_horizon = FALSE,
     validation_fold = 0,
     ...
   ) {
@@ -315,11 +311,16 @@ setMethod(
                     select(x@ids),
                   by = x@ids
                 )
+              # Check optional arguments
+              mc <- match.call(expand.dots = FALSE)$...
+              # Vector nms contains
+              nms <- names(mc)
               if (
-                ("include_clusters" %in%
+                !is.null(nms) &&
+                 (("include_clusters" %in%
                   names(list(...)) &&
                   list(...)$include_clusters) ||
-                  ("avg" %in% names(list(...)) && list(...)$avg)
+                  ("avg" %in% names(list(...)) && list(...)$avg))
               ) {
                 newdata <- newdata |>
                   left_join(
@@ -337,7 +338,10 @@ setMethod(
                 x@longitudinal_fits[[as.character(landmarks)]][[
                   dynamic_covariate
                 ]],
-                newdata = newdata,
+                newdata = newdata |> dplyr::left_join(
+                  x@data_dynamic[[dynamic_covariate]] |>
+                    dplyr::filter(get(x@times) <= landmarks) |>
+                    dplyr::slice_max(get(x@times), by = x@ids) |> select(-!!sym(x@times)), by = stats::setNames(x@ids, x@ids)),
                 test = TRUE,
                 newdata_long = newdata |>
                   select(-any_of(x@times)) |>
@@ -379,7 +383,6 @@ setMethod(
         landmarks[1],
         method,
         dynamic_covariates,
-        censor_at_horizon,
         validation_fold,
         ...
       )
@@ -388,7 +391,6 @@ setMethod(
         landmarks[-1],
         method,
         dynamic_covariates,
-        censor_at_horizon,
         validation_fold,
         ...
       )

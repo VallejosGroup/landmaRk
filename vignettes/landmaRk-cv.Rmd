@@ -115,7 +115,6 @@ landmarking_object <- landmarking_object |>
     method = "lme4",
     dynamic_covariates = c("CD4"),
     validation_fold = 5,
-    allow.new.levels = TRUE
   ) |>
   fit_survival(
     formula = Surv(event_time, event_status) ~ drug,

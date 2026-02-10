@@ -31,7 +31,7 @@
   if (is(method)[1] == "character" && method == "lcmm") {
     method <- .predict_lcmm
   } else if (is(method)[1] == "character" && method == "lme4") {
-    method <- predict
+    method <- .predict_lme4
   } else if (is(method)[1] == "character" && method == "locf") {
     method <- "locf"
   } else if (!(is(method)[1] == "function")) {
