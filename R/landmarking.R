@@ -109,7 +109,7 @@ setValidity("LandmarkAnalysis", function(object) {
     )
   }
   if (length(error_str) == 0) {
-    return(TRUE)
+    TRUE
   } else {
     .eval_error_str(error_str)
   }
@@ -434,13 +434,15 @@ setGeneric(
 #'
 #' @details
 #' A risk set describes all subjects still at risk (i.e., not experienced the
-#' event of interest or censored) at a given time. In \code{\link{LandmarkAnalysis}}, risk sets
-#' define which subjects should be included in the longitudinal and survival
+#' event of interest or censored) at a given time. In
+#' \code{\link{LandmarkAnalysis}}, risk sets define which subjects should be
+#' included in the longitudinal and survival
 #' sub-models for each landmark time.
 #'
-#' The risk sets are stored in the \code{risk_sets} slot of the \code{\link{LandmarkAnalysis}}
-#' object, where each risk set is a list of indices corresponding to the
-#' subjects at risk at the respective landmark time.
+#' The risk sets are stored in the \code{risk_sets} slot of the
+#' \code{\link{LandmarkAnalysis}} object, where each risk set is a list of
+#' indices corresponding to the subjects at risk at the respective landmark
+#' time.
 #'
 #' @examples
 setMethod(
@@ -471,7 +473,8 @@ setMethod(
             group_by(get(x@ids)) |>
             # Work out number of observations per individual
             summarise(n = n()) |>
-            # Select individuals with less than @.warn_when_less_than observations
+            # Select individuals with less than @.warn_when_less_than
+            # observations
             filter(n < .warn_when_less_than) |>
             # Extract vector with individual ids
             pull(`get(x@ids)`)

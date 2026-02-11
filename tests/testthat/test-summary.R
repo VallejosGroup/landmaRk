@@ -78,7 +78,10 @@ test_that("Summary method works", {
       landmark = 365.25,
       dynamic_covariate = "dos"
     ),
-    "No longitudinal submodel has been fitted for dynamic covariate dos to landmark time 365.25"
+    paste(
+      "No longitudinal submodel has been fitted for dynamic covariate",
+      "dos to landmark time 365.25"
+    )
   )
 
   expect_error(

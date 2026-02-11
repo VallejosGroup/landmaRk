@@ -99,7 +99,6 @@ setMethod(
     for (i in seq_along(landmarks)) {
       landmark <- landmarks[i]
       horizon <- horizons[i]
-      at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
 
       # Retrieve survival analysis dataset (censor events past horizon time)
       dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
@@ -221,6 +220,6 @@ setMethod(
       }
       scores <- cbind(scores, auct_matrix)
     }
-    return(scores)
+    scores
   }
 )

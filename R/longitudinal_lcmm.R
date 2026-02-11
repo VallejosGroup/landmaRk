@@ -141,67 +141,14 @@
 ) {
   hlme <- NULL
   # Step 1. we make predictions for individuals in the training set.
-
-  # Step 1a. We estimate the random effects for individuals in the training set
-  x$call[[1]] <- expr(hlme)
-  # Step 1b. Find ids of individuals in the training set
-  in_train_set <- unique(x$data[, subject])
-  if (!test) {
-    predRE <- lcmm::predictRE(x, x$data, subject = subject, classpredRE = TRUE)
-
-    if (length(unique(predRE[, subject])) != length(in_train_set)) {
-      stop(sprintf(
-        paste(
-          "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
-          "Probable reason: static covariates contain missing data.\n"
-        ),
-        length(unique(predRE[, subject])),
-        length(in_train_set)
-      ))
-    }
-  }
-
-  # Step 1c. Find class-specific predictions for individuals in the training set.
-  if (!test) {
-    predictions_step1 <- t(sapply(
-      in_train_set,
-      function(individual) {
-        lcmm::predictY(
-          x,
-          newdata = newdata |> filter(get(subject) == individual),
-          predRE = predRE |> filter(get(subject) == individual)
-        )$pred
-      }
-    ))
-
-    predictions_step1 <- as.data.frame(predictions_step1)
-    predictions_step1[, subject] <- in_train_set
-    predictions_step1 <- predictions_step1 |> relocate(subject)
-    colnames(predictions_step1) <- c(
-      subject,
-      paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
-    )
-  }
+  step1 <- .pred_train(x, hlme, subject, newdata, test)
+  predictions_step1 <- step1[[1]]
+  in_train_set <- step1[[2]]
 
   # Step 2. we make predictions for individuals outwith the training set.
-
-  # Step 2a. Find ids of individuals outwith the training set
-  not_in_train_set <- setdiff(
-    unique(newdata[, subject]),
-    in_train_set
-  )
-
-  # Step 2b. Find class-specific predictions for individuals outwith the training set.
-  if (length(not_in_train_set) > 0) {
-    predictions_step2 <- lcmm::predictY(
-      x,
-      newdata = newdata |>
-        filter(!(get(subject) %in% in_train_set))
-    )$pred
-    predictions_step2 <- as.data.frame(predictions_step2)
-    predictions_step2[, subject] <- not_in_train_set
-    predictions_step2 <- predictions_step2 |> relocate(subject)
-  }
+  step2 <- .pred_test(x, subject, newdata, in_train_set)
+  predictions_step2 <- step2[[1]]
+  not_in_train_set <- step2[[2]]
 
   # pprob contains probabilities for subjects belonging to each certain cluster,
   # However posterior probabilities are unavailable for  individuals not

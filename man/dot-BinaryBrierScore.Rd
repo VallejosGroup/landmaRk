@@ -9,7 +9,8 @@
 \arguments{
 \item{predictions}{Numeric vector of model predictions.}
 
-\item{time}{Numeric vector describing the time to the event of interest or censoring.}
+\item{time}{Numeric vector describing the time to the event of interest or
+censoring.}
 
 \item{status}{Vector of censoring status.}
 

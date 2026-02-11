@@ -17,7 +17,8 @@
 \arguments{
 \item{predictions}{Numeric vector of model predictions.}
 
-\item{time}{Numeric vector describing the time to the event of interest or censoring.}
+\item{time}{Numeric vector describing the time to the event of interest or
+censoring.}
 
 \item{cens.code}{Value used to denote censoring in \code{status}. Defaults to
 0.}
@@ -36,7 +37,8 @@ Concordance index value.
 }
 \description{
 Assess discriminative performance of predictions obtained from a conventional
-or competing risks time-to-event model using time-dependent concordance index.
+or competing risks time-to-event model using time-dependent concordance
+index.
 }
 \details{
 Uses the proportion of correctly ordered risk pairs for the event
@@ -57,9 +59,10 @@ Q == the risk ordering of the subjects, i.e., is subject i assigned a higher
 risk by the model than the subject j, for event \eqn{E_k} until time \eqn{t}.
 \eqn{Q[i,j] = 0} for tied predictions.
 
-N_t == number of subjects with survival time < time point and experience event of interest
-Tied event times are included
+\eqn{N_t} == number of subjects with survival time < time point and
+experience event of interest. Tied event times are included
 }
 \references{
-Ahuja K, Schaar M van der. Joint Concordance Index. Published online August 17, 2019. \doi{10.48550/arXiv.1810.11207}
+Ahuja K, Schaar M van der. Joint Concordance Index. Published
+online August 17, 2019. \doi{10.48550/arXiv.1810.11207}
 }

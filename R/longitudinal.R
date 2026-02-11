@@ -219,7 +219,6 @@ setMethod(
   ) {
     value <- NULL # Global var
     fold <- NULL # Global var
-
     method <- .check_method_long_predict(method)
 
     # Base case for recursion
@@ -355,7 +354,8 @@ setMethod(
           predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
           ]]
-          # Number of predictions (length if stored in vector or number of rows if stored in matrix)
+          # Number of predictions (length if stored in vector or number of rows
+          # if stored in matrix)
           npred <- ifelse(
             is.null(dim(predictions)),
             length(predictions),
