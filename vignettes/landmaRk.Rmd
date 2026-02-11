@@ -382,7 +382,6 @@ landmarking_object <- landmarking_object |>
   predict_longitudinal(
     landmarks = c(6, 8),
     method = "lcmm",
-    subject = "patient",
     avg = TRUE,
     include_clusters = FALSE,
     var.time = "obstime",

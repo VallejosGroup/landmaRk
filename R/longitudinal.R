@@ -300,6 +300,7 @@ setMethod(
                 dynamic_covariate
               ]],
               newdata = newdata_train,
+              subject = x@ids,
               ...
             )
 
@@ -346,6 +347,7 @@ setMethod(
                       select(-!!sym(x@times)),
                     by = stats::setNames(x@ids, x@ids)
                   ),
+                subject = x@ids,
                 test = TRUE,
                 newdata_long = newdata |>
                   select(-any_of(x@times)) |>

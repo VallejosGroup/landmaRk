@@ -160,7 +160,7 @@
       ))
     }
   } else {
-    predRE <- lcmm::predictRE(x, newdata, subject = subject, classpredRE = TRUE)
+    predRE <- lcmm::predictRE(x, newdata_long, subject = subject, classpredRE = TRUE)
 
     if (length(unique(predRE[, subject])) != nrow(newdata)) {
       stop(sprintf(
