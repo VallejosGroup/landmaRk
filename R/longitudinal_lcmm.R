@@ -211,16 +211,28 @@
 
   # Step 2b. Find class-specific predictions for individuals outwith the training set.
   if (length(not_in_train_set) > 0) {
-    predictions_step2 <- t(sapply(
-      not_in_train_set,
-      function(individual) {
-        lcmm::predictY(
-          x,
-          newdata = newdata |> filter(get(subject) == individual),
-          predRE = predRE |> filter(get(subject) == individual)
-        )$pred
-      }
-    ))
+    if (test) {
+      predictions_step2 <- t(sapply(
+        not_in_train_set,
+        function(individual) {
+          lcmm::predictY(
+            x,
+            newdata = newdata |> filter(get(subject) == individual),
+            predRE = predRE |> filter(get(subject) == individual)
+          )$pred
+        }
+      ))
+    } else {
+      predictions_step2 <- t(sapply(
+        not_in_train_set,
+        function(individual) {
+          lcmm::predictY(
+            x,
+            newdata = newdata |> filter(get(subject) == individual)
+          )$pred
+        }
+      ))
+    }
     predictions_step2 <- as.data.frame(predictions_step2)
     predictions_step2[, subject] <- not_in_train_set
     predictions_step2 <- predictions_step2 |> relocate(subject)
@@ -277,6 +289,7 @@
       predictions <- predictions_step2 |>
         arrange(get(subject))
     } else {
+      colnames(predictions_step2) <- colnames(predictions_step1)
       predictions <- rbind(
         predictions_step1,
         predictions_step2
