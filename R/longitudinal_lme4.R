@@ -67,7 +67,8 @@
 
     b_hat <- solve(crossprod(Z_newdata) / sigma2 + solve(Sigma_b)) %*%
       (Matrix::t(Z_newdata) / sigma2) %*%
-      (newdata_long[, as.character(formula(x, fixed.only = TRUE)[[2]])] - as.vector(X_newdata %*% beta_hat))
+      (newdata_long[, as.character(formula(x, fixed.only = TRUE)[[2]])] -
+        as.vector(X_newdata %*% beta_hat))
 
     Z_block <- model.matrix(
       reformulate(deparse(re_terms[[2]])),
