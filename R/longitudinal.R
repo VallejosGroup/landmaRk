@@ -17,6 +17,10 @@
 #' @param formula A formula to be used in longitudinal sub-model fitting.
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
+#' @param censor_at_landmark Boolean indicating whether to fit a single longitudinal
+#'   model to the complete dataset (FALSE) or to censor observations
+#'   at the landmark time prior to fitting the longitudinal model, iterating
+#'   through landmark times (TRUE; default)
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed using the complete
 #'   dataset.
@@ -38,6 +42,7 @@ setGeneric(
     method,
     formula,
     dynamic_covariates,
+    censor_at_landmark = TRUE,
     validation_fold = 0,
     cores = getOption("Ncpus", 1L),
     ...
@@ -72,6 +77,7 @@ setMethod(
     method,
     formula,
     dynamic_covariates,
+    censor_at_landmark = TRUE,
     validation_fold = 0,
     cores = getOption("Ncpus", 1L),
     ...
@@ -100,6 +106,7 @@ setMethod(
           x,
           dynamic_covariate,
           at_risk_individuals,
+          censor_at_landmark,
           landmark
         ) |>
           inner_join(

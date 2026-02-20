@@ -11,6 +11,7 @@ fit_longitudinal(
   method,
   formula,
   dynamic_covariates,
+  censor_at_landmark = TRUE,
   validation_fold = 0,
   cores = getOption("Ncpus", 1L),
   ...
@@ -29,6 +30,11 @@ has a \code{data} argument.}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.}
+
+\item{censor_at_landmark}{Boolean indicating whether to fit a single longitudinal
+model to the complete dataset (FALSE) or to censor observations
+at the landmark time prior to fitting the longitudinal model, iterating
+through landmark times (TRUE; default)}
 
 \item{validation_fold}{If positive, cross-validation fold where model is
 fitted. If 0 (default), model fitting is performed using the complete

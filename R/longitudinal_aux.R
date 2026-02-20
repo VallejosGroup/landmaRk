@@ -83,15 +83,17 @@
   x,
   dynamic_covariate,
   at_risk_individuals,
+  censor_at_landmark,
   landmark
 ) {
+  browser()
   at_risk_individuals <- data.frame(at_risk_individuals)
   colnames(at_risk_individuals) <- x@ids
   if (inherits(x@data_dynamic[[dynamic_covariate]], "tbl_df")) {
     at_risk_individuals <- dplyr::as_tibble(at_risk_individuals)
   }
 
-  at_risk_individuals |>
+  result_df <- at_risk_individuals |>
     # Subset with individuals who are at risk only
     left_join(
       x@data_dynamic[[dynamic_covariate]],
@@ -101,6 +103,12 @@
     dplyr::filter(get(x@times) <= landmark) |>
     # Join with static covariates
     dplyr::left_join(x@data_static, by = x@ids)
+
+  if (censor_at_landmark) {
+    result_df <- result_df |>
+      dplyr::filter(get(x@times) <= landmark)
+  }
+  return(result_df)
 }
 
 # Initialize a cluster for parallel processing based on the operating system
