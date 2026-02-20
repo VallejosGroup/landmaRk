@@ -86,7 +86,6 @@
   censor_at_landmark,
   landmark
 ) {
-  browser()
   at_risk_individuals <- data.frame(at_risk_individuals)
   colnames(at_risk_individuals) <- x@ids
   if (inherits(x@data_dynamic[[dynamic_covariate]], "tbl_df")) {
