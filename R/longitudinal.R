@@ -147,6 +147,7 @@ setMethod(
             x,
             dynamic_covariate,
             at_risk_individuals,
+            censor_at_landmark,
             landmark
           ) |>
             inner_join(
