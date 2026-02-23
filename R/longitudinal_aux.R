@@ -86,11 +86,17 @@
   censor_at_landmark,
   landmark
 ) {
-  at_risk_individuals <- data.frame(at_risk_individuals)
-  colnames(at_risk_individuals) <- x@ids
-  if (inherits(x@data_dynamic[[dynamic_covariate]], "tbl_df")) {
-    at_risk_individuals <- dplyr::as_tibble(at_risk_individuals)
+  if (censor_at_landmark) {
+    at_risk_individuals <- data.frame(at_risk_individuals)
+    colnames(at_risk_individuals) <- x@ids
+    if (inherits(x@data_dynamic[[dynamic_covariate]], "tbl_df")) {
+      at_risk_individuals <- dplyr::as_tibble(at_risk_individuals)
+    }
+  } else {
+    at_risk_individuals <- data.frame(x@data_static[, x@ids])
+    colnames(at_risk_individuals) <- x@ids
   }
+
 
   result_df <- at_risk_individuals |>
     # Subset with individuals who are at risk only
@@ -98,12 +104,11 @@
       x@data_dynamic[[dynamic_covariate]],
       by = stats::setNames(x@ids, x@ids)
     ) |>
-    # Subset with observations prior to landmark time
-    dplyr::filter(get(x@times) <= landmark) |>
     # Join with static covariates
     dplyr::left_join(x@data_static, by = x@ids)
 
   if (censor_at_landmark) {
+    # Subset with observations prior to landmark time
     result_df <- result_df |>
       dplyr::filter(get(x@times) <= landmark)
   }
