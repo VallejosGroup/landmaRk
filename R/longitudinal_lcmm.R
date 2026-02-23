@@ -145,9 +145,9 @@
   # Step 1a. We estimate the random effects for individuals in the training set
   x$call[[1]] <- expr(hlme)
   # Step 1b. Find ids of individuals in the training set
-  in_train_set <- unique(x$data[, subject])
+  in_train_set <- intersect(unique(newdata[, subject]), unique(x$data[, subject]))
   if (!test) {
-    predRE <- lcmm::predictRE(x, x$data, subject = subject, classpredRE = TRUE)
+    predRE <- lcmm::predictRE(x, x$data |> filter(get(subject) %in% in_train_set), subject = subject, classpredRE = TRUE)
 
     if (length(unique(predRE[, subject])) != length(in_train_set)) {
       stop(sprintf(
@@ -243,7 +243,7 @@
   # included in the model fitting.
   # We augment pprob using the sample average for individuals not used in
   # model fitting.
-  pprob <- x$pprob
+  pprob <- x$pprob |> filter(get(subject) %in% intersect(unique(newdata[, subject]), unique(x$data[, subject])))
   # Find the largest cluster
   mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
   # If there are individuals in newdata that had not been used in model fitting,
