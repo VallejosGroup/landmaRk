@@ -403,10 +403,10 @@ summary(landmarking_object, type = "longitudinal", landmark = 6, dynamic_covaria
 #>    Data: dataframe
 #> REML criterion at convergence: 5308.102
 #> Random effects:
-#>  Groups   Name        Std.Dev. Corr
-#>  patient  (Intercept) 3.9911       
-#>           obstime     0.2094   0.00
-#>  Residual             1.6903       
+#>  Groups   Name        Std.Dev. Corr 
+#>  patient  (Intercept) 3.9911        
+#>           obstime     0.2094   0.00 
+#>  Residual             1.6903        
 #> Number of obs: 1060, groups:  patient, 404
 #> Fixed Effects:
 #> (Intercept)   prevOIAIDS      obstime  
