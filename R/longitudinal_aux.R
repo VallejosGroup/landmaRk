@@ -83,10 +83,9 @@
   x,
   dynamic_covariate,
   at_risk_individuals,
-  censor_at_landmark,
   landmark
 ) {
-  if (censor_at_landmark) {
+  if (x@censor_at_landmark) {
     at_risk_individuals <- data.frame(at_risk_individuals)
     colnames(at_risk_individuals) <- x@ids
     if (inherits(x@data_dynamic[[dynamic_covariate]], "tbl_df")) {
@@ -107,7 +106,7 @@
     # Join with static covariates
     dplyr::left_join(x@data_static, by = x@ids)
 
-  if (censor_at_landmark) {
+  if (x@censor_at_landmark) {
     # Subset with observations prior to landmark time
     result_df <- result_df |>
       dplyr::filter(get(x@times) <= landmark)
@@ -156,4 +155,49 @@
     }
   }
   predictions
+}
+
+.fit_longitudinal_model <- function(
+    x,
+    landmark,
+    method,
+    formula,
+    dynamic_covariates,
+    validation_fold = 0,
+    ...
+) {
+  fold <- NULL
+  .check_riskset(x, landmark)
+  # Create list for storing model fits for longitudinal analysis
+  model_fits <- list()
+
+  # Risk set for the landmark time
+  at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
+  # Loop that iterates over all time-varying covariates to fit a
+  # longitudinal model for the underlying trajectories
+  for (dynamic_covariate in dynamic_covariates) {
+    .check_dynamic_covariate(x, dynamic_covariate)
+    # Construct dataset for the longitudinal analysis
+    # (static measurements+time-varying covariate and its recording time)
+    dataframe <- .construct_data(
+      x,
+      dynamic_covariate,
+      at_risk_individuals,
+      landmark
+    ) |>
+      inner_join(
+        x@cv_folds |> filter(fold != validation_fold) |> select(x@ids),
+        by = x@ids
+      )
+
+    # Fit longitudinal model according to chosen method
+    model_fits[[
+      dynamic_covariate
+    ]] <- method(
+      formula,
+      data = dataframe,
+      ...
+    )
+  }
+  model_fits
 }
