@@ -41,6 +41,7 @@
       newdata = newdata,
       allow.new.levels = TRUE
     )
+    subject_levels <- sort(unique(newdata_long[, subject]))
     sigma2 <- sigma(x)^2
     beta_hat <- lme4::fixef(x)
     X_newdata <- model.matrix(formula(x, fixed.only = TRUE), newdata_long)
@@ -51,7 +52,7 @@
     Sigma_b <- as.matrix(unclass(lme4::VarCorr(x)[[1]]))
     attributes(Sigma_b)$correlation <- NULL
     attributes(Sigma_b)$stddev <- NULL
-    Sigma_b <- kronecker(Matrix::Diagonal(nrow(newdata)), Sigma_b)
+    Sigma_b <- kronecker(Matrix::Diagonal(length(subject_levels)), Sigma_b)
 
     # Random-effect design matrix
     re_terms <- lme4::findbars(formula(x))[[1]]
@@ -60,7 +61,7 @@
       newdata_long
     )
 
-    patient_index <- as.integer(factor(newdata_long[, subject]))
+    patient_index <- as.integer(factor(newdata_long[, subject], levels = subject_levels))
     blocks <- split(as.data.frame(Z_block), patient_index)
     block_matrices <- lapply(blocks, as.matrix)
     Z_newdata <- Matrix::bdiag(block_matrices)
@@ -70,11 +71,15 @@
       (newdata_long[, as.character(formula(x, fixed.only = TRUE)[[2]])] -
         as.vector(X_newdata %*% beta_hat))
 
+
     Z_block <- model.matrix(
       reformulate(deparse(re_terms[[2]])),
       newdata
     )
     b_hat <- matrix(as.vector(b_hat), ncol = ncol(Z_block), byrow = TRUE)
-    return(lme4_predictions + rowSums(Z_block * b_hat))
+    re_contribution <- matrix(0, nrow = nrow(newdata), ncol = ncol(Z_block))
+    present_idx <- match(subject_levels, newdata[, subject])
+    re_contribution[present_idx, ] <- b_hat
+    return(lme4_predictions + rowSums(Z_block * re_contribution))
   }
 }
