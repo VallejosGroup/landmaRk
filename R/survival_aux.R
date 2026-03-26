@@ -162,11 +162,13 @@
         colnames(survival_df)[ncol(survival_df) - 1] <- dynamic_covariate
       } else {
         if (is.data.frame(predictions)) {
-        survival_df <- bind_cols(
-          survival_df,
-          predictions
-        )
-        colnames(survival_df)[c((ncol(survival_df)-1):ncol(survival_df))] <- c(dynamic_covariate, paste0("cluster_", dynamic_covariate))
+          survival_df <- bind_cols(
+            survival_df,
+            predictions
+          )
+          colnames(survival_df)[c(
+            (ncol(survival_df) - 1):ncol(survival_df)
+          )] <- c(dynamic_covariate, paste0("cluster_", dynamic_covariate))
         } else {
           survival_df <- bind_cols(
             survival_df,

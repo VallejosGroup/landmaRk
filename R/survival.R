@@ -143,9 +143,14 @@ setMethod(
               paste(
                 as.character(formula)[2],
                 as.character(formula)[1],
-                paste(as.character(formula)[3], "+", paste0("cluster_", dynamic_covariate))
+                paste(
+                  as.character(formula)[3],
+                  "+",
+                  paste0("cluster_", dynamic_covariate)
+                )
                 # paste(as.character(formula)[3], "+", paste0("strata(cluster_", dynamic_covariate, ")"))
-              ))
+              )
+            )
           }
         }
       }
@@ -288,7 +293,6 @@ setMethod(
           "\n"
         )
       }
-
 
       x@survival_predictions[[model_name]] <- survival::survfit(
         x@survival_fits[[model_name]],

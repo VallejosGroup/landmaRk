@@ -117,20 +117,22 @@ setMethod(
         )]]
       }
       if (train) {
-        sf   <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
+        sf <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
       } else {
-        sf   <- x@survival_predictions_test[[paste0(landmark, "-", horizon)]]
+        sf <- x@survival_predictions_test[[paste0(landmark, "-", horizon)]]
       }
       if (length(h_times) == 0) {
         sfit <- summary(sf, times = horizon - landmark)
-        n_ind    <- nrow(dataset)
-        n_t      <- 1
-        pred_matrix <- 1- matrix(sfit$surv, nrow = n_ind, ncol = n_t, byrow = TRUE)
+        n_ind <- nrow(dataset)
+        n_t <- 1
+        pred_matrix <- 1 -
+          matrix(sfit$surv, nrow = n_ind, ncol = n_t, byrow = TRUE)
       } else {
         sfit <- summary(sf, times = h_times)
-        n_ind    <- nrow(dataset)
-        n_t      <- length(h_times)
-        pred_matrix <- 1- matrix(sfit$surv, nrow = n_ind, ncol = n_t, byrow = TRUE)
+        n_ind <- nrow(dataset)
+        n_t <- length(h_times)
+        pred_matrix <- 1 -
+          matrix(sfit$surv, nrow = n_ind, ncol = n_t, byrow = TRUE)
       }
       if (sum(dataset$event_status) == 0) {
         stop("No events in the evaluation set")
@@ -151,19 +153,23 @@ setMethod(
             filter(model != "Null model") |>
             pull(Brier)
         } else {
-          brier_list[[paste0(landmark, "-", horizon)]] <- sapply(seq_along(h_times), function(j) {riskRegression::Score(
-            # object = list(x@survival_predictions_test[[paste0(landmark, "-", horizon)]]),
-            object = list("model" = pred_matrix[, j, drop = FALSE]),
-            formula = Surv(event_time, event_status) ~ 1,
-            data = dataset,
-            cause = 1,
-            times = h_times[j],
-            cens.method = "ipcw",
-            cens.model = "km"
-          )$Brier$score |>
-            filter(model != "Null model") |>
-            pull(Brier)
-          })
+          brier_list[[paste0(landmark, "-", horizon)]] <- sapply(
+            seq_along(h_times),
+            function(j) {
+              riskRegression::Score(
+                # object = list(x@survival_predictions_test[[paste0(landmark, "-", horizon)]]),
+                object = list("model" = pred_matrix[, j, drop = FALSE]),
+                formula = Surv(event_time, event_status) ~ 1,
+                data = dataset,
+                cause = 1,
+                times = h_times[j],
+                cens.method = "ipcw",
+                cens.model = "km"
+              )$Brier$score |>
+                filter(model != "Null model") |>
+                pull(Brier)
+            }
+          )
 
           names(brier_list[[paste0(landmark, "-", horizon)]]) <- paste0(
             "Brier(",
@@ -204,15 +210,20 @@ setMethod(
             )$AUC[2]
           )
         } else {
-          auct_list[[paste0(landmark, "-", horizon)]] <- sapply(seq_along(h_times), function(j) {unname(
-            timeROC::timeROC(
-              T = dataset[, "event_time"],
-              delta = dataset[, "event_status"],
-              marker = pred_matrix[, j],
-              cause = 1,
-              times = h_times[j]
-            )$AUC[paste0("t=",h_times[j])]
-          )})
+          auct_list[[paste0(landmark, "-", horizon)]] <- sapply(
+            seq_along(h_times),
+            function(j) {
+              unname(
+                timeROC::timeROC(
+                  T = dataset[, "event_time"],
+                  delta = dataset[, "event_status"],
+                  marker = pred_matrix[, j],
+                  cause = 1,
+                  times = h_times[j]
+                )$AUC[paste0("t=", h_times[j])]
+              )
+            }
+          )
           names(auct_list[[paste0(landmark, "-", horizon)]]) <- paste0(
             "AUC(",
             h_times,

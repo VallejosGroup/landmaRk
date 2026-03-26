@@ -61,7 +61,10 @@
       newdata_long
     )
 
-    patient_index <- as.integer(factor(newdata_long[, subject], levels = subject_levels))
+    patient_index <- as.integer(factor(
+      newdata_long[, subject],
+      levels = subject_levels
+    ))
     blocks <- split(as.data.frame(Z_block), patient_index)
     block_matrices <- lapply(blocks, as.matrix)
     Z_newdata <- Matrix::bdiag(block_matrices)
@@ -70,7 +73,6 @@
       (Matrix::t(Z_newdata) / sigma2) %*%
       (newdata_long[, as.character(formula(x, fixed.only = TRUE)[[2]])] -
         as.vector(X_newdata %*% beta_hat))
-
 
     Z_block <- model.matrix(
       reformulate(deparse(re_terms[[2]])),

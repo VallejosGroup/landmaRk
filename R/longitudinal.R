@@ -133,7 +133,9 @@ setMethod(
         ...
       )
 
-      x@longitudinal_fits <- lapply(as.character(landmarks), function(i) {longitudinal_fits})
+      x@longitudinal_fits <- lapply(as.character(landmarks), function(i) {
+        longitudinal_fits
+      })
     } else {
       x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
         {
@@ -146,9 +148,9 @@ setMethod(
             validation_fold,
             ...
           )
-       }
-  }
-            names(x@longitudinal_fits) <- landmarks
+        }
+    }
+    names(x@longitudinal_fits) <- landmarks
     x
   }
 )

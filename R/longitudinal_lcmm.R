@@ -152,9 +152,17 @@
   # Step 1a. We estimate the random effects for individuals in the training set
   x$call[[1]] <- expr(hlme)
   # Step 1b. Find ids of individuals in the training set
-  in_train_set <- intersect(unique(newdata[, subject]), unique(x$data[, subject]))
+  in_train_set <- intersect(
+    unique(newdata[, subject]),
+    unique(x$data[, subject])
+  )
   if (!test) {
-    predRE <- lcmm::predictRE(x, x$data |> filter(get(subject) %in% in_train_set), subject = subject, classpredRE = TRUE)
+    predRE <- lcmm::predictRE(
+      x,
+      x$data |> filter(get(subject) %in% in_train_set),
+      subject = subject,
+      classpredRE = TRUE
+    )
 
     if (length(unique(predRE[, subject])) != length(in_train_set)) {
       stop(sprintf(
@@ -174,7 +182,10 @@
       classpredRE = TRUE
     )
 
-    subjects_no_obs <- setdiff(newdata[, subject], unique(newdata_long[, subject]))
+    subjects_no_obs <- setdiff(
+      newdata[, subject],
+      unique(newdata_long[, subject])
+    )
     if (length(subjects_no_obs) > 0) {
       re_cols <- setdiff(colnames(predRE), c(subject, "class"))
       predRE_default <- expand.grid(
@@ -272,10 +283,16 @@
   # included in the model fitting.
   # We augment pprob using the sample average for individuals not used in
   # model fitting.
-  pprob <- x$pprob |> filter(get(subject) %in% intersect(unique(newdata[, subject]), unique(x$data[, subject])))
+  pprob <- x$pprob |>
+    filter(
+      get(subject) %in%
+        intersect(unique(newdata[, subject]), unique(x$data[, subject]))
+    )
   # Find the largest cluster
   mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
-  if (length(mode_cluster) == 0) mode_cluster <- 1L
+  if (length(mode_cluster) == 0) {
+    mode_cluster <- 1L
+  }
 
   # If there are individuals in newdata that had not been used in model fitting,
   # we augment pprob imputing the sample average in those individuals
@@ -368,7 +385,9 @@
         )
         colnames(class_predictions_default) <- colnames(class_predictions)
         class_predictions <- rbind(class_predictions, class_predictions_default)
-        class_predictions <- class_predictions[match(newdata[, subject], class_predictions[, subject]), ]
+        class_predictions <- class_predictions[
+          match(newdata[, subject], class_predictions[, subject]),
+        ]
       }
       predictions <- rowSums(class_predictions[, -c(1, 2)] * predictions[, -1])
       names(predictions) <- NULL

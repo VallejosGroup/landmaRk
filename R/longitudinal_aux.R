@@ -96,7 +96,6 @@
     colnames(at_risk_individuals) <- x@ids
   }
 
-
   result_df <- at_risk_individuals |>
     # Subset with individuals who are at risk only
     left_join(
@@ -158,13 +157,13 @@
 }
 
 .fit_longitudinal_model <- function(
-    x,
-    landmark,
-    method,
-    formula,
-    dynamic_covariates,
-    validation_fold = 0,
-    ...
+  x,
+  landmark,
+  method,
+  formula,
+  dynamic_covariates,
+  validation_fold = 0,
+  ...
 ) {
   fold <- NULL
   .check_riskset(x, landmark)
