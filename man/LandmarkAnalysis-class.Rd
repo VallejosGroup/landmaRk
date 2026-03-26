@@ -27,6 +27,11 @@ values, measurement times and measurement name.}
 \item{\code{measurements}}{Name of the column indicating measurement values in
 \code{data_dynamic}.}
 
+\item{\code{censor_at_landmark}}{Boolean indicating whether to fit a single longitudinal
+model to the complete dataset (FALSE) or to censor observations
+at the landmark time prior to fitting the longitudinal model, iterating
+through landmark times (TRUE; default)}
+
 \item{\code{event_time}}{Name of the column indicating time of the event/censoring.}
 
 \item{\code{risk_sets}}{List of indices.}
