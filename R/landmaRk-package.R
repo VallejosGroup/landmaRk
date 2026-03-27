@@ -3,10 +3,11 @@
 #' @import dplyr
 #' @importFrom foreach `%dopar%`
 #' @importFrom methods new is show
+#' @importFrom prodlim Hist
 #' @importFrom stats as.formula formula reformulate sigma predict model.matrix
+#' @importFrom survival Surv
 #' @importFrom utils capture.output
 #' @importFrom utils head
-#' @importFrom prodlim Hist
 ## usethis namespace: end
 #' @docType package
 #' @name landmaRk
