@@ -12,6 +12,7 @@ LandmarkAnalysis(
   event_time,
   times,
   measurements,
+  censor_at_landmark = TRUE,
   K = 1
 )
 }
@@ -32,6 +33,11 @@ values, measurement times and measurement name.}
 
 \item{measurements}{Name of the column indicating measurement values in
 \code{data_dynamic}.}
+
+\item{censor_at_landmark}{Boolean indicating whether to fit a single longitudinal
+model to the complete dataset (FALSE) or to censor observations
+at the landmark time prior to fitting the longitudinal model, iterating
+through landmark times (TRUE; default)}
 
 \item{K}{Number of cross-validation folds (by default, 1).}
 }

@@ -106,7 +106,7 @@ setMethod(
             x@cv_folds |> filter(fold != validation_fold) |> select(x@ids),
             by = x@ids
           )
-        prop_individuals_few_obs <- sum(table(dataframe$id) <= 1) /
+        prop_individuals_few_obs <- sum(table(dataframe[, x@ids]) <= 1) /
           length(at_risk_individuals)
         if (prop_individuals_few_obs >= 0.25) {
           warning(
@@ -122,42 +122,34 @@ setMethod(
       }
     }
 
-    x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
-      {
-        .check_riskset(x, landmark)
-        # Create list for storing model fits for longitudinal analysis
-        model_fits <- list()
+    if (!x@censor_at_landmark) {
+      longitudinal_fits <- .fit_longitudinal_model(
+        x,
+        landmarks[1],
+        method,
+        formula,
+        dynamic_covariates,
+        validation_fold,
+        ...
+      )
 
-        # Risk set for the landmark time
-        at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
-        # Loop that iterates over all time-varying covariates to fit a
-        # longitudinal model for the underlying trajectories
-        for (dynamic_covariate in dynamic_covariates) {
-          .check_dynamic_covariate(x, dynamic_covariate)
-          # Construct dataset for the longitudinal analysis
-          # (static measurements+time-varying covariate and its recording time)
-          dataframe <- .construct_data(
+      x@longitudinal_fits <- lapply(as.character(landmarks), function(i) {
+        longitudinal_fits
+      })
+    } else {
+      x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
+        {
+          .fit_longitudinal_model(
             x,
-            dynamic_covariate,
-            at_risk_individuals,
-            landmark
-          ) |>
-            inner_join(
-              x@cv_folds |> filter(fold != validation_fold) |> select(x@ids),
-              by = x@ids
-            )
-
-          # Fit longitudinal model according to chosen method
-          model_fits[[
-            dynamic_covariate
-          ]] <- method(
+            landmark,
+            method,
             formula,
-            data = dataframe,
+            dynamic_covariates,
+            validation_fold,
             ...
           )
         }
-        model_fits
-      }
+    }
     names(x@longitudinal_fits) <- landmarks
     x
   }
@@ -171,8 +163,6 @@ setMethod(
 #' @param method Longitudinal data analysis method used to make predictions
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
-#' @param censor_at_horizon Boolean indicating whether to censor observations
-#'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed in the complete dataset.
 #' @param ... Additional arguments passed to the prediction function (e.g.
@@ -189,7 +179,6 @@ setGeneric(
     landmarks,
     method,
     dynamic_covariates,
-    censor_at_horizon = FALSE,
     validation_fold = 0,
     ...
   ) {
@@ -213,7 +202,6 @@ setMethod(
     landmarks,
     method,
     dynamic_covariates,
-    censor_at_horizon = FALSE,
     validation_fold = 0,
     ...
   ) {
@@ -304,6 +292,7 @@ setMethod(
                 dynamic_covariate
               ]],
               newdata = newdata_train,
+              subject = x@ids,
               ...
             )
 
@@ -315,11 +304,16 @@ setMethod(
                     select(x@ids),
                   by = x@ids
                 )
+              # Check optional arguments
+              mc <- match.call(expand.dots = FALSE)$...
+              # Vector nms contains
+              nms <- names(mc)
               if (
-                ("include_clusters" %in%
-                  names(list(...)) &&
-                  list(...)$include_clusters) ||
-                  ("avg" %in% names(list(...)) && list(...)$avg)
+                !is.null(nms) &&
+                  (("include_clusters" %in%
+                    names(list(...)) &&
+                    list(...)$include_clusters) ||
+                    ("avg" %in% names(list(...)) && list(...)$avg))
               ) {
                 newdata <- newdata |>
                   left_join(
@@ -337,12 +331,20 @@ setMethod(
                 x@longitudinal_fits[[as.character(landmarks)]][[
                   dynamic_covariate
                 ]],
-                newdata = newdata,
+                newdata = newdata |>
+                  dplyr::left_join(
+                    x@data_dynamic[[dynamic_covariate]] |>
+                      dplyr::filter(get(x@times) <= landmarks) |>
+                      dplyr::slice_max(get(x@times), by = x@ids) |>
+                      select(-!!sym(x@times)),
+                    by = stats::setNames(x@ids, x@ids)
+                  ),
+                subject = x@ids,
                 test = TRUE,
                 newdata_long = newdata |>
                   select(-any_of(x@times)) |>
                   select(-any_of(x@measurements)) |>
-                  left_join(
+                  inner_join(
                     x@data_dynamic[[dynamic_covariate]] |>
                       filter(get(x@times) <= landmarks),
                     by = x@ids
@@ -379,7 +381,6 @@ setMethod(
         landmarks[1],
         method,
         dynamic_covariates,
-        censor_at_horizon,
         validation_fold,
         ...
       )
@@ -388,7 +389,6 @@ setMethod(
         landmarks[-1],
         method,
         dynamic_covariates,
-        censor_at_horizon,
         validation_fold,
         ...
       )

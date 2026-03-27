@@ -106,26 +106,34 @@ setMethod(
         )
 
       # Include predicted cluster membership in the training dataset and in the survival formula
-      if (length(dynamic_covariates) > 0 && include_clusters == TRUE) {
+      if (length(dynamic_covariates) > 0 && include_clusters != FALSE) {
         for (dynamic_covariate in dynamic_covariates) {
-          formula <- as.formula(
-            paste(
-              as.character(formula)[2],
-              as.character(formula)[1],
+          if (include_clusters == "strata") {
+            formula <- as.formula(
               paste(
+                as.character(formula)[2],
+                as.character(formula)[1],
+                as.character(formula)[3],
                 paste0(
-                  strsplit(as.character(formula)[3], " *\\+ *")[[1]],
-                  "*cluster_",
-                  dynamic_covariate
-                ),
-                collapse = " + "
-              ),
-              paste0(
-                " + ",
-                paste0("strata(cluster_", dynamic_covariate, ")")
+                  " + ",
+                  paste0("strata(cluster_", dynamic_covariate, ")")
+                )
               )
             )
-          )
+          } else {
+            formula <- as.formula(
+              paste(
+                as.character(formula)[2],
+                as.character(formula)[1],
+                paste(
+                  as.character(formula)[3],
+                  "+",
+                  paste0("cluster_", dynamic_covariate)
+                )
+                # paste(as.character(formula)[3], "+", paste0("strata(cluster_", dynamic_covariate, ")"))
+              )
+            )
+          }
         }
       }
 
@@ -268,9 +276,9 @@ setMethod(
         )
       }
 
-      x@survival_predictions[[model_name]] <- method(
+      x@survival_predictions[[model_name]] <- survival::survfit(
         x@survival_fits[[model_name]],
-        ...
+        newdata = x@survival_datasets[[model_name]]
       )
       # Out-of-sample predictions
       if (validation_fold > 0) {
@@ -285,10 +293,9 @@ setMethod(
             validation_fold,
             train = FALSE
           )
-        x@survival_predictions_test[[model_name]] <- method(
+        x@survival_predictions_test[[model_name]] <- survival::survfit(
           x@survival_fits[[model_name]],
-          x@survival_datasets_test[[model_name]],
-          ...
+          newdata = x@survival_datasets_test[[model_name]]
         )
       }
     } else {

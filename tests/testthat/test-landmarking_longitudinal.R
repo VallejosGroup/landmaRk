@@ -56,7 +56,6 @@ test_that("LCMM works as expected", {
       x,
       landmarks = seq(from = 365.25, to = 5 * 365.25, by = 365.25),
       method = "lcmm",
-      subject = "id",
       avg = FALSE,
       dynamic_covariates = "dose"
     ),
@@ -78,7 +77,6 @@ test_that("LOCF works as expected", {
         x,
         landmarks = 365.25,
         method = "locf",
-        subject = "id",
         dynamic_covariates = "dose"
       )
       x@longitudinal_predictions[["365.25"]][["dose"]]
@@ -114,7 +112,6 @@ test_that("LOCF works as expected", {
         x,
         landmarks = 365.25,
         method = "locf",
-        subject = "id",
         dynamic_covariates = "dose2"
       )
       x@longitudinal_predictions[["365.25"]][["dose2"]]
@@ -153,7 +150,6 @@ test_that("LOCF populates test fold predictions when validation_fold > 0", {
     x,
     landmarks = 365.25,
     method = "locf",
-    subject = "id",
     dynamic_covariates = "dose",
     validation_fold = 1
   )
@@ -273,7 +269,6 @@ test_that("predict_longitudinal works correctly with lcmm", {
       predict_longitudinal(
         landmarks = 365.25,
         method = "lcmm",
-        subject = "id",
         var.time = "time",
         avg = FALSE,
         dynamic_covariates = "dose"

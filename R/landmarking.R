@@ -11,6 +11,10 @@
 #'   \code{data_dynamic}.
 #' @slot measurements Name of the column indicating measurement values in
 #'   \code{data_dynamic}.
+#' @slot censor_at_landmark Boolean indicating whether to fit a single longitudinal
+#'   model to the complete dataset (FALSE) or to censor observations
+#'   at the landmark time prior to fitting the longitudinal model, iterating
+#'   through landmark times (TRUE; default)
 #' @slot event_time Name of the column indicating time of the event/censoring.
 #' @slot risk_sets List of indices.
 #' @slot longitudinal_fits List of model fits for the specified landmark times
@@ -44,6 +48,7 @@ setClass(
     event_time = "character",
     times = "character",
     measurements = "character",
+    censor_at_landmark = "logical",
     risk_sets = "list",
     longitudinal_fits = "list",
     longitudinal_predictions = "list",
@@ -128,6 +133,10 @@ setValidity("LandmarkAnalysis", function(object) {
 #'   \code{data_dynamic}.
 #' @param measurements Name of the column indicating measurement values in
 #'   \code{data_dynamic}.
+#' @param censor_at_landmark Boolean indicating whether to fit a single longitudinal
+#'   model to the complete dataset (FALSE) or to censor observations
+#'   at the landmark time prior to fitting the longitudinal model, iterating
+#'   through landmark times (TRUE; default)
 #' @param K Number of cross-validation folds (by default, 1).
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}}
@@ -140,6 +149,7 @@ LandmarkAnalysis <- function(
   event_time,
   times,
   measurements,
+  censor_at_landmark = TRUE,
   K = 1
 ) {
   # Find out static covariates of type characters
@@ -213,6 +223,7 @@ LandmarkAnalysis <- function(
     event_time = event_time,
     times = times,
     measurements = measurements,
+    censor_at_landmark = censor_at_landmark,
     risk_sets = list(),
     longitudinal_fits = list(),
     longitudinal_predictions = list(),

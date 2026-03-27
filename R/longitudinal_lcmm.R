@@ -19,7 +19,7 @@
 .fit_lcmm <- function(
   formula,
   data,
-  mixture,
+  mixture = NULL,
   random,
   subject,
   ng,
@@ -34,54 +34,61 @@
     random = random,
     subject = subject,
     ng = 1,
+    returndata = TRUE,
     maxiter = maxiter
   )
 
   hlme <- NULL
-  if (rep == 1) {
-    model_fit <- lcmm::hlme(
-      formula,
-      data = data,
-      mixture = mixture,
-      random = random,
-      subject = subject,
-      ng = ng,
-      B = model_init,
-      classmb = classmb,
-      returndata = TRUE,
-      maxiter = maxiter,
-      ...
-    )
+  if (ng == 1) {
+    model_fit <- model_init
   } else {
-    model_fit <- lcmm::gridsearch(
-      m = hlme(
+    if (rep == 1) {
+      model_fit <- lcmm::hlme(
         formula,
         data = data,
         mixture = mixture,
         random = random,
         subject = subject,
         ng = ng,
+        B = model_init,
         classmb = classmb,
         returndata = TRUE,
         maxiter = maxiter,
         ...
-      ),
-      rep = rep,
-      maxiter = 1, # This argument is ignored by lcmm::gridsearch
-      minit = model_init
-    )
+      )
+    } else {
+      model_fit <- lcmm::gridsearch(
+        m = hlme(
+          formula,
+          data = data,
+          mixture = mixture,
+          random = random,
+          subject = subject,
+          ng = ng,
+          classmb = classmb,
+          returndata = TRUE,
+          maxiter = maxiter,
+          ...
+        ),
+        rep = rep,
+        maxiter = 1, # This argument is ignored by lcmm::gridsearch
+        minit = model_init
+      )
+    }
   }
 
   .check_lcmm_convergence(model_fit)
 
   model_fit$call$fixed <- formula
   model_fit$call$mixture <- mixture
-  model_fit$call$random <- random
   model_fit$call$subject <- subject
   model_fit$call$ng <- ng
   model_fit$call$data <- data
   model_fit$call$B <- model_init
-  model_fit$call$classmb <- classmb
+  if (ng > 1) {
+    model_fit$call$classmb <- classmb
+    model_fit$call$random <- random
+  }
   model_fit
 }
 
@@ -145,9 +152,17 @@
   # Step 1a. We estimate the random effects for individuals in the training set
   x$call[[1]] <- expr(hlme)
   # Step 1b. Find ids of individuals in the training set
-  in_train_set <- unique(x$data[, subject])
+  in_train_set <- intersect(
+    unique(newdata[, subject]),
+    unique(x$data[, subject])
+  )
   if (!test) {
-    predRE <- lcmm::predictRE(x, x$data, subject = subject, classpredRE = TRUE)
+    predRE <- lcmm::predictRE(
+      x,
+      x$data |> filter(get(subject) %in% in_train_set),
+      subject = subject,
+      classpredRE = TRUE
+    )
 
     if (length(unique(predRE[, subject])) != length(in_train_set)) {
       stop(sprintf(
@@ -157,6 +172,39 @@
         ),
         length(unique(predRE[, subject])),
         length(in_train_set)
+      ))
+    }
+  } else {
+    predRE <- lcmm::predictRE(
+      x,
+      newdata_long,
+      subject = subject,
+      classpredRE = TRUE
+    )
+
+    subjects_no_obs <- setdiff(
+      newdata[, subject],
+      unique(newdata_long[, subject])
+    )
+    if (length(subjects_no_obs) > 0) {
+      re_cols <- setdiff(colnames(predRE), c(subject, "class"))
+      predRE_default <- expand.grid(
+        id = subjects_no_obs,
+        class = 1:x$ng
+      )
+      colnames(predRE_default)[1] <- subject
+      predRE_default[, re_cols] <- 0
+      predRE <- rbind(predRE, predRE_default)
+    }
+
+    if (length(unique(predRE[, subject])) != nrow(newdata)) {
+      stop(sprintf(
+        paste(
+          "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
+          "Probable reason: static covariates contain missing data.\n"
+        ),
+        length(unique(predRE[, subject])),
+        nrow(newdata)
       ))
     }
   }
@@ -174,6 +222,11 @@
       }
     ))
 
+    if (x$call$ng == 1) {
+      predictions_step1 <- as.data.frame(t(predictions_step1))
+    } else {
+      predictions_step1 <- as.data.frame(predictions_step1)
+    }
     predictions_step1 <- as.data.frame(predictions_step1)
     predictions_step1[, subject] <- in_train_set
     predictions_step1 <- predictions_step1 |> relocate(subject)
@@ -193,12 +246,34 @@
 
   # Step 2b. Find class-specific predictions for individuals outwith the training set.
   if (length(not_in_train_set) > 0) {
-    predictions_step2 <- lcmm::predictY(
-      x,
-      newdata = newdata |>
-        filter(!(get(subject) %in% in_train_set))
-    )$pred
-    predictions_step2 <- as.data.frame(predictions_step2)
+    if (test) {
+      predictions_step2 <- t(sapply(
+        not_in_train_set,
+        function(individual) {
+          lcmm::predictY(
+            x,
+            newdata = newdata |> filter(get(subject) == individual),
+            predRE = predRE |> filter(get(subject) == individual)
+          )$pred
+        }
+      ))
+    } else {
+      predictions_step2 <- t(sapply(
+        not_in_train_set,
+        function(individual) {
+          lcmm::predictY(
+            x,
+            newdata = newdata |> filter(get(subject) == individual)
+          )$pred
+        }
+      ))
+    }
+    # predictions_step2 <- as.data.frame(predictions_step2)
+    if (x$call$ng == 1) {
+      predictions_step2 <- as.data.frame(t(predictions_step2))
+    } else {
+      predictions_step2 <- as.data.frame(predictions_step2)
+    }
     predictions_step2[, subject] <- not_in_train_set
     predictions_step2 <- predictions_step2 |> relocate(subject)
   }
@@ -208,9 +283,17 @@
   # included in the model fitting.
   # We augment pprob using the sample average for individuals not used in
   # model fitting.
-  pprob <- x$pprob
+  pprob <- x$pprob |>
+    filter(
+      get(subject) %in%
+        intersect(unique(newdata[, subject]), unique(x$data[, subject]))
+    )
   # Find the largest cluster
   mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
+  if (length(mode_cluster) == 0) {
+    mode_cluster <- 1L
+  }
+
   # If there are individuals in newdata that had not been used in model fitting,
   # we augment pprob imputing the sample average in those individuals
   if (!test && (nrow(newdata) != nrow(pprob))) {
@@ -247,6 +330,21 @@
   } else if (test && include_clusters) {
     # In the test set, use lcmm::predictClass to estimate cluster allocation
     pprob <- lcmm::predictClass(x, newdata = newdata_long)
+    if (length(subjects_no_obs) > 0) {
+      prob_means <- colMeans(pprob[, -c(1, 2)])
+      pprob_default <- data.frame(
+        id = subjects_no_obs,
+        class = mode_cluster,
+        matrix(
+          rep(prob_means, each = length(subjects_no_obs)),
+          nrow = length(subjects_no_obs),
+          dimnames = list(NULL, names(prob_means))
+        )
+      )
+      colnames(pprob_default) <- colnames(pprob)
+      pprob <- rbind(pprob, pprob_default)
+      pprob <- pprob[match(newdata[, subject], pprob[, subject]), ]
+    }
   }
 
   if (length(not_in_train_set) > 0) {
@@ -254,6 +352,7 @@
       predictions <- predictions_step2 |>
         arrange(get(subject))
     } else {
+      colnames(predictions_step2) <- colnames(predictions_step1)
       predictions <- rbind(
         predictions_step1,
         predictions_step2
@@ -273,6 +372,23 @@
         newdata_long,
         subject = subject
       )
+      if (length(subjects_no_obs) > 0) {
+        prob_means <- colMeans(class_predictions[, -c(1, 2)])
+        class_predictions_default <- data.frame(
+          id = subjects_no_obs,
+          class = mode_cluster,
+          matrix(
+            rep(prob_means, each = length(subjects_no_obs)),
+            nrow = length(subjects_no_obs),
+            dimnames = list(NULL, names(prob_means))
+          )
+        )
+        colnames(class_predictions_default) <- colnames(class_predictions)
+        class_predictions <- rbind(class_predictions, class_predictions_default)
+        class_predictions <- class_predictions[
+          match(newdata[, subject], class_predictions[, subject]),
+        ]
+      }
       predictions <- rowSums(class_predictions[, -c(1, 2)] * predictions[, -1])
       names(predictions) <- NULL
     } else {
@@ -282,12 +398,8 @@
       )
     }
   } else {
-    if (test) {
-      model_matrix_aux <- pprob |>
-        inner_join(newdata, by = subject) |>
-        select(starts_with("prob")) |>
-        as.matrix()
-      predictions <- rowSums(as.matrix(predictions[, -1]) * model_matrix_aux)
+    if (x$call$ng == 1) {
+      predictions <- predictions[, -1]
     } else {
       predictions <- rowSums(
         as.matrix(predictions[, -1]) *
