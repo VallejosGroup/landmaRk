@@ -158,7 +158,6 @@ landmarking_object <- landmarking_object |>
     method = "lme4",
     dynamic_covariates = c("CD4"),
     validation_fold = 5,
-    allow.new.levels = TRUE
   ) |>
   fit_survival(
     formula = Surv(event_time, event_status) ~ drug,
@@ -175,15 +174,8 @@ landmarking_object <- landmarking_object |>
     type = "lp",
     validation_fold = 5
   )
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> New names:
-#> New names:
-#> • `` -> `...9`
+#> Warning: the 'findbars' function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainer to do so.
+#> This warning is displayed once per session.
 ```
 
 We can also use [`summary()`](https://rdrr.io/r/base/summary.html) to
@@ -320,51 +312,6 @@ for (k in 1:5) {
       h_times = c(3, 6, 12)
     )
 }
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> New names:
-#> New names:
-#> • `` -> `...9`
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> New names:
-#> New names:
-#> • `` -> `...9`
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> New names:
-#> New names:
-#> • `` -> `...9`
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> New names:
-#> New names:
-#> • `` -> `...9`
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> Warning in
-#> predict.merMod(x@longitudinal_fits[[as.character(landmarks)]][[dynamic_covariate]],
-#> : unused arguments ignored
-#> New names:
-#> New names:
-#> • `` -> `...9`
 
 metrics
 #> [[1]]

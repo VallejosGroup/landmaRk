@@ -13,6 +13,7 @@ LandmarkAnalysis(
   event_time,
   times,
   measurements,
+  censor_at_landmark = TRUE,
   K = 1
 )
 ```
@@ -47,6 +48,13 @@ LandmarkAnalysis(
 - measurements:
 
   Name of the column indicating measurement values in `data_dynamic`.
+
+- censor_at_landmark:
+
+  Boolean indicating whether to fit a single longitudinal model to the
+  complete dataset (FALSE) or to censor observations at the landmark
+  time prior to fitting the longitudinal model, iterating through
+  landmark times (TRUE; default)
 
 - K:
 

@@ -57,6 +57,7 @@
 <span>  <span class="va">event_time</span>,</span>
 <span>  <span class="va">times</span>,</span>
 <span>  <span class="va">measurements</span>,</span>
+<span>  censor_at_landmark <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  K <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -94,6 +95,13 @@ values, measurement times and measurement name.</p></dd>
 <dt id="arg-measurements">measurements<a class="anchor" aria-label="anchor" href="#arg-measurements"></a></dt>
 <dd><p>Name of the column indicating measurement values in
 <code>data_dynamic</code>.</p></dd>
+
+
+<dt id="arg-censor-at-landmark">censor_at_landmark<a class="anchor" aria-label="anchor" href="#arg-censor-at-landmark"></a></dt>
+<dd><p>Boolean indicating whether to fit a single longitudinal
+model to the complete dataset (FALSE) or to censor observations
+at the landmark time prior to fitting the longitudinal model, iterating
+through landmark times (TRUE; default)</p></dd>
 
 
 <dt id="arg-k">K<a class="anchor" aria-label="anchor" href="#arg-k"></a></dt>

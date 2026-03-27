@@ -372,7 +372,6 @@ landmarking_object <- landmarking_object |>
   predict_longitudinal(
     landmarks = c(6, 8),
     method = "lme4",
-    allow.new.levels = TRUE,
     dynamic_covariates = c("CD4")
   ) |>
   fit_survival(
@@ -388,9 +387,6 @@ landmarking_object <- landmarking_object |>
     method = "coxph",
     type = "lp"
   )
-#> New names:
-#> New names:
-#> • `` -> `...9`
 ```
 
 As before, one can also use the function `summary` to display the
@@ -499,7 +495,6 @@ landmarking_object <- landmarking_object |>
   predict_longitudinal(
     landmarks = c(6, 8),
     method = "lcmm",
-    subject = "patient",
     avg = TRUE,
     include_clusters = FALSE,
     var.time = "obstime",
@@ -521,9 +516,6 @@ landmarking_object <- landmarking_object |>
     dynamic_covariates = c("CD4"),
     include_clusters = FALSE
   )
-#> New names:
-#> New names:
-#> • `` -> `...9`
 ```
 
 ``` r

@@ -419,7 +419,6 @@ model section.</p></li>
 <span>  <span class="fu"><a href="../reference/predict_longitudinal.html">predict_longitudinal</a></span><span class="op">(</span></span>
 <span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"lme4"</span>,</span>
-<span>    allow.new.levels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD4"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fit_survival.html">fit_survival</a></span><span class="op">(</span></span>
@@ -434,10 +433,7 @@ model section.</p></li>
 <span>    horizons <span class="op">=</span> <span class="fl">12</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span>
 <span>    type <span class="op">=</span> <span class="st">"lp"</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...9`</span></span></code></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>As before, one can also use the function <code>summary</code> to
 display the results.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -533,7 +529,6 @@ model.</p></li>
 <span>  <span class="fu"><a href="../reference/predict_longitudinal.html">predict_longitudinal</a></span><span class="op">(</span></span>
 <span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"lcmm"</span>,</span>
-<span>    subject <span class="op">=</span> <span class="st">"patient"</span>,</span>
 <span>    avg <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    include_clusters <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    var.time <span class="op">=</span> <span class="st">"obstime"</span>,</span>
@@ -554,10 +549,7 @@ model.</p></li>
 <span>    type <span class="op">=</span> <span class="st">"lp"</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD4"</span><span class="op">)</span>,</span>
 <span>    include_clusters <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...9`</span></span></code></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"longitudinal"</span>, landmark <span class="op">=</span> <span class="fl">6</span>, dynamic_covariate <span class="op">=</span> <span class="st">"CD4"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Heterogenous linear mixed model </span></span>
