@@ -63,7 +63,8 @@ setMethod(
         # Create list of plots that this function will return.
         plots <- list()
         for (name in names(x@survival_fits)) {
-          # Retrieve the landmark time and prediction window for this sub-model fit.
+          # Retrieve the landmark time and prediction window for this sub-model
+          # fit.
           name_split <- unlist(strsplit(name, "-"))
           landmark <- as.numeric(name_split[1])
           window <- as.numeric(name_split[2])
@@ -88,7 +89,8 @@ setMethod(
         plots
       }
     } else if (type == "longitudinal") {
-      # id = NULL, landmark = NULL, window = NULL, dynamic_covariate = NULL, avg = FALSE
+      # id = NULL, landmark = NULL, window = NULL, dynamic_covariate = NULL,
+      # avg = FALSE
       if (is.null(id)) {
         stop("Argument @id is required when @type = 'longitudinal'.")
       } else if (is.null(landmark)) {

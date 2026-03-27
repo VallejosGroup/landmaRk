@@ -36,6 +36,10 @@ in the training set. If FALSE, they are computed in the test set.}
 relative to each landmark time, at which auc_t and Brier scores are
 calculated.}
 }
+\value{
+Data frame with performance metrics across the specified landmark
+times and prediction horizons.
+}
 \description{
 Computes concordance index (c-index) and Brier scores at the specified
 landmark times and prediction horizons.

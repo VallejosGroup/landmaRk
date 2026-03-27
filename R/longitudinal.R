@@ -24,6 +24,9 @@
 #'   Linux and MacOS. Defaults to either \code{options("Ncpus")} if set, or 1
 #'   (single threaded) otherwise. Only single-threaded computation is currently
 #'   supported on Windows.
+#' @param .warn_when_prop_few_obs Threshold proportion (0-1) for warning when
+#'   individuals have 0 or 1 observations. Defaults to 0.25 (i.e., warn when
+#'   25% or more individuals have few observations).
 #' @param ... Additional arguments passed to the longitudinal model fitting
 #'   function (e.g. number of classes/clusters for lcmm).
 #' @returns An object of class \code{\link{LandmarkAnalysis}}.
@@ -40,6 +43,7 @@ setGeneric(
     dynamic_covariates,
     validation_fold = 0,
     cores = getOption("Ncpus", 1L),
+    .warn_when_prop_few_obs = 0.25,
     ...
   ) {
     standardGeneric("fit_longitudinal")
@@ -74,23 +78,35 @@ setMethod(
     dynamic_covariates,
     validation_fold = 0,
     cores = getOption("Ncpus", 1L),
+    .warn_when_prop_few_obs = 0.25,
     ...
   ) {
     landmark <- NULL # Global var
     fold <- NULL # Global var
 
+    if (
+      !is.numeric(.warn_when_prop_few_obs) ||
+        length(.warn_when_prop_few_obs) != 1L ||
+        is.na(.warn_when_prop_few_obs) ||
+        .warn_when_prop_few_obs < 0 ||
+        .warn_when_prop_few_obs > 1
+    ) {
+      stop(
+        "@.warn_when_prop_few_obs must be a single numeric value between 0 and 1"
+      )
+    }
+
     method <- .check_method_long_fit(method)
 
-    if (Sys.info()["sysname"] == "Windows") {
-      `%doparallel%` <- foreach::`%do%`
-    } else {
+    if (.supports_parallel()) {
       cl <- .init_cl(cores)
       `%doparallel%` <- foreach::`%dopar%`
       on.exit(parallel::stopCluster(cl), add = TRUE)
+    } else {
+      `%doparallel%` <- foreach::`%do%`
     }
 
-    # If more than 25% of the individuals have 0 or 1 observations,
-    # raise a warning
+    # Warn if a large proportion of individuals have 0 or 1 observations
     for (landmark in landmarks) {
       for (dynamic_covariate in dynamic_covariates) {
         at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
@@ -108,7 +124,7 @@ setMethod(
           )
         prop_individuals_few_obs <- sum(table(dataframe[, x@ids]) <= 1) /
           length(at_risk_individuals)
-        if (prop_individuals_few_obs >= 0.25) {
+        if (prop_individuals_few_obs >= .warn_when_prop_few_obs) {
           warning(
             round(prop_individuals_few_obs * 100, 2),
             "% of the individuals have 0",
@@ -137,7 +153,8 @@ setMethod(
         longitudinal_fits
       })
     } else {
-      x@longitudinal_fits <- foreach::foreach(landmark = landmarks) %doparallel%
+      x@longitudinal_fits <-
+        foreach::foreach(landmark = landmarks) %doparallel%
         {
           .fit_longitudinal_model(
             x,
@@ -205,7 +222,6 @@ setMethod(
     validation_fold = 0,
     ...
   ) {
-    value <- NULL # Global var
     fold <- NULL # Global var
 
     method <- .check_method_long_predict(method)
@@ -357,7 +373,8 @@ setMethod(
           predictions <- x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
           ]]
-          # Number of predictions (length if stored in vector or number of rows if stored in matrix)
+          # Number of predictions (length if stored in vector or number of rows
+          # if stored in matrix)
           npred <- ifelse(
             is.null(dim(predictions)),
             length(predictions),

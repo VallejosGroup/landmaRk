@@ -5,12 +5,14 @@
 \title{Prunes a landmark time from a \code{\link{LandmarkAnalysis}}, removing
 the risk set, longitudinal submodel and survival submodel from the object.}
 \usage{
-\S4method{prune}{LandmarkAnalysis}(x, landmark = NULL)
+\S4method{prune}{LandmarkAnalysis}(x, landmark = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
 \item{landmark}{A numeric indicating the landmark time.}
+
+\item{...}{Additional arguments (not currently used)}
 }
 \value{
 An object of class \code{\link{LandmarkAnalysis}}.

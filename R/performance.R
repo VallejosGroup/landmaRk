@@ -44,7 +44,8 @@ setGeneric(
 #'
 #' @inheritParams performance_metrics
 #'
-#' @returns
+#' @returns Data frame with performance metrics across the specified landmark
+#' times and prediction horizons.
 #' @export
 #'
 #' @examples
@@ -61,36 +62,20 @@ setMethod(
     train = TRUE,
     h_times = c()
   ) {
-    error_str <- NULL
+    # Early input validation
+    .validate_performance_inputs(
+      x,
+      landmarks,
+      horizons,
+      c_index,
+      brier,
+      auc_t,
+      train,
+      h_times
+    )
+
     model <- NULL
     Brier <- NULL
-    if (!inherits(x, "LandmarkAnalysis")) {
-      error_str <- c(
-        error_str,
-        "@x must be an object of class LandmarkAnalysis"
-      )
-    }
-    if (is(landmarks)[1] != "numeric") {
-      error_str <- c(error_str, "@landmarks must be a vector of numeric values")
-    }
-    if (is(horizons)[1] != "numeric") {
-      error_str <- c(error_str, "@horizons must be a vector of numeric values")
-    }
-    if (is(c_index)[1] != "logical") {
-      error_str <- c(error_str, "@c_index must be a logical")
-    }
-    if (is(brier)[1] != "logical") {
-      error_str <- c(error_str, "@brier must be a logical")
-    }
-    if (length(landmarks) != length(horizons)) {
-      error_str <- c(
-        error_str,
-        "@landmarks and @horizons must be of the same length"
-      )
-    }
-    if (length(error_str) > 0) {
-      stop(paste(error_str, collapse = ". "))
-    }
 
     scores <- cbind(landmark = landmarks, horizon = horizons)
     brier_list <- list()
@@ -99,7 +84,6 @@ setMethod(
     for (i in seq_along(landmarks)) {
       landmark <- landmarks[i]
       horizon <- horizons[i]
-      at_risk_individuals <- x@risk_sets[[as.character(landmark)]]
 
       # Retrieve survival analysis dataset (censor events past horizon time)
       dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
@@ -107,14 +91,8 @@ setMethod(
       # Recover the observations and predictions (in-sample or out-of-sample)
       if (train) {
         dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
-        predictions <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
       } else {
         dataset <- x@survival_datasets_test[[paste0(landmark, "-", horizon)]]
-        predictions <- x@survival_predictions_test[[paste0(
-          landmark,
-          "-",
-          horizon
-        )]]
       }
       if (train) {
         sf <- x@survival_predictions[[paste0(landmark, "-", horizon)]]
@@ -141,7 +119,6 @@ setMethod(
       if (brier) {
         if (length(h_times) == 0) {
           brier_list[[paste0(landmark, "-", horizon)]] <- riskRegression::Score(
-            # object = list(x@survival_predictions_test[[paste0(landmark, "-", horizon)]]),
             object = list(x@survival_fits[[paste0(landmark, "-", horizon)]]),
             formula = Surv(event_time, event_status) ~ 1,
             data = dataset,
@@ -157,7 +134,6 @@ setMethod(
             seq_along(h_times),
             function(j) {
               riskRegression::Score(
-                # object = list(x@survival_predictions_test[[paste0(landmark, "-", horizon)]]),
                 object = list("model" = pred_matrix[, j, drop = FALSE]),
                 formula = Surv(event_time, event_status) ~ 1,
                 data = dataset,
@@ -249,6 +225,6 @@ setMethod(
       }
       scores <- cbind(scores, auct_matrix)
     }
-    return(scores)
+    scores
   }
 )

@@ -56,7 +56,8 @@ test_that("Error handling for fit_survival", {
         dynamic_covariates = c("dose2")
       ),
     paste(
-      "Longitudinal predictions for dynamic covariate dose2 are not available at landmark time 365.25."
+      "Longitudinal predictions for dynamic covariate dose2 are not available",
+      "at landmark time 365.25."
     )
   )
 

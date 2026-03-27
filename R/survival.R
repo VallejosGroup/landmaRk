@@ -82,17 +82,21 @@ setMethod(
     censor_at_horizon = FALSE,
     validation_fold = 0
   ) {
+    # Early input validation
+    if (length(landmarks) != length(horizons)) {
+      stop("@landmarks and @horizons must be of the same length.")
+    }
+
     # Check that method is a function with arguments formula, data, ...
     method <- .check_method_survival_predict(method)
 
-    if (length(landmarks) != length(horizons)) {
-      stop("@landmarks and @horizons must be of the same length.")
-    } else if (length(landmarks) == 1) {
+    if (length(landmarks) == 1) {
       # Base case for recursion
       .check_riskset_survival(x, landmarks)
 
       # Recover risk sets (ids of individuals who are at risk at landmark time)
-      # Construct dataset for survival analysis (censor events past horizon time)
+      # Construct dataset for survival analysis (censor events past horizon
+      # time)
       x@survival_datasets[[paste0(landmarks, "-", horizons)]] <-
         .create_survival_dataframe(
           x,
@@ -105,7 +109,8 @@ setMethod(
           train = TRUE
         )
 
-      # Include predicted cluster membership in the training dataset and in the survival formula
+      # Include predicted cluster membership in the training dataset and in the
+      # survival formula
       if (length(dynamic_covariates) > 0 && include_clusters != FALSE) {
         for (dynamic_covariate in dynamic_covariates) {
           if (include_clusters == "strata") {
@@ -130,7 +135,6 @@ setMethod(
                   "+",
                   paste0("cluster_", dynamic_covariate)
                 )
-                # paste(as.character(formula)[3], "+", paste0("strata(cluster_", dynamic_covariate, ")"))
               )
             )
           }
@@ -182,19 +186,8 @@ setMethod(
 
 #' Make predictions for time-to-event outcomes at specified horizon times
 #'
-#' @param x An object of class \code{\link{LandmarkAnalysis}}.
-#' @param landmarks A numeric vector of landmark times.
-#' @param horizons Vector of prediction horizons up to when the survival submodel
-#'   is fitted.
+#' @inheritParams fit_survival
 #' @param method R function that is used to make predictions
-#' @param dynamic_covariates Vector of time-varying covariates to be used
-#'   in the survival model.
-#' @param include_clusters Boolean indicating whether to propagate cluster
-#'   membership to survival analysis.
-#' @param censor_at_horizon Boolean indicating whether to censor observations
-#'   at horizon times
-#' @param validation_fold If positive, cross-validation fold where model is
-#'   fitted. If 0 (default), model fitting is performed on the complete dataset.
 #' @param ... Additional arguments passed to the prediction function (e.g.
 #'   number of classes/clusters for lcmm).
 #'
