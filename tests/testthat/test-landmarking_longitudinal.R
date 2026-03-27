@@ -273,7 +273,9 @@ test_that("predict_longitudinal works correctly with lcmm", {
         avg = FALSE,
         dynamic_covariates = "dose"
       ),
-    paste("Individuals 28, 389, 473, have not been used in LCMM model fitting.",
-          "Imputing values for those individuals")
+    paste(
+      "Individuals 28, 389, 473, have not been used in LCMM model fitting.",
+      "Imputing values for those individuals"
+    )
   )
 })

@@ -145,8 +145,10 @@ test_that("Character covariates are converted to factor", {
       times = "time",
       measurements = "value"
     ),
-    paste("Static covariates treat, gender were coded as characters.",
-           "Converted to factors.")
+    paste(
+      "Static covariates treat, gender were coded as characters.",
+      "Converted to factors."
+    )
   )
 
   expect_equal(class(x@data_static$treat), "factor")
@@ -213,8 +215,10 @@ test_that("Prune individuals from risk set works", {
 
   expect_warning(
     x |> prune_risk_sets(365.25, c(603, 604, 605)),
-    paste("A total of  3 in @individuals are not in the risk set for landmark",
-          "time 365.25")
+    paste(
+      "A total of  3 in @individuals are not in the risk set for landmark",
+      "time 365.25"
+    )
   )
 
   expect_equal(
@@ -265,7 +269,9 @@ test_that("Warning is raised with few observations per individual", {
         landmarks = 365.25,
         .warn_when_less_than = 2
       ),
-    paste("The following individuals have less than 2 observations recorded",
-          "prior to landmark time 365.25 for dynamic covariate dose: 7")
+    paste(
+      "The following individuals have less than 2 observations recorded",
+      "prior to landmark time 365.25 for dynamic covariate dose: 7"
+    )
   )
 })

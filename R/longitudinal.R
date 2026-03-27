@@ -142,7 +142,8 @@ setMethod(
       })
     } else {
       x@longitudinal_fits <-
-        foreach::foreach(landmark = landmarks) %doparallel% {
+        foreach::foreach(landmark = landmarks) %doparallel%
+        {
           .fit_longitudinal_model(
             x,
             landmark,
