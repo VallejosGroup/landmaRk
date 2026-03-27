@@ -84,6 +84,16 @@ setMethod(
     landmark <- NULL # Global var
     fold <- NULL # Global var
 
+    if (
+      !is.numeric(.warn_when_prop_few_obs) ||
+        length(.warn_when_prop_few_obs) != 1L ||
+        is.na(.warn_when_prop_few_obs) ||
+        .warn_when_prop_few_obs < 0 ||
+        .warn_when_prop_few_obs > 1
+    ) {
+      stop("@.warn_when_prop_few_obs must be a single numeric value between 0 and 1")
+    }
+
     method <- .check_method_long_fit(method)
 
     if (.supports_parallel()) {
