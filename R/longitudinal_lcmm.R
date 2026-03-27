@@ -159,7 +159,7 @@
     predictions <- as.data.frame(predictions)
   }
   predictions[, subject] <- individuals
-  predictions <- predictions |> relocate(subject)
+  predictions <- predictions |> relocate(all_of(subject))
   predictions
 }
 
@@ -292,7 +292,7 @@
         predictions_step2 <- as.data.frame(predictions_step2)
       }
       predictions_step2[, subject] <- not_in_train_set
-      predictions_step2 <- predictions_step2 |> relocate(subject)
+      predictions_step2 <- predictions_step2 |> relocate(dplyr::all_of(subject))
     }
   }
 

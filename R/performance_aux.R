@@ -136,23 +136,23 @@
       "@x must be an object of class LandmarkAnalysis"
     )
   }
-  if (is(landmarks)[1] != "numeric") {
+  if (!is.numeric(landmarks)) {
     error_str <- c(error_str, "@landmarks must be a vector of numeric values")
   }
-  if (is(horizons)[1] != "numeric") {
+  if (!is.numeric(horizons)) {
     error_str <- c(error_str, "@horizons must be a vector of numeric values")
   }
-  if (is(c_index)[1] != "logical") {
-    error_str <- c(error_str, "@c_index must be a logical")
+  if (!(is.logical(c_index) && length(c_index) == 1L && !is.na(c_index))) {
+    error_str <- c(error_str, "@c_index must be a length-1, non-NA logical")
   }
-  if (is(brier)[1] != "logical") {
-    error_str <- c(error_str, "@brier must be a logical")
+  if (!(is.logical(brier) && length(brier) == 1L && !is.na(brier))) {
+    error_str <- c(error_str, "@brier must be a length-1, non-NA logical")
   }
-  if (is(auc_t)[1] != "logical") {
-    error_str <- c(error_str, "@auc_t must be a logical")
+  if (!(is.logical(auc_t) && length(auc_t) == 1L && !is.na(auc_t))) {
+    error_str <- c(error_str, "@auc_t must be a length-1, non-NA logical")
   }
-  if (is(train)[1] != "logical") {
-    error_str <- c(error_str, "@train must be a logical")
+  if (!(is.logical(train) && length(train) == 1L && !is.na(train))) {
+    error_str <- c(error_str, "@train must be a length-1, non-NA logical")
   }
   if (length(landmarks) != length(horizons)) {
     error_str <- c(
