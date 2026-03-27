@@ -19,10 +19,10 @@
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
-\item{landmarks}{A numeric vector of landmark times.}
+\item{landmarks}{Numeric vector of landmark times.}
 
-\item{horizons}{Vector of prediction horizons up to when the survival submodel
-is fitted.}
+\item{horizons}{Vector of prediction horizons up to when the survival
+submodel is fitted.}
 
 \item{method}{R function that is used to make predictions}
 

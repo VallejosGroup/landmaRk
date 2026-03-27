@@ -9,7 +9,8 @@
 \arguments{
 \item{predictions}{Numeric vector of model predictions.}
 
-\item{time}{Numeric vector describing the time to the event of interest or censoring.}
+\item{time}{Numeric vector describing the time to the event of interest or
+censoring.}
 
 \item{status}{Vector of censoring status.}
 
@@ -19,7 +20,7 @@
 }
 \description{
 Computes the Binary Brier Score (BBS) for binary outcomes at a specified
-time point \eqn{\tau}.
+time point, \eqn{\tau}.
 }
 \details{
 The BBS is a measure of the accuracy of probabilistic predictions for binary

@@ -13,6 +13,7 @@ fit_longitudinal(
   dynamic_covariates,
   validation_fold = 0,
   cores = getOption("Ncpus", 1L),
+  .warn_when_prop_few_obs = 0.25,
   ...
 )
 }
@@ -38,6 +39,10 @@ dataset.}
 Linux and MacOS. Defaults to either \code{options("Ncpus")} if set, or 1
 (single threaded) otherwise. Only single-threaded computation is currently
 supported on Windows.}
+
+\item{.warn_when_prop_few_obs}{Threshold proportion (0-1) for warning when
+individuals have 0 or 1 observations. Defaults to 0.25 (i.e., warn when
+25\% or more individuals have few observations).}
 
 \item{...}{Additional arguments passed to the longitudinal model fitting
 function (e.g. number of classes/clusters for lcmm).}

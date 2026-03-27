@@ -134,6 +134,35 @@
 #' @noRd
 #'
 #' @examples
+# Helper function to make class-specific predictions for a set of individuals
+.make_class_predictions <- function(
+  x,
+  individuals,
+  newdata,
+  predRE,
+  subject
+) {
+  predictions <- t(sapply(
+    individuals,
+    function(individual) {
+      lcmm::predictY(
+        x,
+        newdata = newdata |> filter(get(subject) == individual),
+        predRE = predRE |> filter(get(subject) == individual)
+      )$pred
+    }
+  ))
+
+  if (x$call$ng == 1) {
+    predictions <- as.data.frame(t(predictions))
+  } else {
+    predictions <- as.data.frame(predictions)
+  }
+  predictions[, subject] <- individuals
+  predictions <- predictions |> relocate(subject)
+  predictions
+}
+
 .predict_lcmm <- function(
   x,
   newdata,
@@ -167,7 +196,8 @@
     if (length(unique(predRE[, subject])) != length(in_train_set)) {
       stop(sprintf(
         paste(
-          "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
+          "lcmm::predictRE produced %d predictions but expected",
+          "%d predictions.\n",
           "Probable reason: static covariates contain missing data.\n"
         ),
         length(unique(predRE[, subject])),
@@ -200,7 +230,8 @@
     if (length(unique(predRE[, subject])) != nrow(newdata)) {
       stop(sprintf(
         paste(
-          "lcmm::predictRE produced %d predictions but expected %d predictions.\n",
+          "lcmm::predictRE produced %d predictions but expected",
+          "%d predictions.\n",
           "Probable reason: static covariates contain missing data.\n"
         ),
         length(unique(predRE[, subject])),
@@ -209,27 +240,16 @@
     }
   }
 
-  # Step 1c. Find class-specific predictions for individuals in the training set.
+  # Step 1c. Find class-specific predictions for individuals in the training
+  # set.
   if (!test) {
-    predictions_step1 <- t(sapply(
+    predictions_step1 <- .make_class_predictions(
+      x,
       in_train_set,
-      function(individual) {
-        lcmm::predictY(
-          x,
-          newdata = newdata |> filter(get(subject) == individual),
-          predRE = predRE |> filter(get(subject) == individual)
-        )$pred
-      }
-    ))
-
-    if (x$call$ng == 1) {
-      predictions_step1 <- as.data.frame(t(predictions_step1))
-    } else {
-      predictions_step1 <- as.data.frame(predictions_step1)
-    }
-    predictions_step1 <- as.data.frame(predictions_step1)
-    predictions_step1[, subject] <- in_train_set
-    predictions_step1 <- predictions_step1 |> relocate(subject)
+      newdata,
+      predRE,
+      subject
+    )
     colnames(predictions_step1) <- c(
       subject,
       paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
@@ -244,20 +264,19 @@
     in_train_set
   )
 
-  # Step 2b. Find class-specific predictions for individuals outwith the training set.
+  # Step 2b. Find class-specific predictions for individuals outside the
+  # training set.
   if (length(not_in_train_set) > 0) {
     if (test) {
-      predictions_step2 <- t(sapply(
+      predictions_step2 <- .make_class_predictions(
+        x,
         not_in_train_set,
-        function(individual) {
-          lcmm::predictY(
-            x,
-            newdata = newdata |> filter(get(subject) == individual),
-            predRE = predRE |> filter(get(subject) == individual)
-          )$pred
-        }
-      ))
+        newdata,
+        predRE,
+        subject
+      )
     } else {
+      # For individuals not in training set, make predictions without predRE
       predictions_step2 <- t(sapply(
         not_in_train_set,
         function(individual) {
@@ -267,15 +286,14 @@
           )$pred
         }
       ))
+      if (x$call$ng == 1) {
+        predictions_step2 <- as.data.frame(t(predictions_step2))
+      } else {
+        predictions_step2 <- as.data.frame(predictions_step2)
+      }
+      predictions_step2[, subject] <- not_in_train_set
+      predictions_step2 <- predictions_step2 |> relocate(subject)
     }
-    # predictions_step2 <- as.data.frame(predictions_step2)
-    if (x$call$ng == 1) {
-      predictions_step2 <- as.data.frame(t(predictions_step2))
-    } else {
-      predictions_step2 <- as.data.frame(predictions_step2)
-    }
-    predictions_step2[, subject] <- not_in_train_set
-    predictions_step2 <- predictions_step2 |> relocate(subject)
   }
 
   # pprob contains probabilities for subjects belonging to each certain cluster,

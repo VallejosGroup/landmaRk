@@ -11,10 +11,10 @@
 #'   \code{data_dynamic}.
 #' @slot measurements Name of the column indicating measurement values in
 #'   \code{data_dynamic}.
-#' @slot censor_at_landmark Boolean indicating whether to fit a single longitudinal
-#'   model to the complete dataset (FALSE) or to censor observations
-#'   at the landmark time prior to fitting the longitudinal model, iterating
-#'   through landmark times (TRUE; default)
+#' @slot censor_at_landmark Boolean indicating whether to fit a single
+#'   longitudinal model to the complete dataset (FALSE) or to censor
+#'   observations at the landmark time prior to fitting the longitudinal model,
+#'   iterating through landmark times (TRUE; default)
 #' @slot event_time Name of the column indicating time of the event/censoring.
 #' @slot risk_sets List of indices.
 #' @slot longitudinal_fits List of model fits for the specified landmark times
@@ -114,7 +114,7 @@ setValidity("LandmarkAnalysis", function(object) {
     )
   }
   if (length(error_str) == 0) {
-    return(TRUE)
+    TRUE
   } else {
     .eval_error_str(error_str)
   }
@@ -133,10 +133,10 @@ setValidity("LandmarkAnalysis", function(object) {
 #'   \code{data_dynamic}.
 #' @param measurements Name of the column indicating measurement values in
 #'   \code{data_dynamic}.
-#' @param censor_at_landmark Boolean indicating whether to fit a single longitudinal
-#'   model to the complete dataset (FALSE) or to censor observations
-#'   at the landmark time prior to fitting the longitudinal model, iterating
-#'   through landmark times (TRUE; default)
+#' @param censor_at_landmark Boolean indicating whether to fit a single
+#'   longitudinal model to the complete dataset (FALSE) or to censor
+#'   observations at the landmark time prior to fitting the longitudinal model,
+#'   iterating through landmark times (TRUE; default)
 #' @param K Number of cross-validation folds (by default, 1).
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}}
@@ -437,7 +437,12 @@ setGeneric(
 
 #' Compute the list of individuals at risk at landmark times
 #'
-#' @inheritParams compute_risk_sets
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
+#' @param landmarks Numeric vector of landmark times
+#' @param .warn_when_less_than Integer indicating that a warning will be raised
+#' when the number of observations prior to a landmark time is less than that
+#' integer for certain individuals.
+#' @param ... Additional arguments (not used)
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}}, including desired
 #'   risk sets for the relevant landmark times.
@@ -445,13 +450,14 @@ setGeneric(
 #'
 #' @details
 #' A risk set describes all subjects still at risk (i.e., not experienced the
-#' event of interest or censored) at a given time. In \code{\link{LandmarkAnalysis}}, risk sets
-#' define which subjects should be included in the longitudinal and survival
-#' sub-models for each landmark time.
+#' event of interest or censored) at a given time. In
+#' \code{\link{LandmarkAnalysis}}, risk sets define which subjects should be
+#' included in the longitudinal and survival sub-models for each landmark time.
 #'
-#' The risk sets are stored in the \code{risk_sets} slot of the \code{\link{LandmarkAnalysis}}
-#' object, where each risk set is a list of indices corresponding to the
-#' subjects at risk at the respective landmark time.
+#' The risk sets are stored in the \code{risk_sets} slot of the
+#' \code{\link{LandmarkAnalysis}} object, where each risk set is a list of
+#' indices corresponding to the subjects at risk at the respective landmark
+#' time.
 #'
 #' @examples
 setMethod(
@@ -482,7 +488,8 @@ setMethod(
             group_by(get(x@ids)) |>
             # Work out number of observations per individual
             summarise(n = n()) |>
-            # Select individuals with less than @.warn_when_less_than observations
+            # Select individuals with less than @.warn_when_less_than
+            # observations
             filter(n < .warn_when_less_than) |>
             # Extract vector with individual ids
             pull(`get(x@ids)`)
@@ -530,7 +537,9 @@ setGeneric(
 
 #' Prune a set of individuals from a risk set
 #'
-#' @inheritParams prune_risk_sets
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
+#' @param landmark a landmark time
+#' @param individuals Vector of individuals to be pruned from
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}} after having
 #'   pruned the individuals indicated in \code{individuals} from the risk set
@@ -624,8 +633,9 @@ setGeneric(
 #' Prunes a landmark time from a \code{\link{LandmarkAnalysis}}, removing
 #' the risk set, longitudinal submodel and survival submodel from the object.
 #'
-#' @inheritParams prune
+#' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmark A numeric indicating the landmark time.
+#' @param ... Additional arguments (not currently used)
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
@@ -634,7 +644,7 @@ setGeneric(
 setMethod(
   f = "prune",
   signature = "LandmarkAnalysis",
-  definition = function(x, landmark = NULL) {
+  definition = function(x, landmark = NULL, ...) {
     if (is.null(landmark) || !is.numeric(landmark) || length(landmark) != 1) {
       stop("@landmark must be a numeric indicating a landmark time.")
     }
@@ -663,7 +673,7 @@ setMethod(
       names(x@survival_fits),
       paste0(landmark, "-")
     ))
-    if (model_names > 0) {
+    if (length(model_names) > 0) {
       x@survival_fits[[model_names]] <- NULL
     }
 
@@ -672,19 +682,19 @@ setMethod(
       names(x@survival_datasets),
       paste0(landmark, "-")
     ))
-    if (model_names > 0) {
+    if (length(model_names) > 0) {
       x@survival_datasets[[model_names]] <- NULL
     }
 
     # Prune longitudinal predictions
     model_name <- which(names(x@longitudinal_predictions) == landmark)
-    if (model_name > 0) {
+    if (length(model_name) > 0) {
       x@longitudinal_predictions[[model_name]] <- NULL
     }
 
     # Prune longitudinal model fits
     model_name <- which(names(x@longitudinal_fits) == landmark)
-    if (model_name > 0) {
+    if (length(model_name) > 0) {
       x@longitudinal_fits[[model_name]] <- NULL
     }
 

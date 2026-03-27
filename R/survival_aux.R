@@ -149,8 +149,9 @@
           dynamic_covariate
         ]]
       }
-      if (include_clusters != FALSE & inherits(predictions, "data.frame")) {
-        # Include predicted cluster membership in the training dataset and in the survival formula
+      if (include_clusters != FALSE && inherits(predictions, "data.frame")) {
+        # Include predicted cluster membership in the training dataset and in
+        # the survival formula
         survival_df <- bind_cols(
           survival_df,
           predictions

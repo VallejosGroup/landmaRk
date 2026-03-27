@@ -110,7 +110,7 @@
     result_df <- result_df |>
       dplyr::filter(get(x@times) <= landmark)
   }
-  return(result_df)
+  result_df
 }
 
 # Initialize a cluster for parallel processing based on the operating system
@@ -154,6 +154,11 @@
     }
   }
   predictions
+}
+
+# Check if system supports parallel processing
+.supports_parallel <- function() {
+  Sys.info()[["sysname"]] != "Windows"
 }
 
 .fit_longitudinal_model <- function(
