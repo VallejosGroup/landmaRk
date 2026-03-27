@@ -28,7 +28,7 @@ predict_survival(
 
 - landmarks:
 
-  A numeric vector of landmark times.
+  Numeric vector of landmark times.
 
 - horizons:
 

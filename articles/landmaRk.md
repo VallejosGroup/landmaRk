@@ -307,7 +307,7 @@ now, in-sample) performance metrics.
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),
-  horizons = c(18, 20), 
+  horizons = c(18, 20),
   auc_t = TRUE, c_index = FALSE,
   h_times = c(3, 6, 12)
 )
@@ -393,7 +393,10 @@ As before, one can also use the function `summary` to display the
 results.
 
 ``` r
-summary(landmarking_object, type = "longitudinal", landmark = 6, dynamic_covariate = "CD4")
+summary(landmarking_object,
+        type = "longitudinal",
+        landmark = 6,
+        dynamic_covariate = "CD4")
 #> Linear mixed model fit by REML ['lmerMod']
 #> Formula: value ~ prevOI + obstime + (obstime | patient)
 #>    Data: dataframe
@@ -429,7 +432,7 @@ Here are the performance metrics:
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),
-  horizons = c(18, 20), 
+  horizons = c(18, 20),
   auc_t = TRUE, c_index = FALSE,
   h_times = c(3, 6, 12)
 )
@@ -519,7 +522,10 @@ landmarking_object <- landmarking_object |>
 ```
 
 ``` r
-summary(landmarking_object, type = "longitudinal", landmark = 6, dynamic_covariate = "CD4")
+summary(landmarking_object,
+        type = "longitudinal",
+        landmark = 6,
+        dynamic_covariate = "CD4")
 #> Heterogenous linear mixed model 
 #>      fitted by maximum likelihood method 
 #>  
@@ -593,7 +599,7 @@ summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),
-  horizons = c(18, 20), 
+  horizons = c(18, 20),
   auc_t = TRUE, c_index = FALSE,
   h_times = c(3, 6, 12)
 )

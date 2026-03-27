@@ -76,7 +76,7 @@ higher risk by the model than the subject j, for event \\E_k\\ until
 time \\t\\. \\Q\[i,j\] = 0\\ for tied predictions.
 
 N_t == number of subjects with survival time \< time point and
-experience event of interest Tied event times are included
+experience event of interest. Tied event times are included
 
 ## References
 

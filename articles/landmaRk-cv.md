@@ -184,7 +184,10 @@ smaller, because we have held out part of the original dataset for
 validation.
 
 ``` r
-summary(landmarking_object, type = "longitudinal", landmark = 6, dynamic_covariate = "CD4")
+summary(landmarking_object,
+        type = "longitudinal",
+        landmark = 6,
+        dynamic_covariate = "CD4")
 #> Linear mixed model fit by REML ['lmerMod']
 #> Formula: value ~ prevOI + obstime + (obstime | patient)
 #>    Data: dataframe
@@ -219,7 +222,7 @@ Here are the in-sample performance metrics:
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),
-  horizons = c(18, 20), 
+  horizons = c(18, 20),
   auc_t = TRUE, c_index = FALSE,
   h_times = c(3, 6, 12)
 )
@@ -238,7 +241,7 @@ Out-of-sample performance metrics can be obtained by specifying
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),
-  horizons = c(18, 20), 
+  horizons = c(18, 20),
   auc_t = TRUE, c_index = FALSE,
   h_times = c(3, 6, 12),
   train = FALSE
@@ -277,12 +280,12 @@ metrics <- list()
 for (k in 1:5) {
   metrics[[k]] <- landmarking_object |>
     fit_longitudinal(
-    landmarks = c(6, 8),
-    method = "lme4",
-    formula = value ~ prevOI + obstime + (obstime | patient),
-    dynamic_covariates = c("CD4"),
-    validation_fold = k
-  ) |>
+      landmarks = c(6, 8),
+      method = "lme4",
+      formula = value ~ prevOI + obstime + (obstime | patient),
+      dynamic_covariates = c("CD4"),
+      validation_fold = k
+    ) |>
   predict_longitudinal(
     landmarks = c(6, 8),
     method = "lme4",
@@ -307,7 +310,7 @@ for (k in 1:5) {
   ) |>
     performance_metrics(
       landmarks = c(6, 8),
-      horizons = c(18, 20), 
+      horizons = c(18, 20),
       auc_t = TRUE, brier = TRUE, c_index = FALSE,
       h_times = c(3, 6, 12)
     )

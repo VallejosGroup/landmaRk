@@ -1,7 +1,7 @@
 # Binary Brier Score
 
 Computes the Binary Brier Score (BBS) for binary outcomes at a specified
-time point \\\tau\\.
+time point, \\\tau\\.
 
 ## Usage
 

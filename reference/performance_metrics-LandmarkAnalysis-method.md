@@ -56,3 +56,8 @@ performance_metrics(
 
   A numeric vector of prediction horizon times, specified relative to
   each landmark time, at which auc_t and Brier scores are calculated.
+
+## Value
+
+Data frame with performance metrics across the specified landmark times
+and prediction horizons.

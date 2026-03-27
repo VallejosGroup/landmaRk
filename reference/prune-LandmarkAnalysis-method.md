@@ -9,7 +9,7 @@ the object.
 
 ``` r
 # S4 method for class 'LandmarkAnalysis'
-prune(x, landmark = NULL)
+prune(x, landmark = NULL, ...)
 ```
 
 ## Arguments
@@ -22,6 +22,10 @@ prune(x, landmark = NULL)
 - landmark:
 
   A numeric indicating the landmark time.
+
+- ...:
+
+  Additional arguments (not currently used)
 
 ## Value
 

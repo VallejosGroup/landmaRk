@@ -61,6 +61,7 @@ the landmark times</p>
 <span>  <span class="va">dynamic_covariates</span>,</span>
 <span>  validation_fold <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  cores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"Ncpus"</span>, <span class="fl">1L</span><span class="op">)</span>,</span>
+<span>  .warn_when_prop_few_obs <span class="op">=</span> <span class="fl">0.25</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -103,6 +104,12 @@ dataset.</p></dd>
 Linux and MacOS. Defaults to either <code>options("Ncpus")</code> if set, or 1
 (single threaded) otherwise. Only single-threaded computation is currently
 supported on Windows.</p></dd>
+
+
+<dt id="arg--warn-when-prop-few-obs">.warn_when_prop_few_obs<a class="anchor" aria-label="anchor" href="#arg--warn-when-prop-few-obs"></a></dt>
+<dd><p>Threshold proportion (0-1) for warning when
+individuals have 0 or 1 observations. Defaults to 0.25 (i.e., warn when
+25% or more individuals have few observations).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

@@ -360,7 +360,7 @@ calculate (for now, in-sample) performance metrics.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
 <span>  <span class="va">landmarking_object</span>,</span>
 <span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>,</span>
-<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">20</span><span class="op">)</span>, </span>
+<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">20</span><span class="op">)</span>,</span>
 <span>  auc_t <span class="op">=</span> <span class="cn">TRUE</span>, c_index <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  h_times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -437,7 +437,10 @@ model section.</p></li>
 <p>As before, one can also use the function <code>summary</code> to
 display the results.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"longitudinal"</span>, landmark <span class="op">=</span> <span class="fl">6</span>, dynamic_covariate <span class="op">=</span> <span class="st">"CD4"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"longitudinal"</span>,</span>
+<span>        landmark <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>        dynamic_covariate <span class="op">=</span> <span class="st">"CD4"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Linear mixed model fit by REML ['lmerMod']</span></span>
 <span><span class="co">#&gt; Formula: value ~ prevOI + obstime + (obstime | patient)</span></span>
 <span><span class="co">#&gt;    Data: dataframe</span></span>
@@ -468,7 +471,7 @@ display the results.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
 <span>  <span class="va">landmarking_object</span>,</span>
 <span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>,</span>
-<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">20</span><span class="op">)</span>, </span>
+<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">20</span><span class="op">)</span>,</span>
 <span>  auc_t <span class="op">=</span> <span class="cn">TRUE</span>, c_index <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  h_times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -551,7 +554,10 @@ model.</p></li>
 <span>    include_clusters <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"longitudinal"</span>, landmark <span class="op">=</span> <span class="fl">6</span>, dynamic_covariate <span class="op">=</span> <span class="st">"CD4"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"longitudinal"</span>,</span>
+<span>        landmark <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>        dynamic_covariate <span class="op">=</span> <span class="st">"CD4"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Heterogenous linear mixed model </span></span>
 <span><span class="co">#&gt;      fitted by maximum likelihood method </span></span>
 <span><span class="co">#&gt;  </span></span>
@@ -621,7 +627,7 @@ model.</p></li>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
 <span>  <span class="va">landmarking_object</span>,</span>
 <span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>,</span>
-<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">20</span><span class="op">)</span>, </span>
+<span>  horizons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">20</span><span class="op">)</span>,</span>
 <span>  auc_t <span class="op">=</span> <span class="cn">TRUE</span>, c_index <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  h_times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
