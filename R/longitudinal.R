@@ -91,7 +91,9 @@ setMethod(
         .warn_when_prop_few_obs < 0 ||
         .warn_when_prop_few_obs > 1
     ) {
-      stop("@.warn_when_prop_few_obs must be a single numeric value between 0 and 1")
+      stop(
+        "@.warn_when_prop_few_obs must be a single numeric value between 0 and 1"
+      )
     }
 
     method <- .check_method_long_fit(method)
