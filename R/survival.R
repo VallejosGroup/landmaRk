@@ -108,24 +108,6 @@ setMethod(
       # Include predicted cluster membership in the training dataset and in the survival formula
       if (length(dynamic_covariates) > 0 && include_clusters != FALSE) {
         for (dynamic_covariate in dynamic_covariates) {
-          ### formula <- as.formula(
-          ###   paste(
-          ###     as.character(formula)[2],
-          ###     as.character(formula)[1],
-          ###     paste(
-          ###       paste0(
-          ###         strsplit(as.character(formula)[3], " *\\+ *")[[1]],
-          ###         "*cluster_",
-          ###         dynamic_covariate
-          ###       ),
-          ###       collapse = " + "
-          ###     ),
-          ###     paste0(
-          ###       " + ",
-          ###       paste0("strata(cluster_", dynamic_covariate, ")")
-          ###     )
-          ###   )
-          ### )
           if (include_clusters == "strata") {
             formula <- as.formula(
               paste(
