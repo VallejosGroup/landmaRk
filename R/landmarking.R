@@ -179,11 +179,10 @@ LandmarkAnalysis <- function(
   for (dynamic_covariate in names(data_dynamic)) {
     if (measurements %in% names(data_dynamic[[dynamic_covariate]])) {
       if (
-        inherits(data_dynamic[[dynamic_covariate]][, measurements], "character")
+        inherits(data_dynamic[[dynamic_covariate]][[measurements]], "character")
       ) {
-        data_dynamic[[dynamic_covariate]][,
-          measurements
-        ] <- as.factor(data_dynamic[[dynamic_covariate]][, measurements])
+        data_dynamic[[dynamic_covariate]][[measurements]] <-
+          as.factor(data_dynamic[[dynamic_covariate]][[measurements]])
         message(
           "Dynamic covariate ",
           dynamic_covariate,
@@ -475,7 +474,7 @@ setMethod(
       x@landmarks <- c(x@landmarks, landmarks)
       # Compute risk set for given landmark time
       x@risk_sets[[as.character(landmarks)]] <-
-        x@data_static[which(x@data_static[, x@event_time] >= landmarks), x@ids]
+        x@data_static[[x@ids]][x@data_static[[x@event_time]] >= landmarks]
 
       # Now raise a warning if there are individuals with less than
       # @.warn_when_less_than observations prior to landmark time
