@@ -218,6 +218,58 @@ test_that("longitudinal_fit raises warning for too few observations", {
   )
 })
 
+test_that(".warn_when_prop_few_obs validation in fit_longitudinal", {
+  x <- initialise_longitudinal_test_(epileptic = epileptic) |>
+    compute_risk_sets(365.25)
+
+  invalid_inputs <- list(
+    non_numeric_string = "0.5",
+    non_numeric_null = NULL,
+    length_greater_than_one = c(0.2, 0.5),
+    na_value = NA_real_,
+    below_zero = -0.1,
+    above_one = 1.1
+  )
+
+  for (label in names(invalid_inputs)) {
+    expect_error(
+      fit_longitudinal(
+        x,
+        landmarks = 365.25,
+        method = "lme4",
+        formula = value ~ treat + age + gender + learn.dis + (time | id),
+        dynamic_covariates = "dose",
+        .warn_when_prop_few_obs = invalid_inputs[[label]]
+      ),
+      "@.warn_when_prop_few_obs must be a single numeric value between 0 and 1",
+      label = label
+    )
+  }
+
+  # Boundary values 0 and 1 are valid — no error should be raised
+  expect_no_error(
+    fit_longitudinal(
+      x,
+      landmarks = 365.25,
+      method = "lme4",
+      formula = value ~ treat + age + gender + learn.dis + (time | id),
+      dynamic_covariates = "dose",
+      .warn_when_prop_few_obs = 0
+    )
+  )
+
+  expect_no_error(
+    fit_longitudinal(
+      x,
+      landmarks = 365.25,
+      method = "lme4",
+      formula = value ~ treat + age + gender + learn.dis + (time | id),
+      dynamic_covariates = "dose",
+      .warn_when_prop_few_obs = 1
+    )
+  )
+})
+
 test_that("predict_longitudinal works correctly with lcmm", {
   set.seed(1)
 
