@@ -7,13 +7,20 @@
     epileptic_tbl,
     ids = "id",
     times = "time",
-    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
     dynamic = c("dose"),
     measurement_name = "value"
   )
 
   list(
-    static  = dplyr::as_tibble(result$df_static),
+    static = dplyr::as_tibble(result$df_static),
     dynamic = list(dose = dplyr::as_tibble(result$df_dynamic[["dose"]]))
   )
 }
@@ -26,7 +33,14 @@ test_that("split_wide_df accepts a tibble input", {
     epileptic_tbl,
     ids = "id",
     times = "time",
-    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
     dynamic = c("dose"),
     measurement_name = "value"
   )
@@ -40,7 +54,14 @@ test_that("split_wide_df accepts a tibble input", {
     epileptic,
     ids = "id",
     times = "time",
-    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
     dynamic = c("dose"),
     measurement_name = "value"
   )
@@ -117,7 +138,14 @@ test_that("Risk sets computed from tibble inputs match those from data.frame inp
     epileptic,
     ids = "id",
     times = "time",
-    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
     dynamic = c("dose"),
     measurement_name = "value"
   )
@@ -178,7 +206,14 @@ test_that("LOCF predictions from tibble inputs match those from data.frame input
     epileptic,
     ids = "id",
     times = "time",
-    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
     dynamic = c("dose"),
     measurement_name = "value"
   )
