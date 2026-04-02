@@ -47,7 +47,8 @@ Suggests:
     tidyverse,
     spelling,
     joineR,
-    survminer
+    survminer,
+    withr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 LazyData: true
