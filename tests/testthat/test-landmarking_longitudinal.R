@@ -1,4 +1,5 @@
 initialise_longitudinal_test_ <- function(epileptic, K = 1) {
+  withr::local_seed(123)
   epileptic$dose2 <- as.factor(epileptic$dose > 2)
   epileptic_dfs <- split_wide_df(
     epileptic,
