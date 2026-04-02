@@ -1,5 +1,5 @@
 test_that("split_wide_df works as expected", {
-  set.seed(123)
+  withr::local_seed(123)
 
   static.correct <- c(
     "with.time",
