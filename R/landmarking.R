@@ -161,7 +161,7 @@ LandmarkAnalysis <- function(
 
     if (length(char_columns) == 1) {
       message(
-        "Static covariate",
+        "Static covariate ",
         paste(char_columns, collapse = ", "),
         " was coded as a character. Converted to factor."
       )

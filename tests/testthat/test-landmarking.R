@@ -154,6 +154,26 @@ test_that("Character covariates are converted to factor", {
   expect_equal(class(x@data_static$treat), "factor")
   expect_equal(class(x@data_static$gender), "factor")
 
+  # Single character static covariate produces singular message
+  static_single_char <- static
+  static_single_char$treat <- as.character(static_single_char$treat)
+  static_single_char$gender <- as.factor(static_single_char$gender)
+
+  expect_message(
+    x_single <- LandmarkAnalysis(
+      data_static = static_single_char,
+      data_dynamic = dynamic,
+      event_indicator = "with.status",
+      ids = "id",
+      event_time = "with.time",
+      times = "time",
+      measurements = "value"
+    ),
+    "Static covariate treat was coded as a character. Converted to factor."
+  )
+
+  expect_equal(class(x_single@data_static$treat), "factor")
+
   dynamic[["dose"]]$value <- as.character(dynamic[["dose"]]$value > 2)
 
   expect_message(
