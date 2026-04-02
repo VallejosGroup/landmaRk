@@ -180,7 +180,14 @@ test_that("compute_risk_sets drops individuals whose event_time is NA", {
     epileptic,
     ids = "id",
     times = "time",
-    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
     dynamic = c("dose"),
     measurement_name = "value"
   )
