@@ -174,6 +174,54 @@ test_that("Risk sets computed from tibble inputs match those from data.frame inp
   expect_equal(x_df@risk_sets[["365.25"]], x_tbl@risk_sets[["365.25"]])
 })
 
+test_that("compute_risk_sets drops individuals whose event_time is NA", {
+  data("epileptic")
+  epileptic_dfs <- split_wide_df(
+    epileptic,
+    ids = "id",
+    times = "time",
+    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    dynamic = c("dose"),
+    measurement_name = "value"
+  )
+  static <- epileptic_dfs$df_static
+  dynamic <- epileptic_dfs$df_dynamic
+
+  # Introduce NA event_time for one individual
+  na_id <- static$id[1]
+  static$with.time[static$id == na_id] <- NA
+
+  x_df <- LandmarkAnalysis(
+    data_static = static,
+    data_dynamic = dynamic,
+    event_indicator = "with.status",
+    ids = "id",
+    event_time = "with.time",
+    times = "time",
+    measurements = "value"
+  ) |>
+    compute_risk_sets(landmarks = 365.25)
+
+  # The individual with NA event_time must not appear in the risk set
+  expect_false(na_id %in% x_df@risk_sets[["365.25"]])
+
+  # Same behaviour when data_static is a tibble
+  static_tbl <- dplyr::as_tibble(static)
+  x_tbl <- LandmarkAnalysis(
+    data_static = static_tbl,
+    data_dynamic = dynamic,
+    event_indicator = "with.status",
+    ids = "id",
+    event_time = "with.time",
+    times = "time",
+    measurements = "value"
+  ) |>
+    compute_risk_sets(landmarks = 365.25)
+
+  expect_false(na_id %in% x_tbl@risk_sets[["365.25"]])
+  expect_equal(x_df@risk_sets[["365.25"]], x_tbl@risk_sets[["365.25"]])
+})
+
 test_that("LOCF predict_longitudinal works with tibble inputs", {
   dfs <- .build_tibble_dfs()
 
