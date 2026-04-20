@@ -1,6 +1,5 @@
 test_that("Error handling for fit_survival", {
-  set.seed(123)
-
+  withr::local_seed(123)
   epileptic_dfs <- split_wide_df(
     epileptic,
     ids = "id",

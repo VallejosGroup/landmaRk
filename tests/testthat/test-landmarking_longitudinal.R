@@ -1,7 +1,6 @@
 initialise_longitudinal_test_ <- function(epileptic, K = 1) {
-  set.seed(123)
+  withr::local_seed(123)
   epileptic$dose2 <- as.factor(epileptic$dose > 2)
-
   epileptic_dfs <- split_wide_df(
     epileptic,
     ids = "id",
@@ -38,6 +37,7 @@ initialise_longitudinal_test_ <- function(epileptic, K = 1) {
 }
 
 test_that("LCMM works as expected", {
+  withr::local_seed(123)
   x <- initialise_longitudinal_test_(epileptic = epileptic)
   x <- x |>
     compute_risk_sets(seq(from = 365.25, to = 5 * 365.25, by = 365.25)) |>
@@ -191,10 +191,10 @@ test_that("LOCF populates test fold predictions when validation_fold > 0", {
 })
 
 test_that("longitudinal_fit raises warning for too few observations", {
-  set.seed(1)
   epileptic <- epileptic |> dplyr::filter(time < 368) |> head(20)
   epileptic <- epileptic[-c(18, 19), ]
 
+  withr::local_seed(123)
   x <- initialise_longitudinal_test_(epileptic = epileptic)
 
   expect_warning(
@@ -219,7 +219,7 @@ test_that("longitudinal_fit raises warning for too few observations", {
 })
 
 test_that("predict_longitudinal works correctly with lcmm", {
-  set.seed(1)
+  withr::local_seed(1)
 
   data("epileptic")
 
