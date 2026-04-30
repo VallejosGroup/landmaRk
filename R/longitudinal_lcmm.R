@@ -449,6 +449,35 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
+#' data(epileptic)
+#' epileptic_dfs <- split_wide_df(
+#'   epileptic,
+#'   ids = "id", times = "time",
+#'   static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+#'   dynamic = c("dose"),
+#'   measurement_name = "value"
+#' )
+#' x <- LandmarkAnalysis(
+#'   data_static = epileptic_dfs$df_static,
+#'   data_dynamic = epileptic_dfs$df_dynamic,
+#'   event_indicator = "with.status",
+#'   ids = "id", event_time = "with.time",
+#'   times = "time", measurements = "value"
+#' ) |>
+#'   compute_risk_sets(365.25) |>
+#'   fit_longitudinal(
+#'     landmarks = 365.25,
+#'     method = "lcmm",
+#'     formula = value ~ time + treat,
+#'     mixture = ~ time + treat,
+#'     random = ~ time,
+#'     subject = "id",
+#'     ng = 2,
+#'     dynamic_covariates = c("dose")
+#'   )
+#' check_lcmm_convergence(x)
+#' }
 check_lcmm_convergence <- function(x) {
   if (!is(x, "LandmarkAnalysis")) {
     stop("x must be an object of class LandmarkAnalysis")

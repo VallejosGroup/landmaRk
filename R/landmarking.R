@@ -244,6 +244,25 @@ LandmarkAnalysis <- function(
 #' @export
 #'
 #' @examples
+#' \donttest{
+#' data(epileptic)
+#' epileptic_dfs <- split_wide_df(
+#'   epileptic,
+#'   ids = "id", times = "time",
+#'   static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+#'   dynamic = c("dose"),
+#'   measurement_name = "value"
+#' )
+#' x <- LandmarkAnalysis(
+#'   data_static = epileptic_dfs$df_static,
+#'   data_dynamic = epileptic_dfs$df_dynamic,
+#'   event_indicator = "with.status",
+#'   ids = "id", event_time = "with.time",
+#'   times = "time", measurements = "value"
+#' ) |>
+#'   compute_risk_sets(365.25)
+#' show(x)
+#' }
 setMethod(
   f = "show",
   signature = "LandmarkAnalysis",
@@ -285,6 +304,47 @@ setMethod(
 #' @export
 #'
 #' @examples
+#' \donttest{
+#' data(epileptic)
+#' epileptic_dfs <- split_wide_df(
+#'   epileptic,
+#'   ids = "id", times = "time",
+#'   static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+#'   dynamic = c("dose"),
+#'   measurement_name = "value"
+#' )
+#' x <- LandmarkAnalysis(
+#'   data_static = epileptic_dfs$df_static,
+#'   data_dynamic = epileptic_dfs$df_dynamic,
+#'   event_indicator = "with.status",
+#'   ids = "id", event_time = "with.time",
+#'   times = "time", measurements = "value"
+#' ) |>
+#'   compute_risk_sets(365.25) |>
+#'   fit_longitudinal(
+#'     landmarks = 365.25,
+#'     method = "lme4",
+#'     formula = value ~ treat + age + gender + learn.dis + (time | id),
+#'     dynamic_covariates = c("dose")
+#'   ) |>
+#'   predict_longitudinal(
+#'     landmarks = 365.25,
+#'     method = "lme4",
+#'     allow.new.levels = TRUE,
+#'     dynamic_covariates = c("dose")
+#'   ) |>
+#'   fit_survival(
+#'     formula = survival::Surv(event_time, event_status) ~
+#'       treat + age + gender + learn.dis + dose,
+#'     landmarks = 365.25,
+#'     horizons = 2 * 365.25,
+#'     method = "coxph",
+#'     dynamic_covariates = c("dose")
+#'   ) |>
+#'   predict_survival(landmarks = 365.25, horizons = 2 * 365.25)
+#' summary(x, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
+#' summary(x, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
+#' }
 setMethod(
   "summary",
   signature(

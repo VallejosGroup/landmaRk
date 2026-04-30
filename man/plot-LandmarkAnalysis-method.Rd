@@ -37,6 +37,9 @@ longitudinal model is not an LCMM.}
 \item{...}{Additional arguments passed to \code{\link[survminer:ggadjustedcurves]{survminer::ggadjustedcurves()}}
 for plotting survival curves.}
 }
+\value{
+Plot with longitudinal trajectory and survival curve
+}
 \description{
 Plots longitudinal trajectories and survival curves for landmarking models.
 }

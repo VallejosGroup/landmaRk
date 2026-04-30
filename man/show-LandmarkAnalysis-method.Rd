@@ -12,3 +12,24 @@
 \description{
 Displays an object of class "\code{\link{LandmarkAnalysis}}"
 }
+\examples{
+\donttest{
+data(epileptic)
+epileptic_dfs <- split_wide_df(
+  epileptic,
+  ids = "id", times = "time",
+  static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+  dynamic = c("dose"),
+  measurement_name = "value"
+)
+x <- LandmarkAnalysis(
+  data_static = epileptic_dfs$df_static,
+  data_dynamic = epileptic_dfs$df_dynamic,
+  event_indicator = "with.status",
+  ids = "id", event_time = "with.time",
+  times = "time", measurements = "value"
+) |>
+  compute_risk_sets(365.25)
+show(x)
+}
+}
