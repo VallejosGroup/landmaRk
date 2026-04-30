@@ -85,9 +85,6 @@ setMethod(
       landmark <- landmarks[i]
       horizon <- horizons[i]
 
-      # Retrieve survival analysis dataset (censor events past horizon time)
-      dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
-
       # Recover the observations and predictions (in-sample or out-of-sample)
       if (train) {
         dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
