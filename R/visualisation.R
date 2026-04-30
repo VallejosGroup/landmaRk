@@ -14,7 +14,7 @@
 #' @param ... Additional arguments passed to [survminer::ggadjustedcurves()]
 #'   for plotting survival curves.
 #'
-#' @returns
+#' @returns Plot with longitudinal trajectory and survival curve
 #' @export
 #'
 #' @examples
