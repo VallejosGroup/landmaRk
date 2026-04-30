@@ -107,11 +107,11 @@
 
 # Helper function to make class-specific predictions for a set of individuals
 .make_class_predictions <- function(
-    x,
-    individuals,
-    newdata,
-    predRE,
-    subject
+  x,
+  individuals,
+  newdata,
+  predRE,
+  subject
 ) {
   predictions <- t(sapply(
     individuals,
