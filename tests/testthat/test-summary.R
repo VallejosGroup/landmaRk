@@ -57,7 +57,6 @@ test_that("Summary method works", {
     predict_survival(
       landmarks = 365.25,
       horizons = 2 * 365.25,
-      method = "coxph",
       type = "survival"
     )
 

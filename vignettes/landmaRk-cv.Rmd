@@ -127,7 +127,6 @@ landmarking_object <- landmarking_object |>
   predict_survival(
     landmarks = c(6, 8),
     horizons = 12 + c(6, 8),
-    method = "coxph",
     type = "lp",
     validation_fold = 5
   )
@@ -223,7 +222,6 @@ for (k in 1:5) {
   predict_survival(
     landmarks = c(6, 8),
     horizons = 12 + c(6, 8),
-    method = "coxph",
     type = "lp",
     validation_fold = k
   ) |>

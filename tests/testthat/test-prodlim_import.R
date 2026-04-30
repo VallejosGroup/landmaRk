@@ -64,7 +64,6 @@ test_that("Hist is available without attaching prodlim", {
     predict_survival(
       landmarks = 365.25,
       horizons = 2 * 365.25,
-      method = "coxph",
       type = "survival"
     )
 
