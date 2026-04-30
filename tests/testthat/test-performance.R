@@ -4,7 +4,14 @@ test_that("auc_t uses per-subject predicted risks, not a scalar", {
     epileptic,
     ids = "id",
     times = "time",
-    static = c("with.time", "with.status", "treat", "age", "gender", "learn.dis"),
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
     dynamic = c("dose"),
     measurement_name = "value"
   )
@@ -20,7 +27,8 @@ test_that("auc_t uses per-subject predicted risks, not a scalar", {
   ) |>
     compute_risk_sets(365.25) |>
     fit_survival(
-      formula = survival::Surv(event_time, event_status) ~ treat + age + gender + learn.dis,
+      formula = survival::Surv(event_time, event_status) ~
+        treat + age + gender + learn.dis,
       landmarks = 365.25,
       horizons = 2 * 365.25,
       method = "coxph"
@@ -40,7 +48,8 @@ test_that("auc_t uses per-subject predicted risks, not a scalar", {
   model_name <- "365.25-730.5"
   dataset <- x@survival_datasets[[model_name]]
   sfit <- summary(x@survival_predictions[[model_name]], times = 365.25)
-  pred_risks <- 1 - matrix(sfit$surv, nrow = nrow(dataset), ncol = 1, byrow = TRUE)[, 1]
+  pred_risks <- 1 -
+    matrix(sfit$surv, nrow = nrow(dataset), ncol = 1, byrow = TRUE)[, 1]
 
   expected_auct <- unname(
     timeROC::timeROC(

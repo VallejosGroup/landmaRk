@@ -239,7 +239,9 @@ setMethod(
     if (is(method)[1] != "character") {
       stop("@method must be of type character.")
     } else if (method != "survfit") {
-      stop("'survfit' is the only @method supported in this version of landmaRk")
+      stop(
+        "'survfit' is the only @method supported in this version of landmaRk"
+      )
     }
     if (length(landmarks) != length(horizons)) {
       stop("@landmarks and @horizons must be of the same length.")
