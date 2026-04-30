@@ -129,7 +129,7 @@ setMethod(
         newdata[, "prediction"] <- predictions
         newdata[
           nrow(newdata) + 1,
-          c("ParticipantId", "time", "prediction")
+          c(x@ids, "time", "prediction")
         ] <- c(
           id,
           landmark,
@@ -155,7 +155,7 @@ setMethod(
           newdata[, "prediction"] <- predictions$pred %*% t(class_probabilities)
           newdata[
             nrow(newdata) + 1,
-            c("ParticipantId", "time", "prediction")
+            c(x@ids, "time", "prediction")
           ] <- c(
             id,
             landmark,
@@ -177,7 +177,7 @@ setMethod(
           newdata[, "prediction"] <- predictions$pred[, predicted_cluster]
           newdata[
             nrow(newdata) + 1,
-            c("ParticipantId", "time", "prediction")
+            c(x@ids, "time", "prediction")
           ] <- c(
             id,
             landmark,
@@ -187,7 +187,7 @@ setMethod(
           )
           newdata[
             nrow(newdata) + 1,
-            c("ParticipantId", "time", "prediction")
+            c(x@ids, "time", "prediction")
           ] <- c(
             id,
             landmark,

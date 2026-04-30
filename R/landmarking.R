@@ -666,7 +666,7 @@ setMethod(
       paste0(landmark, "-")
     ))
     if (length(model_names) > 0) {
-      x@survival_predictions[[model_names]] <- NULL
+      x@survival_predictions[model_names] <- NULL
     }
 
     # Prune survival model fits
@@ -675,7 +675,7 @@ setMethod(
       paste0(landmark, "-")
     ))
     if (length(model_names) > 0) {
-      x@survival_fits[[model_names]] <- NULL
+      x@survival_fits[model_names] <- NULL
     }
 
     # Prune survival datasets
@@ -696,7 +696,7 @@ setMethod(
     # Prune longitudinal model fits
     model_name <- which(names(x@longitudinal_fits) == landmark)
     if (length(model_name) > 0) {
-      x@longitudinal_fits[[model_name]] <- NULL
+      x@longitudinal_fits[model_name] <- NULL
     }
 
     # Prune risk sets
