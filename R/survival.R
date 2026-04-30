@@ -187,7 +187,8 @@ setMethod(
 #' Make predictions for time-to-event outcomes at specified horizon times
 #'
 #' @inheritParams fit_survival
-#' @param method R function that is used to make predictions
+#' @param method Name of the function that is used to make predictions.
+#'   At the moment, 'survfit' is the only supported @method.
 #' @param ... Additional arguments passed to the prediction function (e.g.
 #'   number of classes/clusters for lcmm).
 #'
@@ -201,7 +202,7 @@ setGeneric(
     x,
     landmarks,
     horizons,
-    method,
+    method = "survfit",
     dynamic_covariates = c(),
     include_clusters = FALSE,
     censor_at_horizon = FALSE,
@@ -227,7 +228,7 @@ setMethod(
     x,
     landmarks,
     horizons,
-    method,
+    method = "survfit",
     dynamic_covariates = c(),
     include_clusters = FALSE,
     censor_at_horizon = FALSE,
@@ -235,15 +236,10 @@ setMethod(
     ...
   ) {
     # Check that method is a function with arguments formula, data, ...
-    if (is(method)[1] == "character" && method == "coxph") {
-      method <- predict
-    }
-    if (!(is(method)[1] == "function")) {
-      stop(
-        "Argument method",
-        " must be a function",
-        "\n"
-      )
+    if (is(method)[1] != "character") {
+      stop("@method must be of type character.")
+    } else if (method != "survfit") {
+      stop("'survfit' is the only @method supported in this version of landmaRk")
     }
     if (length(landmarks) != length(horizons)) {
       stop("@landmarks and @horizons must be of the same length.")
