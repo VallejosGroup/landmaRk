@@ -37,7 +37,7 @@ setMethod(
       } else if (is.null(landmark)) {
         stop("Argument @landmark is required when @type = 'survival'")
       } else if (is.null(dynamic_covariate)) {
-        stop("Argument @window is required when @type = 'survival'")
+        stop("Argument @dynamic_covariate is required when @type = 'survival'")
       }
       if (!is.null(id)) {
         # If id is specified, generate survival plot for the relevant subject
