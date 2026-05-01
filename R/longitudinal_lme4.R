@@ -35,6 +35,14 @@
     # Outwith the training set, lme4 predictions are marginal predictions
     # We make BLUP predictions and add them to the marginal predictions
   } else {
+    if (length(lme4::findbars(formula(x))) > 1) {
+      stop(
+        "Out-of-sample BLUP predictions are only supported for models with a ",
+        "single random-effect grouping. Found ",
+        length(lme4::findbars(formula(x))),
+        " groupings. Use a model with a single grouping (e.g. (1 + time | id))."
+      )
+    }
     # First, calculate predictions using lme4::predict.merMod
     lme4_predictions <- predict(
       x,
