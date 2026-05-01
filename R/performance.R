@@ -180,7 +180,7 @@ setMethod(
               marker = pred_matrix[, 1],
               cause = 1,
               times = horizon - landmark
-            )$AUC[2]
+            )$AUC[paste0("t=", horizon - landmark)]
           )
         } else {
           auct_list[[paste0(landmark, "-", horizon)]] <- sapply(
