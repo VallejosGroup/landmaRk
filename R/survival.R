@@ -280,7 +280,7 @@ setMethod(
             horizons,
             dynamic_covariates,
             include_clusters,
-            censor_at_horizon,
+            FALSE, # Never perform horizon-censoring in the test dataset
             validation_fold,
             train = FALSE
           )
