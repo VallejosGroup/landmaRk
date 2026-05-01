@@ -145,6 +145,16 @@
   predictions <- predictions |> dplyr::pull(x@measurements, name = x@ids)
   # Impute NAs
   if (any(is.na(predictions))) {
+    n_imputed <- sum(is.na(predictions))
+    message(
+      n_imputed,
+      " individual(s) have no observations before landmark time ",
+      landmarks,
+      " for dynamic covariate ",
+      dynamic_covariate,
+      ". Imputing with population ",
+      if (is.numeric(predictions)) "mean." else "mode."
+    )
     if (is.numeric(predictions)) {
       # Replace NAs with mean if covariate is continuous
       predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
