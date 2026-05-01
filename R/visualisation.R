@@ -129,7 +129,7 @@ setMethod(
         newdata[, "prediction"] <- predictions
         newdata[
           nrow(newdata) + 1,
-          c(x@ids, "time", "prediction")
+          c(x@ids, x@times, "prediction")
         ] <- c(
           id,
           landmark,
