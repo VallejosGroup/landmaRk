@@ -445,7 +445,7 @@ setMethod("getLandmarks", "LandmarkAnalysis", function(object) object@landmarks)
 # Accessor for event
 setGeneric("getEvent", function(object) standardGeneric("getEvent"))
 setMethod("getEvent", "LandmarkAnalysis", function(object) {
-  object@event_indicaator
+  object@event_indicator
 })
 
 # Accessor for ids
