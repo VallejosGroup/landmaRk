@@ -222,7 +222,6 @@ for (k in 1:5) {
   predict_survival(
     landmarks = c(6, 8),
     horizons = 12 + c(6, 8),
-    type = "lp",
     validation_fold = k
   ) |>
     performance_metrics(
