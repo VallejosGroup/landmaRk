@@ -148,24 +148,29 @@ test_that("LOCF emits a message when continuous imputation occurs", {
   )
   data_dynamic <- list(
     dose = data.frame(
-      id    = c(1L, 1L, 2L, 3L),
-      time  = c(0.5, 2.0, 2.0, 0.8),
+      id = c(1L, 1L, 2L, 3L),
+      time = c(0.5, 2.0, 2.0, 0.8),
       value = c(1.0, 2.0, 3.0, 1.5)
     )
   )
   x <- LandmarkAnalysis(
-    data_static     = data_static,
-    data_dynamic    = data_dynamic,
+    data_static = data_static,
+    data_dynamic = data_dynamic,
     event_indicator = "event_status",
-    ids             = "id",
-    event_time      = "event_time",
-    times           = "time",
-    measurements    = "value"
-  ) |> compute_risk_sets(1)
+    ids = "id",
+    event_time = "event_time",
+    times = "time",
+    measurements = "value"
+  ) |>
+    compute_risk_sets(1)
 
   expect_message(
-    predict_longitudinal(x, landmarks = 1, method = "locf",
-                         dynamic_covariates = "dose"),
+    predict_longitudinal(
+      x,
+      landmarks = 1,
+      method = "locf",
+      dynamic_covariates = "dose"
+    ),
     "1 individual\\(s\\) have no observations before landmark time 1 for dynamic covariate dose. Imputing with population mean."
   )
 })
@@ -180,24 +185,29 @@ test_that("LOCF emits a message when discrete imputation occurs", {
   )
   data_dynamic <- list(
     group = data.frame(
-      id    = c(1L, 1L, 2L, 3L),
-      time  = c(0.5, 2.0, 2.0, 0.8),
+      id = c(1L, 1L, 2L, 3L),
+      time = c(0.5, 2.0, 2.0, 0.8),
       value = c("A", "A", "B", "A")
     )
   )
   x <- LandmarkAnalysis(
-    data_static     = data_static,
-    data_dynamic    = data_dynamic,
+    data_static = data_static,
+    data_dynamic = data_dynamic,
     event_indicator = "event_status",
-    ids             = "id",
-    event_time      = "event_time",
-    times           = "time",
-    measurements    = "value"
-  ) |> compute_risk_sets(1)
+    ids = "id",
+    event_time = "event_time",
+    times = "time",
+    measurements = "value"
+  ) |>
+    compute_risk_sets(1)
 
   expect_message(
-    predict_longitudinal(x, landmarks = 1, method = "locf",
-                         dynamic_covariates = "group"),
+    predict_longitudinal(
+      x,
+      landmarks = 1,
+      method = "locf",
+      dynamic_covariates = "group"
+    ),
     "1 individual\\(s\\) have no observations before landmark time 1 for dynamic covariate group. Imputing with population mode."
   )
 })
@@ -212,24 +222,29 @@ test_that("LOCF emits no message when all individuals have observations", {
   )
   data_dynamic <- list(
     dose = data.frame(
-      id    = c(1L, 2L, 3L),
-      time  = c(0.5, 0.6, 0.8),
+      id = c(1L, 2L, 3L),
+      time = c(0.5, 0.6, 0.8),
       value = c(1.0, 2.0, 3.0)
     )
   )
   x <- LandmarkAnalysis(
-    data_static     = data_static,
-    data_dynamic    = data_dynamic,
+    data_static = data_static,
+    data_dynamic = data_dynamic,
     event_indicator = "event_status",
-    ids             = "id",
-    event_time      = "event_time",
-    times           = "time",
-    measurements    = "value"
-  ) |> compute_risk_sets(1)
+    ids = "id",
+    event_time = "event_time",
+    times = "time",
+    measurements = "value"
+  ) |>
+    compute_risk_sets(1)
 
   expect_no_message(
-    predict_longitudinal(x, landmarks = 1, method = "locf",
-                         dynamic_covariates = "dose")
+    predict_longitudinal(
+      x,
+      landmarks = 1,
+      method = "locf",
+      dynamic_covariates = "dose"
+    )
   )
 })
 
