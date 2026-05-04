@@ -1,10 +1,10 @@
-pandoc: 3.1.11
+pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   landmaRk-cv: landmaRk-cv.html
   landmaRk: landmaRk.html
-last_built: 2026-04-27T05:53Z
+last_built: 2026-05-04T05:57Z
 urls:
   reference: https://vallejosgroup.github.io/landmaRk/reference
   article: https://vallejosgroup.github.io/landmaRk/articles

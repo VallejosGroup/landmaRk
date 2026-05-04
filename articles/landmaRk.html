@@ -575,9 +575,9 @@ model.</p></li>
 <span><span class="co">#&gt; Iteration process: </span></span>
 <span><span class="co">#&gt;      Convergence criteria satisfied </span></span>
 <span><span class="co">#&gt;      Number of iterations:  12 </span></span>
-<span><span class="co">#&gt;      Convergence criteria: parameters= 7.1e-09 </span></span>
-<span><span class="co">#&gt;                          : likelihood= 1.4e-08 </span></span>
-<span><span class="co">#&gt;                          : second derivatives= 1e-12 </span></span>
+<span><span class="co">#&gt;      Convergence criteria: parameters= 2.3e-08 </span></span>
+<span><span class="co">#&gt;                          : likelihood= 1.2e-07 </span></span>
+<span><span class="co">#&gt;                          : second derivatives= 8e-13 </span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; Goodness-of-fit statistics: </span></span>
 <span><span class="co">#&gt;      maximum log-likelihood: -2578.12  </span></span>
@@ -591,17 +591,17 @@ model.</p></li>
 <span><span class="co">#&gt; (the class of reference is the last class) </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                      coef      Se   Wald p-value</span></span>
-<span><span class="co">#&gt; intercept class1  0.02129 0.17431  0.122 0.90279</span></span>
+<span><span class="co">#&gt; intercept class1  0.02129 0.17874  0.119 0.90519</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Fixed effects in the longitudinal model:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                       coef      Se   Wald p-value</span></span>
-<span><span class="co">#&gt; intercept class1   5.38287 0.31868 16.891 0.00000</span></span>
-<span><span class="co">#&gt; intercept class2  13.51658 0.49286 27.425 0.00000</span></span>
+<span><span class="co">#&gt; intercept class1   5.38287 0.31995 16.824 0.00000</span></span>
+<span><span class="co">#&gt; intercept class2  13.51658 0.49433 27.343 0.00000</span></span>
 <span><span class="co">#&gt; obstime class1    -0.16531 0.03393 -4.873 0.00000</span></span>
 <span><span class="co">#&gt; obstime class2    -0.19030 0.04637 -4.104 0.00004</span></span>
-<span><span class="co">#&gt; prevOIAIDS class1 -1.44437 0.31851 -4.535 0.00001</span></span>
-<span><span class="co">#&gt; prevOIAIDS class2 -4.82749 0.68196 -7.079 0.00000</span></span>
+<span><span class="co">#&gt; prevOIAIDS class1 -1.44437 0.31886 -4.530 0.00001</span></span>
+<span><span class="co">#&gt; prevOIAIDS class2 -4.82749 0.68294 -7.069 0.00000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variance-covariance matrix of the random-effects:</span></span>
@@ -610,8 +610,8 @@ model.</p></li>
 <span><span class="co">#&gt; obstime    -0.24981 0.16909</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                                     coef      Se</span></span>
-<span><span class="co">#&gt; Proportional coefficient class1  0.33917 0.04167</span></span>
-<span><span class="co">#&gt; Residual standard error:         1.54912 0.05467</span></span></code></pre></div>
+<span><span class="co">#&gt; Proportional coefficient class1  0.33917 0.04187</span></span>
+<span><span class="co">#&gt; Residual standard error:         1.54912 0.05468</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">6</span>, horizon <span class="op">=</span> <span class="fl">18</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call:</span></span>

@@ -54,6 +54,7 @@ Diagram of the landmaRk package pipeline
 In addition to the `landmaRk` package, we will also use `tidyverse`.
 
 ``` r
+
 set.seed(123)
 library(landmaRk)
 library(lcmm)
@@ -78,6 +79,7 @@ analysis of time-to-event data with time-varying covariates. Here is the
 structure of the dataset.
 
 ``` r
+
 library(JMbayes2)
 #> Loading required package: survival
 #> Loading required package: nlme
@@ -152,6 +154,7 @@ once per individual, rather than repeatedly for each longitudinal
 measurement.
 
 ``` r
+
 # DF with Static covariates
 aids_dfs <- split_wide_df(
   aids,
@@ -173,6 +176,7 @@ head(static)
 ```
 
 ``` r
+
 # DF with Dynamic covariates
 dynamic <- aids_dfs$df_dynamic
 head(dynamic[["CD4"]])
@@ -189,6 +193,7 @@ We can now create an object of class `LandmarkAnalysis`, using the
 helper function of the same name.
 
 ``` r
+
 landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
@@ -230,6 +235,7 @@ analysis with such covariates. First step is to establish the landmark
 times, and to work out the risk sets at each of those landmark times.
 
 ``` r
+
 landmarking_object <- landmarking_object |>
   compute_risk_sets(landmarks = c(6, 8))
 
@@ -268,6 +274,7 @@ Then, we can make predictions using the function `predict_survival`.
 Arguments `method`, `landmarks` and `horizons`are as above.
 
 ``` r
+
 landmarking_object <- landmarking_object |>
   fit_survival(
     formula = Surv(event_time, event_status) ~ drug,
@@ -288,6 +295,7 @@ To display the results, one can use the method `summary`, specifying
 `type = "survival"`, in addition to a landmark and a horizon.
 
 ``` r
+
 summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> Call:
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
@@ -304,6 +312,7 @@ Now the `performance_metrics` function can be used to calculate (for
 now, in-sample) performance metrics.
 
 ``` r
+
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),
@@ -329,6 +338,7 @@ time-varying covariate, CD4. This first step is followed by fitting a
 Cox PH sub-model using the longitudinal predictions as covariates.
 
 ``` r
+
 landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
@@ -362,6 +372,7 @@ steps:
   model section.
 
 ``` r
+
 landmarking_object <- landmarking_object |>
   fit_longitudinal(
     landmarks = c(6, 8),
@@ -393,6 +404,7 @@ As before, one can also use the function `summary` to display the
 results.
 
 ``` r
+
 summary(landmarking_object,
         type = "longitudinal",
         landmark = 6,
@@ -414,6 +426,7 @@ summary(landmarking_object,
 ```
 
 ``` r
+
 summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> Call:
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
@@ -429,6 +442,7 @@ summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 Here are the performance metrics:
 
 ``` r
+
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),
@@ -470,6 +484,7 @@ namely
 - `ng`: the number of clusters in the LCMM model.
 
 ``` r
+
 landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
@@ -482,6 +497,7 @@ landmarking_object <- LandmarkAnalysis(
 ```
 
 ``` r
+
 landmarking_object <- landmarking_object |>
   compute_risk_sets(landmarks = c(6, 8)) |>
   fit_longitudinal(
@@ -522,6 +538,7 @@ landmarking_object <- landmarking_object |>
 ```
 
 ``` r
+
 summary(landmarking_object,
         type = "longitudinal",
         landmark = 6,
@@ -543,9 +560,9 @@ summary(landmarking_object,
 #> Iteration process: 
 #>      Convergence criteria satisfied 
 #>      Number of iterations:  12 
-#>      Convergence criteria: parameters= 7.1e-09 
-#>                          : likelihood= 1.4e-08 
-#>                          : second derivatives= 1e-12 
+#>      Convergence criteria: parameters= 2.3e-08 
+#>                          : likelihood= 1.2e-07 
+#>                          : second derivatives= 8e-13 
 #>  
 #> Goodness-of-fit statistics: 
 #>      maximum log-likelihood: -2578.12  
@@ -559,17 +576,17 @@ summary(landmarking_object,
 #> (the class of reference is the last class) 
 #> 
 #>                      coef      Se   Wald p-value
-#> intercept class1  0.02129 0.17431  0.122 0.90279
+#> intercept class1  0.02129 0.17874  0.119 0.90519
 #> 
 #> Fixed effects in the longitudinal model:
 #> 
 #>                       coef      Se   Wald p-value
-#> intercept class1   5.38287 0.31868 16.891 0.00000
-#> intercept class2  13.51658 0.49286 27.425 0.00000
+#> intercept class1   5.38287 0.31995 16.824 0.00000
+#> intercept class2  13.51658 0.49433 27.343 0.00000
 #> obstime class1    -0.16531 0.03393 -4.873 0.00000
 #> obstime class2    -0.19030 0.04637 -4.104 0.00004
-#> prevOIAIDS class1 -1.44437 0.31851 -4.535 0.00001
-#> prevOIAIDS class2 -4.82749 0.68196 -7.079 0.00000
+#> prevOIAIDS class1 -1.44437 0.31886 -4.530 0.00001
+#> prevOIAIDS class2 -4.82749 0.68294 -7.069 0.00000
 #> 
 #> 
 #> Variance-covariance matrix of the random-effects:
@@ -578,11 +595,12 @@ summary(landmarking_object,
 #> obstime    -0.24981 0.16909
 #> 
 #>                                     coef      Se
-#> Proportional coefficient class1  0.33917 0.04167
-#> Residual standard error:         1.54912 0.05467
+#> Proportional coefficient class1  0.33917 0.04187
+#> Residual standard error:         1.54912 0.05468
 ```
 
 ``` r
+
 summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> Call:
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
@@ -596,6 +614,7 @@ summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 ```
 
 ``` r
+
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),

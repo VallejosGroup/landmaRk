@@ -5,6 +5,7 @@
 In addition to the `landmaRk` package, we will also use `tidyverse`.
 
 ``` r
+
 set.seed(123)
 library(landmaRk)
 library(tidyverse)
@@ -29,6 +30,7 @@ landmarking analysis of time-to-event data with time-varying covariates.
 Here is the structure of the dataset.
 
 ``` r
+
 library(JMbayes2)
 #> Loading required package: nlme
 #> 
@@ -74,6 +76,7 @@ format. We split it into two dataframes, one for static covariates and
 one for dynamic covariates.
 
 ``` r
+
 # DF with Static covariates
 aids_dfs <- split_wide_df(
   aids,
@@ -95,6 +98,7 @@ head(static)
 ```
 
 ``` r
+
 # DF with Dynamic covariates
 dynamic <- aids_dfs$df_dynamic
 head(dynamic[["CD4"]])
@@ -116,6 +120,7 @@ We then calculate the risk sets using
 [`compute_risk_sets()`](https://vallejosgroup.github.io/landmaRk/reference/compute_risk_sets.md).
 
 ``` r
+
 landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
@@ -145,6 +150,7 @@ and
 [`predict_survival()`](https://vallejosgroup.github.io/landmaRk/reference/predict_survival.md).
 
 ``` r
+
 landmarking_object <- landmarking_object |>
   fit_longitudinal(
     landmarks = c(6, 8),
@@ -184,6 +190,7 @@ smaller, because we have held out part of the original dataset for
 validation.
 
 ``` r
+
 summary(landmarking_object,
         type = "longitudinal",
         landmark = 6,
@@ -204,6 +211,7 @@ summary(landmarking_object,
 ```
 
 ``` r
+
 summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> Call:
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
@@ -219,6 +227,7 @@ summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 Here are the in-sample performance metrics:
 
 ``` r
+
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),
@@ -238,6 +247,7 @@ Out-of-sample performance metrics can be obtained by specifying
 `train = FALSE`:
 
 ``` r
+
 performance_metrics(
   landmarking_object,
   landmarks = c(6, 8),
@@ -260,6 +270,7 @@ Now, we can embed the above pipeline in a for loop to perform
 cross-validation:
 
 ``` r
+
 landmarking_object <- LandmarkAnalysis(
   data_static = static,
   data_dynamic = dynamic,
@@ -276,6 +287,7 @@ landmarking_object <- landmarking_object |>
 ```
 
 ``` r
+
 metrics <- list()
 for (k in 1:5) {
   metrics[[k]] <- landmarking_object |>
