@@ -26,6 +26,7 @@ Depends:
     survival
 Imports:
     dplyr,
+    ggplot2,
     lme4,
     Matrix,
     methods,

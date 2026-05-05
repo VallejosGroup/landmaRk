@@ -2,44 +2,38 @@
 % Please edit documentation in R/visualisation.R
 \name{plot,LandmarkAnalysis-method}
 \alias{plot,LandmarkAnalysis-method}
-\title{Plots longitudinal trajectories and survival curves for landmarking models.}
+\title{Plot longitudinal trajectory and predicted survival curve for one individual}
 \usage{
-\S4method{plot}{LandmarkAnalysis}(
-  x,
-  type = "survival",
-  id = NULL,
-  landmark = NULL,
-  window = NULL,
-  dynamic_covariate = NULL,
-  avg = FALSE,
-  ...
-)
+\S4method{plot}{LandmarkAnalysis}(x, id, landmark, dynamic_covariate, horizon = NULL, train = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
-\item{type}{A character taking the value \code{'survival'} (survival curves)
-or \code{'longitudinal'} (model trajectories of dynamic covariates).}
+\item{id}{Identifier of the individual to plot. Must match a value in the
+column \code{x@ids}.}
 
-\item{id}{The identifier for the unit (subject) whose data will be plotted.}
+\item{landmark}{Numeric landmark time.}
 
-\item{landmark}{Numeric indicating a landmark time}
+\item{dynamic_covariate}{Character name of the dynamic covariate to display.}
 
-\item{window}{Numeric indicating a prediction window}
+\item{horizon}{Numeric horizon time. If \code{NULL} (default), uses the
+single available horizon for \code{landmark}; errors when multiple
+horizons are available.}
 
-\item{dynamic_covariate}{A character indicating a dynamic covariate}
+\item{train}{Logical. If \code{TRUE} (default), uses in-sample predictions.
+If \code{FALSE}, uses out-of-sample predictions (requires
+\code{validation_fold > 0} in \code{\link{predict_survival}}).}
 
-\item{avg}{A logical (by default, \code{FALSE}) indicating whether LCMM
-predictions are conditioned on the predicted cluster (\code{avg = FALSE})
-or averaged across clusters (\code{avg = TRUE}). Ignored if the
-longitudinal model is not an LCMM.}
-
-\item{...}{Additional arguments passed to \code{\link[survminer:ggadjustedcurves]{survminer::ggadjustedcurves()}}
-for plotting survival curves.}
+\item{...}{Additional arguments (not currently used).}
 }
 \value{
-Plot with longitudinal trajectory and survival curve
+A \code{\link[ggplot2]{ggplot}} object.
 }
 \description{
-Plots longitudinal trajectories and survival curves for landmarking models.
+Produces a single-panel plot with a common time axis. The left of the
+landmark dashed line shows the individual's observed longitudinal
+measurements and model-fitted trajectory; the right shows their
+predicted survival curve. The predicted value at the landmark that feeds
+into the survival sub-model is highlighted. For LCMM fits, predicted
+cluster probabilities are annotated on the plot.
 }
