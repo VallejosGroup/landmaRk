@@ -28,7 +28,6 @@ setMethod(
   "plot",
   "LandmarkAnalysis",
   function(x, id, landmark, dynamic_covariate, horizon = NULL, train = TRUE, ...) {
-
     # ---- Input validation ----
     if (missing(id) || is.null(id)) {
       stop("@id is required.")
@@ -234,45 +233,26 @@ setMethod(
         )
       ) +
       ggplot2::xlab("Time") +
+      ggplot2::ggtitle(paste("Patient", id)) +
       ggplot2::theme_bw()
 
-    # Fitted longitudinal trajectory (lme4 / lcmm)
-    if (!is.null(traj_df)) {
-      myplot <- myplot +
-        ggplot2::geom_line(
-          data = traj_df,
-          ggplot2::aes(
-            x        = .data[["time"]],
-            y        = .data[["prediction"]],
-            linetype = .data[["type"]]
-          ),
-          colour = "tomato", linewidth = 0.8
-        ) +
-        ggplot2::scale_linetype_manual(
-          name   = NULL,
-          values = c("Individual" = "solid", "Population average" = "dashed")
-        )
-    } else {
-      # LOCF: show a step function extended to the landmark so the carried-
-      # forward value connects naturally to the highlighted diamond
-      last_obs_val <- obs_data |>
+    # LOCF: horizontal dashed segment from last observation to landmark
+    if (is.null(traj_df) && !is.null(pred_at_landmark)) {
+      last_obs_time <- obs_data |>
         dplyr::arrange(.data[[x@times]]) |>
         dplyr::slice_tail(n = 1L) |>
-        dplyr::pull(x@measurements)
-      step_data <- obs_data |>
-        dplyr::arrange(.data[[x@times]]) |>
-        dplyr::select(dplyr::all_of(c(x@times, x@measurements))) |>
-        dplyr::bind_rows(
-          stats::setNames(
-            data.frame(landmark, last_obs_val),
-            c(x@times, x@measurements)
-          )
-        )
+        dplyr::pull(x@times)
       myplot <- myplot +
-        ggplot2::geom_step(
-          data = step_data,
-          ggplot2::aes(x = .data[[x@times]], y = .data[[x@measurements]]),
-          colour = "tomato", linewidth = 0.8
+        ggplot2::geom_segment(
+          data = data.frame(
+            x    = last_obs_time,
+            xend = landmark,
+            y    = pred_at_landmark,
+            yend = pred_at_landmark
+          ),
+          ggplot2::aes(x = .data[["x"]], xend = .data[["xend"]],
+                       y = .data[["y"]], yend = .data[["yend"]]),
+          colour = "orange", linetype = "dashed", linewidth = 0.8
         )
     }
 
