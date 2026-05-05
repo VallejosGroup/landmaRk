@@ -399,7 +399,6 @@ landmarking_object <- landmarking_object |>
   predict_survival(
     landmarks = c(6, 8),
     horizons = 12 + c(6, 8),
-    type = "lp",
     dynamic_covariates = c("CD4"),
     include_clusters = FALSE
   )
