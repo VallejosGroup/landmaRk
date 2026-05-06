@@ -306,7 +306,7 @@
         intersect(unique(newdata[, subject]), unique(x$data[, subject]))
     )
   # Find the largest cluster
-  mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
+  mode_cluster <- as.integer(names(sort(-table(x$pprob$class)))[1])
   if (is.na(mode_cluster)) {
     mode_cluster <- 1L
   }
