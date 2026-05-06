@@ -1,22 +1,16 @@
-# Plots longitudinal trajectories and survival curves for landmarking models.
+# Plot longitudinal observations and predicted survival curve for one individual
 
-Plots longitudinal trajectories and survival curves for landmarking
-models.
+Produces a single-panel plot with a common time axis. The left of the
+landmark dashed line shows the individual's observed longitudinal
+measurements; the right shows their predicted survival curve. The
+summary value at the landmark that feeds into the survival sub-model is
+highlighted.
 
 ## Usage
 
 ``` r
 # S4 method for class 'LandmarkAnalysis'
-plot(
-  x,
-  type = "survival",
-  id = NULL,
-  landmark = NULL,
-  window = NULL,
-  dynamic_covariate = NULL,
-  avg = FALSE,
-  ...
-)
+plot(x, id, landmark, dynamic_covariate, horizon = NULL, train = TRUE, ...)
 ```
 
 ## Arguments
@@ -26,36 +20,35 @@ plot(
   An object of class
   [`LandmarkAnalysis`](https://vallejosgroup.github.io/landmaRk/reference/LandmarkAnalysis.md).
 
-- type:
-
-  A character taking the value `'survival'` (survival curves) or
-  `'longitudinal'` (model trajectories of dynamic covariates).
-
 - id:
 
-  The identifier for the unit (subject) whose data will be plotted.
+  Identifier of the individual to plot. Must match a value in the column
+  `x@ids`.
 
 - landmark:
 
-  Numeric indicating a landmark time
-
-- window:
-
-  Numeric indicating a prediction window
+  Numeric landmark time.
 
 - dynamic_covariate:
 
-  A character indicating a dynamic covariate
+  Character name of the dynamic covariate to display.
 
-- avg:
+- horizon:
 
-  A logical (by default, `FALSE`) indicating whether LCMM predictions
-  are conditioned on the predicted cluster (`avg = FALSE`) or averaged
-  across clusters (`avg = TRUE`). Ignored if the longitudinal model is
-  not an LCMM.
+  Numeric horizon time. If `NULL` (default), uses the single available
+  horizon for `landmark`; errors when multiple horizons are available.
+
+- train:
+
+  Logical. If `TRUE` (default), uses in-sample predictions. If `FALSE`,
+  uses out-of-sample predictions (requires `validation_fold > 0` in
+  [`predict_survival`](https://vallejosgroup.github.io/landmaRk/reference/predict_survival.md)).
 
 - ...:
 
-  Additional arguments passed to
-  [`survminer::ggadjustedcurves()`](https://rdrr.io/pkg/survminer/man/ggadjustedcurves.html)
-  for plotting survival curves.
+  Additional arguments (not currently used).
+
+## Value
+
+A [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
+object.

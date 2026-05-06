@@ -17,12 +17,6 @@
 - [`compute_risk_sets()`](https://vallejosgroup.github.io/landmaRk/reference/compute_risk_sets.md)
   : Compute the list of individuals at risk at landmark times
 
-- [`.BinaryBrierScore()`](https://vallejosgroup.github.io/landmaRk/reference/dot-BinaryBrierScore.md)
-  : Binary Brier Score
-
-- [`.CIndexCRisks()`](https://vallejosgroup.github.io/landmaRk/reference/dot-CIndexCRisks.md)
-  : Concordance index for competing risks
-
 - [`epileptic`](https://vallejosgroup.github.io/landmaRk/reference/epileptic.md)
   : Dose calibration of anti-epileptic drugs data
 
@@ -49,8 +43,8 @@
   : Performance metrics
 
 - [`plot(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/plot-LandmarkAnalysis-method.md)
-  : Plots longitudinal trajectories and survival curves for landmarking
-  models.
+  : Plot longitudinal observations and predicted survival curve for one
+  individual
 
 - [`predict_longitudinal(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal-LandmarkAnalysis-method.md)
   : Make predictions for time-varying covariates at specified landmark

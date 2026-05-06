@@ -9,7 +9,7 @@ predict_survival(
   x,
   landmarks,
   horizons,
-  method,
+  method = "survfit",
   dynamic_covariates = c(),
   include_clusters = FALSE,
   censor_at_horizon = FALSE,
@@ -36,7 +36,8 @@ predict_survival(
 
 - method:
 
-  R function that is used to make predictions
+  Name of the function that is used to make predictions. At the moment,
+  'survfit' is the only supported @method.
 
 - dynamic_covariates:
 

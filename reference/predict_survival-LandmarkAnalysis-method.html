@@ -54,7 +54,7 @@
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">landmarks</span>,</span>
 <span>  <span class="va">horizons</span>,</span>
-<span>  <span class="va">method</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"survfit"</span>,</span>
 <span>  dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  include_clusters <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  censor_at_horizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -81,7 +81,8 @@ submodel is fitted.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>R function that is used to make predictions</p></dd>
+<dd><p>Name of the function that is used to make predictions.
+At the moment, 'survfit' is the only supported @method.</p></dd>
 
 
 <dt id="arg-dynamic-covariates">dynamic_covariates<a class="anchor" aria-label="anchor" href="#arg-dynamic-covariates"></a></dt>

@@ -90,6 +90,78 @@ the dynamic covariate</p></dd>
     <p>A summary of the desired submodel</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">epileptic</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">epileptic_dfs</span> <span class="op">&lt;-</span> <span class="fu"><a href="split_wide_df.html">split_wide_df</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">epileptic</span>,</span></span>
+<span class="r-in"><span>  ids <span class="op">=</span> <span class="st">"id"</span>, times <span class="op">=</span> <span class="st">"time"</span>,</span></span>
+<span class="r-in"><span>  static <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"with.time"</span>, <span class="st">"with.status"</span>, <span class="st">"treat"</span>, <span class="st">"age"</span>, <span class="st">"gender"</span>, <span class="st">"learn.dis"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  dynamic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  measurement_name <span class="op">=</span> <span class="st">"value"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="LandmarkAnalysis.html">LandmarkAnalysis</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data_static <span class="op">=</span> <span class="va">epileptic_dfs</span><span class="op">$</span><span class="va">df_static</span>,</span></span>
+<span class="r-in"><span>  data_dynamic <span class="op">=</span> <span class="va">epileptic_dfs</span><span class="op">$</span><span class="va">df_dynamic</span>,</span></span>
+<span class="r-in"><span>  event_indicator <span class="op">=</span> <span class="st">"with.status"</span>,</span></span>
+<span class="r-in"><span>  ids <span class="op">=</span> <span class="st">"id"</span>, event_time <span class="op">=</span> <span class="st">"with.time"</span>,</span></span>
+<span class="r-in"><span>  times <span class="op">=</span> <span class="st">"time"</span>, measurements <span class="op">=</span> <span class="st">"value"</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="compute_risk_sets.html">compute_risk_sets</a></span><span class="op">(</span><span class="fl">365.25</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="fit_longitudinal.html">fit_longitudinal</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    landmarks <span class="op">=</span> <span class="fl">365.25</span>,</span></span>
+<span class="r-in"><span>    method <span class="op">=</span> <span class="st">"lme4"</span>,</span></span>
+<span class="r-in"><span>    formula <span class="op">=</span> <span class="va">value</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="op">(</span><span class="va">time</span> <span class="op">|</span> <span class="va">id</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="predict_longitudinal.html">predict_longitudinal</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    landmarks <span class="op">=</span> <span class="fl">365.25</span>,</span></span>
+<span class="r-in"><span>    method <span class="op">=</span> <span class="st">"lme4"</span>,</span></span>
+<span class="r-in"><span>    allow.new.levels <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="fit_survival.html">fit_survival</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    formula <span class="op">=</span> <span class="fu">survival</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">event_time</span>, <span class="va">event_status</span><span class="op">)</span> <span class="op">~</span></span></span>
+<span class="r-in"><span>      <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">gender</span> <span class="op">+</span> <span class="va">learn.dis</span> <span class="op">+</span> <span class="va">dose</span>,</span></span>
+<span class="r-in"><span>    landmarks <span class="op">=</span> <span class="fl">365.25</span>,</span></span>
+<span class="r-in"><span>    horizons <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>,</span></span>
+<span class="r-in"><span>    method <span class="op">=</span> <span class="st">"coxph"</span>,</span></span>
+<span class="r-in"><span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="predict_survival.html">predict_survival</a></span><span class="op">(</span>landmarks <span class="op">=</span> <span class="fl">365.25</span>, horizons <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span>, type <span class="op">=</span> <span class="st">"longitudinal"</span>, landmark <span class="op">=</span> <span class="fl">365.25</span>, dynamic_covariate <span class="op">=</span> <span class="st">"dose"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Linear mixed model fit by REML ['lmerMod']</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: value ~ treat + age + gender + learn.dis + (time | id)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Data: dataframe</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> REML criterion at convergence: 2246.377</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Random effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Groups   Name        Std.Dev. Corr  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  id       (Intercept) 0.713682       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           time        0.003222 -0.22 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Residual             0.358703       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of obs: 1074, groups:  id, 427</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fixed Effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)      treatLTG           age       genderM  learn.disYes  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1.9585547    -0.1244086    -0.0006828     0.1257524    -0.2773500  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 2 lme4 warnings </span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">365.25</span>, horizon <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     "-", horizons)]], model = TRUE, x = TRUE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   coef exp(coef)  se(coef)      z        p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> treatLTG      0.110243  1.116549  0.197993  0.557 0.577664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age          -0.014894  0.985216  0.005952 -2.502 0.012341</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> genderM      -0.022325  0.977923  0.198184 -0.113 0.910311</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> learn.disYes -0.488076  0.613806  0.436477 -1.118 0.263475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dose          0.276647  1.318700  0.082287  3.362 0.000774</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood ratio test=17.86  on 5 df, p=0.003126</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> n= 430, number of events= 105 </span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -8,13 +8,14 @@ In addition to the `landmaRk` package, we will also use `tidyverse`.
 
 set.seed(123)
 library(landmaRk)
+#> Loading required package: survival
 library(tidyverse)
 #> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 #> ✔ dplyr     1.2.1     ✔ readr     2.2.0
 #> ✔ forcats   1.0.1     ✔ stringr   1.6.0
 #> ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
 #> ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
-#> ✔ purrr     1.2.2     
+#> ✔ purrr     1.2.2
 #> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::filter() masks stats::filter()
 #> ✖ dplyr::lag()    masks stats::lag()
@@ -176,8 +177,6 @@ landmarking_object <- landmarking_object |>
   predict_survival(
     landmarks = c(6, 8),
     horizons = 12 + c(6, 8),
-    method = "coxph",
-    type = "lp",
     validation_fold = 5
   )
 #> Warning: the 'findbars' function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainer to do so.
@@ -316,8 +315,6 @@ for (k in 1:5) {
   predict_survival(
     landmarks = c(6, 8),
     horizons = 12 + c(6, 8),
-    method = "coxph",
-    type = "lp",
     validation_fold = k
   ) |>
     performance_metrics(
