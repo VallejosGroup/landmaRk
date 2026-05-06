@@ -8,7 +8,7 @@ predict_survival(
   x,
   landmarks,
   horizons,
-  method,
+  method = "survfit",
   dynamic_covariates = c(),
   include_clusters = FALSE,
   censor_at_horizon = FALSE,
@@ -24,7 +24,8 @@ predict_survival(
 \item{horizons}{Vector of prediction horizons up to when the survival
 submodel is fitted.}
 
-\item{method}{R function that is used to make predictions}
+\item{method}{Name of the function that is used to make predictions.
+At the moment, 'survfit' is the only supported @method.}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be used
 in the survival model.}

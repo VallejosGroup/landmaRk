@@ -105,35 +105,6 @@
   )
 }
 
-
-#' Makes predictions from an LCMM model
-#'
-#' @param x An object of class \code{\link[lcmm]{hlme}}.
-#' @param newdata A data frame containing static covariates and individual
-#'   IDs
-#' @param subject Name of the column in newdata where individual IDs are stored.
-#' @param var.time Name of the column in newdata where time is recorded.
-#' @param avg Logical indicating whether to make predictions based on the
-#'   most likely cluster (FALSE, default) or averaging over clusters (TRUE).
-#' @param include_clusters Logical indicating whether to include
-#'   predicted class allocation in the predictions.
-#' @param validation_fold If positive, cross-validation fold where model is
-#'   fitted. If 0 (default), model fitting is performed in the complete dataset.
-#' @param test Logical indicating whether to make predictions for the test set
-#'   (make out of sample predictions). Defaults to FALSE
-#' @param newdata_long A data frame containing longitudinal measurements for
-#'   prediction. Required when \code{test = TRUE} and either \code{avg = TRUE}
-#'   or \code{include_clusters = TRUE}. Should include columns for subject IDs,
-#'   time (\code{var.time}), and any time-varying covariates used in the model.
-#'   Defaults to \code{NULL}.
-#'
-#' @returns If \code{include_clusters == FALSE}, a vector of predictions. If
-#'   \code{include_clusters == TRUE}, a vector whose first column includes
-#'   predictions and second column includes predicted class allocation
-#'
-#' @noRd
-#'
-#' @examples
 # Helper function to make class-specific predictions for a set of individuals
 .make_class_predictions <- function(
   x,
@@ -163,6 +134,34 @@
   predictions
 }
 
+#' Makes predictions from an LCMM model
+#'
+#' @param x An object of class \code{\link[lcmm]{hlme}}.
+#' @param newdata A data frame containing static covariates and individual
+#'   IDs
+#' @param subject Name of the column in newdata where individual IDs are stored.
+#' @param var.time Name of the column in newdata where time is recorded.
+#' @param avg Logical indicating whether to make predictions based on the
+#'   most likely cluster (FALSE, default) or averaging over clusters (TRUE).
+#' @param include_clusters Logical indicating whether to include
+#'   predicted class allocation in the predictions.
+#' @param validation_fold If positive, cross-validation fold where model is
+#'   fitted. If 0 (default), model fitting is performed in the complete dataset.
+#' @param test Logical indicating whether to make predictions for the test set
+#'   (make out of sample predictions). Defaults to FALSE
+#' @param newdata_long A data frame containing longitudinal measurements for
+#'   prediction. Required when \code{test = TRUE} and either \code{avg = TRUE}
+#'   or \code{include_clusters = TRUE}. Should include columns for subject IDs,
+#'   time (\code{var.time}), and any time-varying covariates used in the model.
+#'   Defaults to \code{NULL}.
+#'
+#' @returns If \code{include_clusters == FALSE}, a vector of predictions. If
+#'   \code{include_clusters == TRUE}, a vector whose first column includes
+#'   predictions and second column includes predicted class allocation
+#'
+#' @noRd
+#'
+#' @examples
 .predict_lcmm <- function(
   x,
   newdata,
@@ -308,7 +307,7 @@
     )
   # Find the largest cluster
   mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
-  if (length(mode_cluster) == 0) {
+  if (is.na(mode_cluster)) {
     mode_cluster <- 1L
   }
 
@@ -403,10 +402,13 @@
         )
         colnames(class_predictions_default) <- colnames(class_predictions)
         class_predictions <- rbind(class_predictions, class_predictions_default)
-        class_predictions <- class_predictions[
-          match(newdata[, subject], class_predictions[, subject]),
-        ]
       }
+      class_predictions <- class_predictions[
+        match(newdata[, subject], class_predictions[, subject]),
+      ]
+      predictions <- predictions[
+        match(newdata[, subject], predictions[, subject]),
+      ]
       predictions <- rowSums(class_predictions[, -c(1, 2)] * predictions[, -1])
       names(predictions) <- NULL
     } else {

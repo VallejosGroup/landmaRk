@@ -74,4 +74,24 @@ test_that("Error handling for fit_survival", {
       "Longitudinal predictions are not available at landmark time 1095.75."
     )
   )
+
+  expect_error(
+    x |>
+      predict_survival(
+        landmarks = 365.25,
+        horizons = 2 * 365.25,
+        method = 42
+      ),
+    "@method must be of type character"
+  )
+
+  expect_error(
+    x |>
+      predict_survival(
+        landmarks = 365.25,
+        horizons = 2 * 365.25,
+        method = "coxph"
+      ),
+    "'survfit' is the only @method supported"
+  )
 })

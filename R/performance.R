@@ -85,9 +85,6 @@ setMethod(
       landmark <- landmarks[i]
       horizon <- horizons[i]
 
-      # Retrieve survival analysis dataset (censor events past horizon time)
-      dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
-
       # Recover the observations and predictions (in-sample or out-of-sample)
       if (train) {
         dataset <- x@survival_datasets[[paste0(landmark, "-", horizon)]]
@@ -180,10 +177,10 @@ setMethod(
             timeROC::timeROC(
               T = dataset[, "event_time"],
               delta = dataset[, "event_status"],
-              marker = horizon - landmark,
+              marker = pred_matrix[, 1],
               cause = 1,
               times = horizon - landmark
-            )$AUC[2]
+            )$AUC[paste0("t=", horizon - landmark)]
           )
         } else {
           auct_list[[paste0(landmark, "-", horizon)]] <- sapply(
