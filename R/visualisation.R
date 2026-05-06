@@ -1,11 +1,9 @@
-#' Plot longitudinal trajectory and predicted survival curve for one individual
+#' Plot longitudinal observations and predicted survival curve for one individual
 #'
 #' Produces a single-panel plot with a common time axis. The left of the
 #' landmark dashed line shows the individual's observed longitudinal
-#' measurements and model-fitted trajectory; the right shows their
-#' predicted survival curve. The predicted value at the landmark that feeds
-#' into the survival sub-model is highlighted. For LCMM fits, predicted
-#' cluster probabilities are annotated on the plot.
+#' measurements; the right shows their predicted survival curve. The summary
+#' value at the landmark that feeds into the survival sub-model is highlighted.
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param id Identifier of the individual to plot. Must match a value in the
@@ -104,68 +102,6 @@ setMethod(
       as.numeric(long_preds[as.character(id)])
     }
 
-    # ---- Fitted trajectory on a dense time grid ----
-    longitudinal_fit <- x@longitudinal_fits[[as.character(landmark)]][[
-      dynamic_covariate
-    ]]
-    traj_df <- NULL
-    if (!is.null(longitudinal_fit)) {
-      t_start   <- min(obs_data[[x@times]], na.rm = TRUE)
-      time_grid <- seq(t_start, landmark, length.out = 100L)
-      newdata_grid <- stats::setNames(
-        data.frame(id, time_grid),
-        c(x@ids, x@times)
-      ) |>
-        dplyr::left_join(
-          x@data_static |> dplyr::filter(.data[[x@ids]] == .env$id),
-          by = x@ids
-        )
-
-      if (inherits(longitudinal_fit, "lmerMod")) {
-        obs_data_full <- obs_data |>
-          dplyr::left_join(
-            x@data_static |> dplyr::filter(.data[[x@ids]] == .env$id),
-            by = x@ids
-          )
-        pop_pred <- as.numeric(predict(
-          longitudinal_fit,
-          newdata = newdata_grid,
-          re.form = NA
-        ))
-        ind_pred <- as.numeric(.predict_lme4(
-          x            = longitudinal_fit,
-          newdata      = newdata_grid,
-          subject      = x@ids,
-          test         = !train,
-          newdata_long = obs_data_full
-        ))
-        traj_df <- data.frame(
-          time       = rep(time_grid, 2L),
-          prediction = c(pop_pred, ind_pred),
-          type       = rep(
-            c("Population average", "Individual"),
-            each = length(time_grid)
-          )
-        )
-      } else if (inherits(longitudinal_fit, "hlme")) {
-        predicted_class <- longitudinal_fit$pprob |>
-          dplyr::filter(.data[[x@ids]] == .env$id) |>
-          dplyr::pull(class)
-        if (length(predicted_class) == 0L) predicted_class <- 1L
-        traj_df <- data.frame(
-          time       = time_grid,
-          prediction = as.numeric(
-            lcmm::predictY(
-              longitudinal_fit,
-              newdata  = newdata_grid,
-              var.time = x@times
-            )$pred[, predicted_class]
-          ),
-          type = "Individual"
-        )
-      }
-    }
-
     # ---- Individual-specific survival curve ----
     dataset <- if (train) x@survival_datasets[[model_name]] else x@survival_datasets_test[[model_name]]
     sf      <- predictions_slot[[model_name]]
@@ -186,7 +122,6 @@ setMethod(
     # ---- Y-axis range (longitudinal scale with a small buffer) ----
     y_vals <- c(
       obs_data[[x@measurements]],
-      if (!is.null(traj_df)) traj_df$prediction,
       if (!is.null(pred_at_landmark)) pred_at_landmark
     )
     y_raw <- range(y_vals, na.rm = TRUE)
@@ -236,8 +171,11 @@ setMethod(
       ggplot2::ggtitle(paste("Patient", id)) +
       ggplot2::theme_bw()
 
-    # LOCF: horizontal dashed segment from last observation to landmark
-    if (is.null(traj_df) && !is.null(pred_at_landmark)) {
+    # Dashed segment from last observation to landmark summary value (LOCF only)
+    is_locf <- is.null(
+      x@longitudinal_fits[[as.character(landmark)]][[dynamic_covariate]]
+    )
+    if (is_locf && !is.null(pred_at_landmark)) {
       last_obs_time <- obs_data |>
         dplyr::arrange(.data[[x@times]]) |>
         dplyr::slice_tail(n = 1L) |>
@@ -254,33 +192,6 @@ setMethod(
                        y = .data[["y"]], yend = .data[["yend"]]),
           colour = "orange", linetype = "dashed", linewidth = 0.8
         )
-    }
-
-    # LCMM cluster probability annotation
-    if (
-      !is.null(longitudinal_fit) &&
-        inherits(longitudinal_fit, "hlme") &&
-        longitudinal_fit$ng > 1L
-    ) {
-      pprob_row <- longitudinal_fit$pprob |>
-        dplyr::filter(.data[[x@ids]] == .env$id) |>
-        dplyr::select(dplyr::starts_with("prob"))
-      if (nrow(pprob_row) > 0L) {
-        prob_label <- paste(
-          vapply(seq_len(ncol(pprob_row)), function(k) {
-            sprintf("Class %d: %.1f%%", k, pprob_row[[1L, k]] * 100)
-          }, character(1L)),
-          collapse = "\n"
-        )
-        myplot <- myplot +
-          ggplot2::annotate(
-            "text",
-            x      = landmark + 0.05 * (horizon - landmark),
-            y      = y_max,
-            label  = prob_label,
-            hjust  = 0, vjust = 1, size = 3, colour = "grey30"
-          )
-      }
     }
 
     myplot

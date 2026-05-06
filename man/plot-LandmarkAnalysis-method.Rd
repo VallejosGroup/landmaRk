@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualisation.R
 \name{plot,LandmarkAnalysis-method}
 \alias{plot,LandmarkAnalysis-method}
-\title{Plot longitudinal trajectory and predicted survival curve for one individual}
+\title{Plot longitudinal observations and predicted survival curve for one individual}
 \usage{
 \S4method{plot}{LandmarkAnalysis}(x, id, landmark, dynamic_covariate, horizon = NULL, train = TRUE, ...)
 }
@@ -32,8 +32,6 @@ A \code{\link[ggplot2]{ggplot}} object.
 \description{
 Produces a single-panel plot with a common time axis. The left of the
 landmark dashed line shows the individual's observed longitudinal
-measurements and model-fitted trajectory; the right shows their
-predicted survival curve. The predicted value at the landmark that feeds
-into the survival sub-model is highlighted. For LCMM fits, predicted
-cluster probabilities are annotated on the plot.
+measurements; the right shows their predicted survival curve. The summary
+value at the landmark that feeds into the survival sub-model is highlighted.
 }
