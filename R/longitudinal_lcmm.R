@@ -307,7 +307,7 @@
     )
   # Find the largest cluster
   mode_cluster <- as.integer(names(sort(-table(pprob$class)))[1])
-  if (length(mode_cluster) == 0) {
+  if (is.na(mode_cluster)) {
     mode_cluster <- 1L
   }
 
@@ -402,10 +402,11 @@
         )
         colnames(class_predictions_default) <- colnames(class_predictions)
         class_predictions <- rbind(class_predictions, class_predictions_default)
-        class_predictions <- class_predictions[
-          match(newdata[, subject], class_predictions[, subject]),
-        ]
       }
+      class_predictions <- class_predictions[
+        match(newdata[, subject], class_predictions[, subject]),
+      ]
+      predictions <- predictions[match(newdata[, subject], predictions[, subject]), ]
       predictions <- rowSums(class_predictions[, -c(1, 2)] * predictions[, -1])
       names(predictions) <- NULL
     } else {

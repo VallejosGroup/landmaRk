@@ -88,6 +88,7 @@
     )
     b_hat <- matrix(as.vector(b_hat), ncol = ncol(Z_block), byrow = TRUE)
     re_contribution <- matrix(0, nrow = nrow(newdata), ncol = ncol(Z_block))
+    browser()
     present_idx <- match(subject_levels, newdata[, subject])
     re_contribution[present_idx, ] <- b_hat
     lme4_predictions + rowSums(Z_block * re_contribution)
