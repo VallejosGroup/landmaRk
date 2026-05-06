@@ -25,7 +25,15 @@
 setMethod(
   "plot",
   "LandmarkAnalysis",
-  function(x, id, landmark, dynamic_covariate, horizon = NULL, train = TRUE, ...) {
+  function(
+    x,
+    id,
+    landmark,
+    dynamic_covariate,
+    horizon = NULL,
+    train = TRUE,
+    ...
+  ) {
     # ---- Input validation ----
     if (missing(id) || is.null(id)) {
       stop("@id is required.")
@@ -34,18 +42,28 @@ setMethod(
       stop("@landmark must be a single numeric value.")
     }
     if (!(landmark %in% x@landmarks)) {
-      stop(paste("Risk set for landmark time", landmark, "has not been computed."))
+      stop(paste(
+        "Risk set for landmark time",
+        landmark,
+        "has not been computed."
+      ))
     }
     if (missing(dynamic_covariate) || is.null(dynamic_covariate)) {
       stop("@dynamic_covariate is required.")
     }
-    predictions_slot <- if (train) x@survival_predictions else x@survival_predictions_test
+    predictions_slot <- if (train) {
+      x@survival_predictions
+    } else {
+      x@survival_predictions_test
+    }
     if (length(predictions_slot) == 0) {
-      stop(if (train) {
-        "No survival predictions found. Call predict_survival() first."
-      } else {
-        "No out-of-sample survival predictions found. Call predict_survival() with validation_fold > 0."
-      })
+      stop(
+        if (train) {
+          "No survival predictions found. Call predict_survival() first."
+        } else {
+          "No out-of-sample survival predictions found. Call predict_survival() with validation_fold > 0."
+        }
+      )
     }
 
     # ---- Resolve horizon ----
@@ -55,7 +73,10 @@ setMethod(
       value = TRUE
     )
     if (length(available) == 0) {
-      stop(paste("No survival predictions available for landmark time", landmark))
+      stop(paste(
+        "No survival predictions available for landmark time",
+        landmark
+      ))
     }
     if (is.null(horizon)) {
       if (length(available) == 1) {
@@ -63,7 +84,9 @@ setMethod(
         horizon <- as.numeric(sub(paste0(landmark, "-"), "", model_name))
       } else {
         stop(paste0(
-          "Multiple horizons available for landmark ", landmark, ": ",
+          "Multiple horizons available for landmark ",
+          landmark,
+          ": ",
           paste(available, collapse = ", "),
           ". Please specify @horizon."
         ))
@@ -72,7 +95,10 @@ setMethod(
       model_name <- paste0(landmark, "-", horizon)
       if (!(model_name %in% names(predictions_slot))) {
         stop(paste(
-          "No survival predictions for landmark", landmark, "and horizon", horizon
+          "No survival predictions for landmark",
+          landmark,
+          "and horizon",
+          horizon
         ))
       }
     }
@@ -83,8 +109,10 @@ setMethod(
 
     if (nrow(obs_data) == 0) {
       stop(paste(
-        "No observations found for individual", id,
-        "at or before landmark time", landmark
+        "No observations found for individual",
+        id,
+        "at or before landmark time",
+        landmark
       ))
     }
 
@@ -92,7 +120,9 @@ setMethod(
     long_preds <- if (train) {
       x@longitudinal_predictions[[as.character(landmark)]][[dynamic_covariate]]
     } else {
-      x@longitudinal_predictions_test[[as.character(landmark)]][[dynamic_covariate]]
+      x@longitudinal_predictions_test[[as.character(landmark)]][[
+        dynamic_covariate
+      ]]
     }
     pred_at_landmark <- if (is.null(long_preds)) {
       NULL
@@ -103,18 +133,27 @@ setMethod(
     }
 
     # ---- Individual-specific survival curve ----
-    dataset <- if (train) x@survival_datasets[[model_name]] else x@survival_datasets_test[[model_name]]
-    sf      <- predictions_slot[[model_name]]
-    id_idx  <- which(dataset[[x@ids]] == id)
+    dataset <- if (train) {
+      x@survival_datasets[[model_name]]
+    } else {
+      x@survival_datasets_test[[model_name]]
+    }
+    sf <- predictions_slot[[model_name]]
+    id_idx <- which(dataset[[x@ids]] == id)
     if (length(id_idx) == 0L) {
-      stop(paste("Individual", id, "not found in survival dataset for", model_name))
+      stop(paste(
+        "Individual",
+        id,
+        "not found in survival dataset for",
+        model_name
+      ))
     }
 
-    n_pts          <- 200L
+    n_pts <- 200L
     surv_times_rel <- seq(0, horizon - landmark, length.out = n_pts)
-    sfit           <- summary(sf, times = surv_times_rel)
-    surv_mat       <- matrix(sfit$surv, nrow = n_pts, ncol = nrow(dataset))
-    surv_df        <- data.frame(
+    sfit <- summary(sf, times = surv_times_rel)
+    surv_mat <- matrix(sfit$surv, nrow = n_pts, ncol = nrow(dataset))
+    surv_df <- data.frame(
       time = surv_times_rel + landmark,
       surv = surv_mat[, id_idx]
     )
@@ -138,7 +177,8 @@ setMethod(
       ggplot2::geom_line(
         data = surv_df,
         ggplot2::aes(x = .data[["time"]], y = .data[["surv_scaled"]]),
-        colour = "steelblue", linewidth = 0.8
+        colour = "steelblue",
+        linewidth = 0.8
       ) +
       # Observed longitudinal measurements
       ggplot2::geom_point(
@@ -147,22 +187,26 @@ setMethod(
       ) +
       # Vertical dashed line separating longitudinal from survival
       ggplot2::geom_vline(
-        xintercept = landmark, linetype = "dashed", colour = "grey40"
+        xintercept = landmark,
+        linetype = "dashed",
+        colour = "grey40"
       ) +
       # Predicted value at landmark (diamond, highlighted; only if available)
       (if (!is.null(pred_at_landmark)) {
         ggplot2::geom_point(
           data = data.frame(t = landmark, p = pred_at_landmark),
           ggplot2::aes(x = .data[["t"]], y = .data[["p"]]),
-          colour = "tomato", size = 4L, shape = 18L
+          colour = "tomato",
+          size = 4L,
+          shape = 18L
         )
       }) +
       ggplot2::scale_y_continuous(
-        name   = dynamic_covariate,
+        name = dynamic_covariate,
         limits = c(y_min, y_max),
         sec.axis = ggplot2::sec_axis(
           ~ (. - y_min) / (y_max - y_min),
-          name   = "Survival probability",
+          name = "Survival probability",
           breaks = c(0, 0.25, 0.5, 0.75, 1),
           labels = c("0", "0.25", "0.50", "0.75", "1")
         )
@@ -183,14 +227,20 @@ setMethod(
       myplot <- myplot +
         ggplot2::geom_segment(
           data = data.frame(
-            x    = last_obs_time,
+            x = last_obs_time,
             xend = landmark,
-            y    = pred_at_landmark,
+            y = pred_at_landmark,
             yend = pred_at_landmark
           ),
-          ggplot2::aes(x = .data[["x"]], xend = .data[["xend"]],
-                       y = .data[["y"]], yend = .data[["yend"]]),
-          colour = "orange", linetype = "dashed", linewidth = 0.8
+          ggplot2::aes(
+            x = .data[["x"]],
+            xend = .data[["xend"]],
+            y = .data[["y"]],
+            yend = .data[["yend"]]
+          ),
+          colour = "orange",
+          linetype = "dashed",
+          linewidth = 0.8
         )
     }
 

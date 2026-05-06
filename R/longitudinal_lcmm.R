@@ -406,7 +406,9 @@
       class_predictions <- class_predictions[
         match(newdata[, subject], class_predictions[, subject]),
       ]
-      predictions <- predictions[match(newdata[, subject], predictions[, subject]), ]
+      predictions <- predictions[
+        match(newdata[, subject], predictions[, subject]),
+      ]
       predictions <- rowSums(class_predictions[, -c(1, 2)] * predictions[, -1])
       names(predictions) <- NULL
     } else {
