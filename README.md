@@ -78,7 +78,7 @@ Alternatively, you can view the vignette
 
 If you are interested in contributing to `landmaRk`, please read our
 [contributing
-guide](.github/CONTRIBUTING.md).
+guide](https://github.com/VallejosGroup/landmaRk/blob/main/.github/CONTRIBUTING.md).
 
 ## References
 

@@ -4,6 +4,9 @@
 
 * This is a new release.
 
+* This is a resubmission. A full URL to the contributing guide has been added to
+  the README. A  missing reference to the method has been added.
+
 ## Test environments 
 
 - windows-latest (R release)
