@@ -14,3 +14,5 @@ codecov.yml
 ^codemeta\.json$
 ^CITATION\.cff$
 docs/
+.claude
+^CRAN-SUBMISSION$
