@@ -20,6 +20,7 @@
 #'
 #' @returns A \code{\link[ggplot2]{ggplot}} object.
 #' @export
+#' @importFrom ggplot2 ggplot geom_line geom_point geom_vline aes scale_y_continuous sec_axis xlab ggtitle theme_bw geom_segment
 #'
 #' @examples
 setMethod(
@@ -34,6 +35,7 @@ setMethod(
     train = TRUE,
     ...
   ) {
+    .env <- NULL
     # ---- Input validation ----
     if (missing(id) || is.null(id)) {
       stop("@id is required.")
