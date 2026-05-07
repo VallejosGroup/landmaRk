@@ -2,7 +2,7 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "landmaRk",
-  "description": "Provides a comprehensive framework for conducting time-to-event landmarking analysis using a variety of longitudinal and survival sub-models. It aims to facilitate the analysis of time-to-event data with time-dependent covariates.",
+  "description": "Provides a modular end-to-end framework for dynamic risk prediction based on time-to-event and longitudinal data. This allows flexible specifications for the longitudinal and survival sub-models. The 'landmaRk' package enables reproducible benchmarks of different model choices, including cross-validation to assess out-of-sample predictive performance.",
   "name": "landmaRk: Time-to-Event Landmark Analysis using an Array of Longitudinal and Survival Sub-Models",
   "relatedLink": "https://vallejosgroup.github.io/landmaRk/",
   "codeRepository": "https://github.com/VallejosGroup/landmaRk",
@@ -14,7 +14,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.5.2 (2025-10-31)",
+  "runtimePlatform": "R version 4.4.3 (2025-02-28)",
   "author": [
     {
       "@type": "Person",
@@ -55,6 +55,18 @@
     }
   ],
   "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "JMbayes2",
+      "name": "JMbayes2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=JMbayes2"
+    },
     {
       "@type": "SoftwareApplication",
       "identifier": "knitr",
@@ -154,15 +166,15 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "prodlim",
-      "name": "prodlim",
+      "identifier": "withr",
+      "name": "withr",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=prodlim"
+      "sameAs": "https://CRAN.R-project.org/package=withr"
     }
   ],
   "softwareRequirements": {
@@ -174,6 +186,18 @@
     },
     "2": {
       "@type": "SoftwareApplication",
+      "identifier": "survival",
+      "name": "survival",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=survival"
+    },
+    "3": {
+      "@type": "SoftwareApplication",
       "identifier": "dplyr",
       "name": "dplyr",
       "provider": {
@@ -184,7 +208,19 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
-    "3": {
+    "4": {
+      "@type": "SoftwareApplication",
+      "identifier": "ggplot2",
+      "name": "ggplot2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=ggplot2"
+    },
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "lme4",
       "name": "lme4",
@@ -196,12 +232,24 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=lme4"
     },
-    "4": {
+    "6": {
+      "@type": "SoftwareApplication",
+      "identifier": "Matrix",
+      "name": "Matrix",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=Matrix"
+    },
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
-    "5": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "pec",
       "name": "pec",
@@ -213,7 +261,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=pec"
     },
-    "6": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "riskRegression",
       "name": "riskRegression",
@@ -225,19 +273,19 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=riskRegression"
     },
-    "7": {
+    "10": {
       "@type": "SoftwareApplication",
-      "identifier": "survival",
-      "name": "survival",
+      "identifier": "rlang",
+      "name": "rlang",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=survival"
+      "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "8": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "lcmm",
       "name": "lcmm",
@@ -250,7 +298,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=lcmm"
     },
-    "9": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "doParallel",
       "name": "doParallel",
@@ -262,7 +310,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=doParallel"
     },
-    "10": {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "foreach",
       "name": "foreach",
@@ -274,12 +322,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=foreach"
     },
-    "11": {
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     },
-    "12": {
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "timeROC",
       "name": "timeROC",
@@ -291,9 +339,21 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=timeROC"
     },
+    "16": {
+      "@type": "SoftwareApplication",
+      "identifier": "prodlim",
+      "name": "prodlim",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=prodlim"
+    },
     "SystemRequirements": null
   },
-  "fileSize": "416.66KB",
+  "fileSize": "443.637KB",
   "releaseNotes": "https://github.com/VallejosGroup/landmaRk/blob/main/NEWS.md",
   "readme": "https://github.com/VallejosGroup/landmaRk/blob/main/README.md",
   "contIntegration": ["https://github.com/VallejosGroup/landmaRk/actions/workflows/Action.yaml", "https://app.codecov.io/gh/VallejosGroup/landmaRk"],
