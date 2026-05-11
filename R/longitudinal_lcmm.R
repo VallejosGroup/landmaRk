@@ -67,11 +67,11 @@
           ng = ng,
           classmb = classmb,
           returndata = TRUE,
-          maxiter = maxiter,
+          maxiter = 24000,
           ...
         ),
         rep = rep,
-        maxiter = 1, # This argument is ignored by lcmm::gridsearch
+        maxiter = maxiter,
         minit = model_init
       )
     }
