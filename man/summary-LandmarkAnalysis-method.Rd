@@ -26,13 +26,13 @@ If \code{survival}, it summarises the survival submodel.}
 the dynamic covariate}
 }
 \value{
-A summary of the desired submodel
+A summary of the desired submodel, printed to the console.
+Returns \code{NULL} invisibly.
 }
 \description{
 Summarise a LandmarkAnalysis object
 }
 \examples{
-\donttest{
 data(epileptic)
 epileptic_dfs <- split_wide_df(
   epileptic,
@@ -42,6 +42,23 @@ epileptic_dfs <- split_wide_df(
   measurement_name = "value"
 )
 x <- LandmarkAnalysis(
+  data_static = epileptic_dfs$df_static,
+  data_dynamic = epileptic_dfs$df_dynamic,
+  event_indicator = "with.status",
+  ids = "id", event_time = "with.time",
+  times = "time", measurements = "value"
+) |>
+  compute_risk_sets(365.25) |>
+  fit_survival(
+    formula = survival::Surv(event_time, event_status) ~ treat + age,
+    landmarks = 365.25,
+    horizons = 2 * 365.25,
+    method = "coxph"
+  )
+summary(x, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
+\donttest{
+# Full pipeline including longitudinal submodel
+x2 <- LandmarkAnalysis(
   data_static = epileptic_dfs$df_static,
   data_dynamic = epileptic_dfs$df_dynamic,
   event_indicator = "with.status",
@@ -70,7 +87,7 @@ x <- LandmarkAnalysis(
     dynamic_covariates = c("dose")
   ) |>
   predict_survival(landmarks = 365.25, horizons = 2 * 365.25)
-summary(x, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
-summary(x, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
+summary(x2, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
+summary(x2, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
 }
 }
