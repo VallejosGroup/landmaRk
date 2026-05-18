@@ -448,7 +448,7 @@
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #'
-#' @return No return value. Issues a message if all lcmm models converged, 
+#' @return No return value. Issues a message if all lcmm models converged,
 #' or a warning for each model that did not converge.
 #'
 #' @export
