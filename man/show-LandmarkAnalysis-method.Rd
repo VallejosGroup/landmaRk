@@ -9,11 +9,13 @@
 \arguments{
 \item{object}{An object of class \code{\link{LandmarkAnalysis}}.}
 }
+\value{
+No return value(prints a summary to the console).
+}
 \description{
 Displays an object of class "\code{\link{LandmarkAnalysis}}"
 }
 \examples{
-\donttest{
 data(epileptic)
 epileptic_dfs <- split_wide_df(
   epileptic,
@@ -31,5 +33,4 @@ x <- LandmarkAnalysis(
 ) |>
   compute_risk_sets(365.25)
 show(x)
-}
 }

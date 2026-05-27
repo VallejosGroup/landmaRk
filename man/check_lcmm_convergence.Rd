@@ -9,6 +9,10 @@ check_lcmm_convergence(x)
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 }
+\value{
+No return value. Issues a message if all lcmm models converged,
+or a warning for each model that did not converge.
+}
 \description{
 Checks convergence of lcmm models
 }

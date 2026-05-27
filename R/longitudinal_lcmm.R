@@ -67,11 +67,11 @@
           ng = ng,
           classmb = classmb,
           returndata = TRUE,
-          maxiter = maxiter,
+          maxiter = 24000,
           ...
         ),
         rep = rep,
-        maxiter = 1, # This argument is ignored by lcmm::gridsearch
+        maxiter = maxiter,
         minit = model_init
       )
     }
@@ -448,9 +448,10 @@
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #'
-#' @export
+#' @return No return value. Issues a message if all lcmm models converged,
+#' or a warning for each model that did not converge.
 #'
-#' @examples
+#' @export
 check_lcmm_convergence <- function(x) {
   if (!is(x, "LandmarkAnalysis")) {
     stop("x must be an object of class LandmarkAnalysis")
