@@ -2,9 +2,8 @@
 
 0 errors | 0 warnings | 1 note
 
-* Respond to comments raised by CRAN's team: adds a reference about the method and removes invalid URI
-* .fit_lcmm now correctly passes the maximum number of iterations to the LCMM optimiser.
-
+* Respond to comments raised by CRAN's team: adds missing Rd-tags and unwraps examples currently wrapped in 
+\donttest{}
 
 ## Test environments 
 
