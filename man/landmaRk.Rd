@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides a modular end-to-end framework for dynamic risk prediction based on time-to-event and longitudinal data. This allows flexible specifications for the longitudinal and survival sub-models. The 'landmaRk' package enables reproducible benchmarks of different model choices, including cross-validation to assess out-of-sample predictive performance.
+Provides a modular end-to-end framework for dynamic risk prediction based on time-to-event and longitudinal data. This allows flexible specifications for the longitudinal and survival sub-models. The 'landmaRk' package enables reproducible benchmarks of different model choices, including cross-validation to assess out-of-sample predictive performance. Methods are described in Velasco-Pardo, Constantine-Cooke, Lees and Vallejos (2026, manuscript under preparation) 'Landmarking with Latent Class Mixed Models for Dynamic Prediction of Time-to-event Data with Heterogeneous Biomarker Trajectories'.
 }
 \seealso{
 Useful links:
@@ -24,9 +24,10 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Victor Velasco-Pardo \email{vvelasco@ed.ac.uk} (\href{https://orcid.org/0000-0002-7166-1573}{ORCID})
   \item Nathan Constantine-Cooke \email{nathan.constantine-cooke@ed.ac.uk} (\href{https://orcid.org/0000-0002-4437-8713}{ORCID})
-  \item Catalina Vallejos \email{catalina.vallejos@ed.ac.uk} (\href{https://orcid.org/0000-0003-3638-1960}{ORCID})
   \item Charlie Lees \email{charlie.lees@ed.ac.uk} (\href{https://orcid.org/0000-0002-0732-8215}{ORCID})
+  \item Catalina Vallejos \email{catalina.vallejos@ed.ac.uk} (\href{https://orcid.org/0000-0003-3638-1960}{ORCID})
 }
 
 }
