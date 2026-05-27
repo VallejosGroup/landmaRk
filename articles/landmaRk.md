@@ -542,7 +542,7 @@ summary(landmarking_object,
 #>  
 #> hlme(fixed = value ~ obstime + prevOI, mixture = ~obstime + prevOI, 
 #>     random = ~obstime, subject = "patient", classmb = ~1, ng = 2, 
-#>     nwg = TRUE, maxiter = maxiter, returndata = TRUE)
+#>     nwg = TRUE, maxiter = 24000, returndata = TRUE)
 #>  
 #> Statistical Model: 
 #>      Dataset: NULL 
@@ -553,10 +553,10 @@ summary(landmarking_object,
 #>  
 #> Iteration process: 
 #>      Convergence criteria satisfied 
-#>      Number of iterations:  12 
-#>      Convergence criteria: parameters= 7.1e-09 
-#>                          : likelihood= 1.4e-08 
-#>                          : second derivatives= 1e-12 
+#>      Number of iterations:  1 
+#>      Convergence criteria: parameters= 4.9e-11 
+#>                          : likelihood= 1.5e-09 
+#>                          : second derivatives= 2.5e-10 
 #>  
 #> Goodness-of-fit statistics: 
 #>      maximum log-likelihood: -2578.12  
@@ -570,27 +570,27 @@ summary(landmarking_object,
 #> (the class of reference is the last class) 
 #> 
 #>                      coef      Se   Wald p-value
-#> intercept class1  0.02129 0.17431  0.122 0.90279
+#> intercept class1  0.02129 0.17671  0.120 0.90411
 #> 
 #> Fixed effects in the longitudinal model:
 #> 
 #>                       coef      Se   Wald p-value
-#> intercept class1   5.38287 0.31868 16.891 0.00000
-#> intercept class2  13.51658 0.49286 27.425 0.00000
+#> intercept class1   5.38287 0.31937 16.855 0.00000
+#> intercept class2  13.51657 0.49366 27.380 0.00000
 #> obstime class1    -0.16531 0.03393 -4.873 0.00000
 #> obstime class2    -0.19030 0.04637 -4.104 0.00004
-#> prevOIAIDS class1 -1.44437 0.31851 -4.535 0.00001
-#> prevOIAIDS class2 -4.82749 0.68196 -7.079 0.00000
+#> prevOIAIDS class1 -1.44437 0.31871 -4.532 0.00001
+#> prevOIAIDS class2 -4.82750 0.68248 -7.073 0.00000
 #> 
 #> 
 #> Variance-covariance matrix of the random-effects:
 #>           intercept obstime
 #> intercept  13.60174        
-#> obstime    -0.24981 0.16909
+#> obstime    -0.24982 0.16909
 #> 
 #>                                     coef      Se
-#> Proportional coefficient class1  0.33917 0.04167
-#> Residual standard error:         1.54912 0.05467
+#> Proportional coefficient class1  0.33917 0.04178
+#> Residual standard error:         1.54911 0.05468
 ```
 
 ``` r

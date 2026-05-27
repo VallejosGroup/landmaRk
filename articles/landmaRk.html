@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">landmaRk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -557,7 +557,7 @@ model.</p></li>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; hlme(fixed = value ~ obstime + prevOI, mixture = ~obstime + prevOI, </span></span>
 <span><span class="co">#&gt;     random = ~obstime, subject = "patient", classmb = ~1, ng = 2, </span></span>
-<span><span class="co">#&gt;     nwg = TRUE, maxiter = maxiter, returndata = TRUE)</span></span>
+<span><span class="co">#&gt;     nwg = TRUE, maxiter = 24000, returndata = TRUE)</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; Statistical Model: </span></span>
 <span><span class="co">#&gt;      Dataset: NULL </span></span>
@@ -568,10 +568,10 @@ model.</p></li>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; Iteration process: </span></span>
 <span><span class="co">#&gt;      Convergence criteria satisfied </span></span>
-<span><span class="co">#&gt;      Number of iterations:  12 </span></span>
-<span><span class="co">#&gt;      Convergence criteria: parameters= 7.1e-09 </span></span>
-<span><span class="co">#&gt;                          : likelihood= 1.4e-08 </span></span>
-<span><span class="co">#&gt;                          : second derivatives= 1e-12 </span></span>
+<span><span class="co">#&gt;      Number of iterations:  1 </span></span>
+<span><span class="co">#&gt;      Convergence criteria: parameters= 4.9e-11 </span></span>
+<span><span class="co">#&gt;                          : likelihood= 1.5e-09 </span></span>
+<span><span class="co">#&gt;                          : second derivatives= 2.5e-10 </span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; Goodness-of-fit statistics: </span></span>
 <span><span class="co">#&gt;      maximum log-likelihood: -2578.12  </span></span>
@@ -585,27 +585,27 @@ model.</p></li>
 <span><span class="co">#&gt; (the class of reference is the last class) </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                      coef      Se   Wald p-value</span></span>
-<span><span class="co">#&gt; intercept class1  0.02129 0.17431  0.122 0.90279</span></span>
+<span><span class="co">#&gt; intercept class1  0.02129 0.17671  0.120 0.90411</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Fixed effects in the longitudinal model:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                       coef      Se   Wald p-value</span></span>
-<span><span class="co">#&gt; intercept class1   5.38287 0.31868 16.891 0.00000</span></span>
-<span><span class="co">#&gt; intercept class2  13.51658 0.49286 27.425 0.00000</span></span>
+<span><span class="co">#&gt; intercept class1   5.38287 0.31937 16.855 0.00000</span></span>
+<span><span class="co">#&gt; intercept class2  13.51657 0.49366 27.380 0.00000</span></span>
 <span><span class="co">#&gt; obstime class1    -0.16531 0.03393 -4.873 0.00000</span></span>
 <span><span class="co">#&gt; obstime class2    -0.19030 0.04637 -4.104 0.00004</span></span>
-<span><span class="co">#&gt; prevOIAIDS class1 -1.44437 0.31851 -4.535 0.00001</span></span>
-<span><span class="co">#&gt; prevOIAIDS class2 -4.82749 0.68196 -7.079 0.00000</span></span>
+<span><span class="co">#&gt; prevOIAIDS class1 -1.44437 0.31871 -4.532 0.00001</span></span>
+<span><span class="co">#&gt; prevOIAIDS class2 -4.82750 0.68248 -7.073 0.00000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variance-covariance matrix of the random-effects:</span></span>
 <span><span class="co">#&gt;           intercept obstime</span></span>
 <span><span class="co">#&gt; intercept  13.60174        </span></span>
-<span><span class="co">#&gt; obstime    -0.24981 0.16909</span></span>
+<span><span class="co">#&gt; obstime    -0.24982 0.16909</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                                     coef      Se</span></span>
-<span><span class="co">#&gt; Proportional coefficient class1  0.33917 0.04167</span></span>
-<span><span class="co">#&gt; Residual standard error:         1.54912 0.05467</span></span></code></pre></div>
+<span><span class="co">#&gt; Proportional coefficient class1  0.33917 0.04178</span></span>
+<span><span class="co">#&gt; Residual standard error:         1.54911 0.05468</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">6</span>, horizon <span class="op">=</span> <span class="fl">18</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call:</span></span>
@@ -639,7 +639,7 @@ model.</p></li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Victor Velasco-Pardo, Nathan Constantine-Cooke, Catalina Vallejos, Charlie Lees.</p>
+  <p>Developed by Victor Velasco-Pardo, Nathan Constantine-Cooke, Charlie Lees, Catalina Vallejos.</p>
 </div>
 
 <div class="pkgdown-footer-right">

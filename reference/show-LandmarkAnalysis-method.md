@@ -17,10 +17,13 @@ show(object)
   An object of class
   [`LandmarkAnalysis`](https://vallejosgroup.github.io/landmaRk/reference/LandmarkAnalysis.md).
 
+## Value
+
+No return value(prints a summary to the console).
+
 ## Examples
 
 ``` r
-# \donttest{
 data(epileptic)
 epileptic_dfs <- split_wide_df(
   epileptic,
@@ -45,5 +48,4 @@ show(x)
 #>   Event time: with.time 
 #>   Risk sets: 
 #>     Landmark 365.25: 430 subjects
-# }
 ```

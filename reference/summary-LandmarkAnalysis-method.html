@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">landmaRk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,13 +87,13 @@ the dynamic covariate</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A summary of the desired submodel</p>
+    <p>A summary of the desired submodel, printed to the console.
+Returns <code>NULL</code> invisibly.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">epileptic</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">epileptic</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">epileptic_dfs</span> <span class="op">&lt;-</span> <span class="fu"><a href="split_wide_df.html">split_wide_df</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">epileptic</span>,</span></span>
 <span class="r-in"><span>  ids <span class="op">=</span> <span class="st">"id"</span>, times <span class="op">=</span> <span class="st">"time"</span>,</span></span>
@@ -102,6 +102,33 @@ the dynamic covariate</p></dd>
 <span class="r-in"><span>  measurement_name <span class="op">=</span> <span class="st">"value"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="LandmarkAnalysis.html">LandmarkAnalysis</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data_static <span class="op">=</span> <span class="va">epileptic_dfs</span><span class="op">$</span><span class="va">df_static</span>,</span></span>
+<span class="r-in"><span>  data_dynamic <span class="op">=</span> <span class="va">epileptic_dfs</span><span class="op">$</span><span class="va">df_dynamic</span>,</span></span>
+<span class="r-in"><span>  event_indicator <span class="op">=</span> <span class="st">"with.status"</span>,</span></span>
+<span class="r-in"><span>  ids <span class="op">=</span> <span class="st">"id"</span>, event_time <span class="op">=</span> <span class="st">"with.time"</span>,</span></span>
+<span class="r-in"><span>  times <span class="op">=</span> <span class="st">"time"</span>, measurements <span class="op">=</span> <span class="st">"value"</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="compute_risk_sets.html">compute_risk_sets</a></span><span class="op">(</span><span class="fl">365.25</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="fit_survival.html">fit_survival</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    formula <span class="op">=</span> <span class="fu">survival</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">event_time</span>, <span class="va">event_status</span><span class="op">)</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">+</span> <span class="va">age</span>,</span></span>
+<span class="r-in"><span>    landmarks <span class="op">=</span> <span class="fl">365.25</span>,</span></span>
+<span class="r-in"><span>    horizons <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span>,</span></span>
+<span class="r-in"><span>    method <span class="op">=</span> <span class="st">"coxph"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">365.25</span>, horizon <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     "-", horizons)]], model = TRUE, x = TRUE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               coef exp(coef)  se(coef)      z      p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> treatLTG  0.111859  1.118356  0.197679  0.566 0.5715</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> age      -0.012549  0.987529  0.005414 -2.318 0.0205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood ratio test=5.96  on 2 df, p=0.0509</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> n= 430, number of events= 105 </span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Full pipeline including longitudinal submodel</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="LandmarkAnalysis.html">LandmarkAnalysis</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data_static <span class="op">=</span> <span class="va">epileptic_dfs</span><span class="op">$</span><span class="va">df_static</span>,</span></span>
 <span class="r-in"><span>  data_dynamic <span class="op">=</span> <span class="va">epileptic_dfs</span><span class="op">$</span><span class="va">df_dynamic</span>,</span></span>
 <span class="r-in"><span>  event_indicator <span class="op">=</span> <span class="st">"with.status"</span>,</span></span>
@@ -130,7 +157,7 @@ the dynamic covariate</p></dd>
 <span class="r-in"><span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dose"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="predict_survival.html">predict_survival</a></span><span class="op">(</span>landmarks <span class="op">=</span> <span class="fl">365.25</span>, horizons <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span>, type <span class="op">=</span> <span class="st">"longitudinal"</span>, landmark <span class="op">=</span> <span class="fl">365.25</span>, dynamic_covariate <span class="op">=</span> <span class="st">"dose"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x2</span>, type <span class="op">=</span> <span class="st">"longitudinal"</span>, landmark <span class="op">=</span> <span class="fl">365.25</span>, dynamic_covariate <span class="op">=</span> <span class="st">"dose"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Linear mixed model fit by REML ['lmerMod']</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Formula: value ~ treat + age + gender + learn.dis + (time | id)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Data: dataframe</span>
@@ -145,7 +172,7 @@ the dynamic covariate</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)      treatLTG           age       genderM  learn.disYes  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1.9585547    -0.1244086    -0.0006828     0.1257524    -0.2773500  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 2 lme4 warnings </span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">365.25</span>, horizon <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x2</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">365.25</span>, horizon <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">365.25</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "-", horizons)]], model = TRUE, x = TRUE)</span>
@@ -167,7 +194,7 @@ the dynamic covariate</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Victor Velasco-Pardo, Nathan Constantine-Cooke, Catalina Vallejos, Charlie Lees.</p>
+  <p>Developed by Victor Velasco-Pardo, Nathan Constantine-Cooke, Charlie Lees, Catalina Vallejos.</p>
 </div>
 
 <div class="pkgdown-footer-right">

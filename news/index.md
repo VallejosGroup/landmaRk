@@ -2,6 +2,8 @@
 
 ## landmaRk 0.1.1
 
+CRAN release: 2026-05-27
+
 - Package is made publicly available via CRAN.
 
 ### New Features

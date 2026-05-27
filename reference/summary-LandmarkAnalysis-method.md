@@ -42,12 +42,12 @@ summary(
 
 ## Value
 
-A summary of the desired submodel
+A summary of the desired submodel, printed to the console. Returns
+`NULL` invisibly.
 
 ## Examples
 
 ``` r
-# \donttest{
 data(epileptic)
 epileptic_dfs <- split_wide_df(
   epileptic,
@@ -57,6 +57,33 @@ epileptic_dfs <- split_wide_df(
   measurement_name = "value"
 )
 x <- LandmarkAnalysis(
+  data_static = epileptic_dfs$df_static,
+  data_dynamic = epileptic_dfs$df_dynamic,
+  event_indicator = "with.status",
+  ids = "id", event_time = "with.time",
+  times = "time", measurements = "value"
+) |>
+  compute_risk_sets(365.25) |>
+  fit_survival(
+    formula = survival::Surv(event_time, event_status) ~ treat + age,
+    landmarks = 365.25,
+    horizons = 2 * 365.25,
+    method = "coxph"
+  )
+summary(x, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
+#> Call:
+#> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
+#>     "-", horizons)]], model = TRUE, x = TRUE)
+#> 
+#>               coef exp(coef)  se(coef)      z      p
+#> treatLTG  0.111859  1.118356  0.197679  0.566 0.5715
+#> age      -0.012549  0.987529  0.005414 -2.318 0.0205
+#> 
+#> Likelihood ratio test=5.96  on 2 df, p=0.0509
+#> n= 430, number of events= 105 
+# \donttest{
+# Full pipeline including longitudinal submodel
+x2 <- LandmarkAnalysis(
   data_static = epileptic_dfs$df_static,
   data_dynamic = epileptic_dfs$df_dynamic,
   event_indicator = "with.status",
@@ -85,7 +112,7 @@ x <- LandmarkAnalysis(
     dynamic_covariates = c("dose")
   ) |>
   predict_survival(landmarks = 365.25, horizons = 2 * 365.25)
-summary(x, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
+summary(x2, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
 #> Linear mixed model fit by REML ['lmerMod']
 #> Formula: value ~ treat + age + gender + learn.dis + (time | id)
 #>    Data: dataframe
@@ -100,7 +127,7 @@ summary(x, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
 #>  (Intercept)      treatLTG           age       genderM  learn.disYes  
 #>    1.9585547    -0.1244086    -0.0006828     0.1257524    -0.2773500  
 #> optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 2 lme4 warnings 
-summary(x, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
+summary(x2, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
 #> Call:
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
 #>     "-", horizons)]], model = TRUE, x = TRUE)

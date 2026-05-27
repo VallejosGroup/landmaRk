@@ -14,3 +14,8 @@ check_lcmm_convergence(x)
 
   An object of class
   [`LandmarkAnalysis`](https://vallejosgroup.github.io/landmaRk/reference/LandmarkAnalysis.md).
+
+## Value
+
+No return value. Issues a message if all lcmm models converged, or a
+warning for each model that did not converge.
