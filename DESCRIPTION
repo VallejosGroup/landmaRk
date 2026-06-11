@@ -59,4 +59,3 @@ VignetteBuilder: knitr
 URL: https://vallejosgroup.github.io/landmaRk/, https://github.com/VallejosGroup/landmaRk
 Language: en-GB
 Config/roxygen2/version: 8.0.0
-RoxygenNote: 7.3.3
