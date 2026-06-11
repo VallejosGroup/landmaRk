@@ -81,7 +81,7 @@
   fold <- NULL
   # Create dataframe for survival analysis
   survival_df <- x@data_static[
-    which(x@data_static[, x@event_time] >= landmarks),
+    which(x@data_static[, x@event_time] > landmarks),
   ]
   # If censor_at_horizon=TRUE, censor observations at horizons
   if (censor_at_horizon) {

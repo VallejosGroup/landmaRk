@@ -554,7 +554,7 @@ setMethod(
       # Compute risk set for given landmark time
       x@risk_sets[[as.character(landmarks)]] <-
         x@data_static[[x@ids]][which(
-          x@data_static[[x@event_time]] >= landmarks
+          x@data_static[[x@event_time]] > landmarks
         )]
 
       # Now raise a warning if there are individuals with less than

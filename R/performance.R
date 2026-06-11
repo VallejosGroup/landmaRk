@@ -173,33 +173,37 @@ setMethod(
       }
       if (auc_t) {
         if (length(h_times) == 0) {
-          auct_list[[paste0(landmark, "-", horizon)]] <- unname(
-            timeROC::timeROC(
-              T = dataset[, "event_time"],
-              delta = dataset[, "event_status"],
-              marker = pred_matrix[, 1],
-              cause = 1,
-              times = horizon - landmark
-            )$AUC[paste0("t=", horizon - landmark)]
-          )
+          auct_list[[paste0(landmark, "-", horizon)]] <- riskRegression::Score(
+            object = list(x@survival_fits[[paste0(landmark, "-", horizon)]]),
+            formula = Surv(event_time, event_status) ~ 1,
+            data = dataset,
+            cause = 1,
+            times = horizon - landmark,
+            cens.method = "ipcw",
+            cens.model = "km"
+          )$AUC$score |>
+            filter(model != "Null model") |>
+            pull(AUC)
         } else {
           auct_list[[paste0(landmark, "-", horizon)]] <- sapply(
             seq_along(h_times),
             function(j) {
-              unname(
-                timeROC::timeROC(
-                  T = dataset[, "event_time"],
-                  delta = dataset[, "event_status"],
-                  marker = pred_matrix[, j],
-                  cause = 1,
-                  times = h_times[j]
-                )$AUC[paste0("t=", h_times[j])]
-              )
+              riskRegression::Score(
+                object = list("model" = pred_matrix[, j, drop = FALSE]),
+                formula = Surv(event_time, event_status) ~ 1,
+                data = dataset,
+                cause = 1,
+                times = h_times[j],
+                cens.method = "ipcw",
+                cens.model = "km"
+              )$AUC$score |>
+                filter(model != "Null model") |>
+                pull(AUC)
             }
           )
           names(auct_list[[paste0(landmark, "-", horizon)]]) <- paste0(
             "AUC(",
-            h_times,
+            landmark + h_times,
             ")"
           )
         }

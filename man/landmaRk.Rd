@@ -24,7 +24,6 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Victor Velasco-Pardo \email{vvelasco@ed.ac.uk} (\href{https://orcid.org/0000-0002-7166-1573}{ORCID})
   \item Nathan Constantine-Cooke \email{nathan.constantine-cooke@ed.ac.uk} (\href{https://orcid.org/0000-0002-4437-8713}{ORCID})
   \item Charlie Lees \email{charlie.lees@ed.ac.uk} (\href{https://orcid.org/0000-0002-0732-8215}{ORCID})
   \item Catalina Vallejos \email{catalina.vallejos@ed.ac.uk} (\href{https://orcid.org/0000-0003-3638-1960}{ORCID})
