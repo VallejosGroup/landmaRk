@@ -247,27 +247,27 @@ part of the original dataset for validation.</p>
 <span><span class="co">#&gt; Linear mixed model fit by REML ['lmerMod']</span></span>
 <span><span class="co">#&gt; Formula: value ~ prevOI + obstime + (obstime | patient)</span></span>
 <span><span class="co">#&gt;    Data: dataframe</span></span>
-<span><span class="co">#&gt; REML criterion at convergence: 4263.201</span></span>
+<span><span class="co">#&gt; REML criterion at convergence: 4254.095</span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
 <span><span class="co">#&gt;  Groups   Name        Std.Dev. Corr  </span></span>
-<span><span class="co">#&gt;  patient  (Intercept) 4.1584         </span></span>
-<span><span class="co">#&gt;           obstime     0.2392   -0.09 </span></span>
-<span><span class="co">#&gt;  Residual             1.6223         </span></span>
-<span><span class="co">#&gt; Number of obs: 853, groups:  patient, 321</span></span>
+<span><span class="co">#&gt;  patient  (Intercept) 4.1593         </span></span>
+<span><span class="co">#&gt;           obstime     0.2385   -0.09 </span></span>
+<span><span class="co">#&gt;  Residual             1.6248         </span></span>
+<span><span class="co">#&gt; Number of obs: 851, groups:  patient, 320</span></span>
 <span><span class="co">#&gt; Fixed Effects:</span></span>
 <span><span class="co">#&gt; (Intercept)   prevOIAIDS      obstime  </span></span>
-<span><span class="co">#&gt;     10.3201      -4.3287      -0.1757</span></span></code></pre></div>
+<span><span class="co">#&gt;      10.321       -4.311       -0.176</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">6</span>, horizon <span class="op">=</span> <span class="fl">18</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, </span></span>
 <span><span class="co">#&gt;     "-", horizons)]], model = TRUE, x = TRUE)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;           coef exp(coef) se(coef)     z   p</span></span>
-<span><span class="co">#&gt; drugddI 0.2081    1.2313   0.2007 1.037 0.3</span></span>
+<span><span class="co">#&gt;           coef exp(coef) se(coef)     z     p</span></span>
+<span><span class="co">#&gt; drugddI 0.2306    1.2594   0.2019 1.142 0.253</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Likelihood ratio test=1.08  on 1 df, p=0.299</span></span>
-<span><span class="co">#&gt; n= 321, number of events= 100</span></span></code></pre></div>
+<span><span class="co">#&gt; Likelihood ratio test=1.31  on 1 df, p=0.2522</span></span>
+<span><span class="co">#&gt; n= 320, number of events= 99</span></span></code></pre></div>
 <p>Here are the in-sample performance metrics:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/performance_metrics.html">performance_metrics</a></span><span class="op">(</span></span>
@@ -277,12 +277,12 @@ part of the original dataset for validation.</p>
 <span>  auc_t <span class="op">=</span> <span class="cn">TRUE</span>, c_index <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  h_times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)</span></span>
-<span><span class="co">#&gt; 6-18        6      18 0.07967156 0.1630371 0.2313983 0.5194303 0.5381293</span></span>
-<span><span class="co">#&gt; 8-20        8      20 0.10531988 0.1699368 0.2449021 0.5118598 0.5353575</span></span>
-<span><span class="co">#&gt;        AUC(12)</span></span>
-<span><span class="co">#&gt; 6-18 0.4853891</span></span>
-<span><span class="co">#&gt; 8-20 0.4644064</span></span></code></pre></div>
+<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)</span></span>
+<span><span class="co">#&gt; 6-18        6      18 0.07725955 0.1614473 0.2309560 0.5293336 0.5424304</span></span>
+<span><span class="co">#&gt; 8-20        8      20 0.10304433 0.1683295 0.2449509 0.5118598 0.5396523</span></span>
+<span><span class="co">#&gt;        AUC(18)</span></span>
+<span><span class="co">#&gt; 6-18 0.4876483</span></span>
+<span><span class="co">#&gt; 8-20 0.4661287</span></span></code></pre></div>
 <p>Out-of-sample performance metrics can be obtained by specifying
 <code>train = FALSE</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -294,10 +294,10 @@ part of the original dataset for validation.</p>
 <span>  h_times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span>,</span>
 <span>  train <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)</span></span>
-<span><span class="co">#&gt; 6-18        6      18 0.07655582 0.1744548 0.2385842 0.6400376 0.6126645</span></span>
-<span><span class="co">#&gt; 8-20        8      20 0.08189975 0.1732424 0.2365391 0.6458753 0.6614730</span></span>
-<span><span class="co">#&gt;        AUC(12)</span></span>
+<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)</span></span>
+<span><span class="co">#&gt; 6-18        6      18 0.07650806 0.1743734 0.2385928 0.6400376 0.6126645</span></span>
+<span><span class="co">#&gt; 8-20        8      20 0.08163087 0.1728349 0.2370645 0.6458753 0.6614730</span></span>
+<span><span class="co">#&gt;        AUC(18)</span></span>
 <span><span class="co">#&gt; 6-18 0.5646015</span></span>
 <span><span class="co">#&gt; 8-20 0.4347708</span></span></code></pre></div>
 </div>
@@ -361,43 +361,43 @@ cross-validation:</p>
 <span></span>
 <span><span class="va">metrics</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)</span></span>
-<span><span class="co">#&gt; 6-18        6      18 0.07430174 0.1628066 0.2331222 0.5165677 0.5332049</span></span>
-<span><span class="co">#&gt; 8-20        8      20 0.10693845 0.1686616 0.2472218 0.5129526 0.5464116</span></span>
-<span><span class="co">#&gt;        AUC(12)</span></span>
-<span><span class="co">#&gt; 6-18 0.4909934</span></span>
-<span><span class="co">#&gt; 8-20 0.4711122</span></span>
+<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)</span></span>
+<span><span class="co">#&gt; 6-18        6      18 0.07184892 0.1612296 0.2326964 0.5273167 0.5375056</span></span>
+<span><span class="co">#&gt; 8-20        8      20 0.10469373 0.1670153 0.2473288 0.5129526 0.5509932</span></span>
+<span><span class="co">#&gt;        AUC(18)</span></span>
+<span><span class="co">#&gt; 6-18 0.4932091</span></span>
+<span><span class="co">#&gt; 8-20 0.4728190</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)</span></span>
-<span><span class="co">#&gt; 6-18        6      18 0.07878887 0.1649606 0.2357098 0.5245006 0.5430452</span></span>
-<span><span class="co">#&gt; 8-20        8      20 0.10599282 0.1717609 0.2397350 0.5231481 0.5536476</span></span>
-<span><span class="co">#&gt;        AUC(12)</span></span>
-<span><span class="co">#&gt; 6-18 0.5008851</span></span>
-<span><span class="co">#&gt; 8-20 0.4908798</span></span>
+<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)</span></span>
+<span><span class="co">#&gt; 6-18        6      18 0.07638709 0.1633966 0.2353011 0.5344016 0.5472043</span></span>
+<span><span class="co">#&gt; 8-20        8      20 0.10373758 0.1701512 0.2395004 0.5231481 0.5579315</span></span>
+<span><span class="co">#&gt;        AUC(18)</span></span>
+<span><span class="co">#&gt; 6-18 0.5030073</span></span>
+<span><span class="co">#&gt; 8-20 0.4927184</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[3]]</span></span>
-<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)</span></span>
-<span><span class="co">#&gt; 6-18        6      18 0.07071204 0.1598846 0.2288635 0.5448391 0.5714684</span></span>
-<span><span class="co">#&gt; 8-20        8      20 0.09567283 0.1690807 0.2444550 0.5446251 0.5772778</span></span>
-<span><span class="co">#&gt;        AUC(12)</span></span>
-<span><span class="co">#&gt; 6-18 0.5021795</span></span>
-<span><span class="co">#&gt; 8-20 0.4210204</span></span>
+<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)</span></span>
+<span><span class="co">#&gt; 6-18        6      18 0.06823000 0.1582112 0.2283218 0.5564865 0.5760020</span></span>
+<span><span class="co">#&gt; 8-20        8      20 0.09329432 0.1673781 0.2447129 0.5531478 0.5817774</span></span>
+<span><span class="co">#&gt;        AUC(18)</span></span>
+<span><span class="co">#&gt; 6-18 0.5044216</span></span>
+<span><span class="co">#&gt; 8-20 0.4228088</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[4]]</span></span>
-<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)</span></span>
+<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)</span></span>
 <span><span class="co">#&gt; 6-18        6      18 0.08955414 0.1686272 0.2363873 0.5502151 0.5302593</span></span>
-<span><span class="co">#&gt; 8-20        8      20 0.09355146 0.1656261 0.2322180 0.5037594 0.5340163</span></span>
-<span><span class="co">#&gt;        AUC(12)</span></span>
+<span><span class="co">#&gt; 8-20        8      20 0.09112097 0.1639479 0.2318162 0.5037594 0.5385344</span></span>
+<span><span class="co">#&gt;        AUC(18)</span></span>
 <span><span class="co">#&gt; 6-18 0.4867656</span></span>
-<span><span class="co">#&gt; 8-20 0.4807579</span></span>
+<span><span class="co">#&gt; 8-20 0.4831339</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[5]]</span></span>
-<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)</span></span>
-<span><span class="co">#&gt; 6-18        6      18 0.08130580 0.1681432 0.2359809 0.5782629 0.5907356</span></span>
-<span><span class="co">#&gt; 8-20        8      20 0.09911599 0.1739465 0.2599817 0.5934627 0.5997129</span></span>
-<span><span class="co">#&gt;        AUC(12)</span></span>
-<span><span class="co">#&gt; 6-18 0.5300017</span></span>
+<span><span class="co">#&gt;      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)</span></span>
+<span><span class="co">#&gt; 6-18        6      18 0.07884724 0.1664794 0.2354732 0.5893467 0.5951622</span></span>
+<span><span class="co">#&gt; 8-20        8      20 0.09911599 0.1739465 0.2599817 0.5841044 0.5997129</span></span>
+<span><span class="co">#&gt;        AUC(18)</span></span>
+<span><span class="co">#&gt; 6-18 0.5322901</span></span>
 <span><span class="co">#&gt; 8-20 0.4345596</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

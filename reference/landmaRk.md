@@ -27,9 +27,6 @@ Useful links:
 
 Authors:
 
-- Victor Velasco-Pardo <vvelasco@ed.ac.uk>
-  ([ORCID](https://orcid.org/0000-0002-7166-1573))
-
 - Nathan Constantine-Cooke <nathan.constantine-cooke@ed.ac.uk>
   ([ORCID](https://orcid.org/0000-0002-4437-8713))
 

@@ -246,8 +246,8 @@ landmarking_object
 #>   Event indicator: death 
 #>   Event time: Time 
 #>   Risk sets: 
-#>     Landmark 6: 404 subjects
-#>     Landmark 8: 379 subjects
+#>     Landmark 6: 403 subjects
+#>     Landmark 8: 378 subjects
 ```
 
 Now we use the function `fit_survival` to fit the survival model. We
@@ -299,11 +299,11 @@ summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
 #>     "-", horizons)]], model = TRUE, x = TRUE)
 #> 
-#>           coef exp(coef) se(coef)    z      p
-#> drugddI 0.3123    1.3665   0.1785 1.75 0.0802
+#>           coef exp(coef) se(coef)     z      p
+#> drugddI 0.3306    1.3918   0.1793 1.843 0.0653
 #> 
-#> Likelihood ratio test=3.08  on 1 df, p=0.07918
-#> n= 404, number of events= 127
+#> Likelihood ratio test=3.42  on 1 df, p=0.06425
+#> n= 403, number of events= 126
 ```
 
 Now the `performance_metrics` function can be used to calculate (for
@@ -321,12 +321,12 @@ performance_metrics(
 #> Registered S3 method overwritten by 'cmprsk':
 #>   method      from
 #>   plot.cuminc lcmm
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
-#> 6-18        6      18 0.07900671 0.1651251 0.2342406 0.5437755 0.5539229
-#> 8-20        8      20 0.10044734 0.1701394 0.2442496 0.5357143 0.5626498
-#>        AUC(12)
-#> 6-18 0.5022860
-#> 8-20 0.4582525
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
+#> 6-18        6      18 0.07706756 0.1638480 0.2338849 0.5521678 0.5573471
+#> 8-20        8      20 0.09856622 0.1688013 0.2443032 0.5357143 0.5662291
+#>        AUC(18)
+#> 6-18 0.5040560
+#> 8-20 0.4597691
 ```
 
 ## Landmarking analysis with lme4 + coxph
@@ -408,17 +408,16 @@ summary(landmarking_object,
 #> Linear mixed model fit by REML ['lmerMod']
 #> Formula: value ~ prevOI + obstime + (obstime | patient)
 #>    Data: dataframe
-#> REML criterion at convergence: 5308.102
+#> REML criterion at convergence: 5298.972
 #> Random effects:
 #>  Groups   Name        Std.Dev. Corr 
-#>  patient  (Intercept) 3.9911        
-#>           obstime     0.2094   0.00 
-#>  Residual             1.6903        
-#> Number of obs: 1060, groups:  patient, 404
+#>  patient  (Intercept) 3.9915        
+#>           obstime     0.2085   0.00 
+#>  Residual             1.6926        
+#> Number of obs: 1058, groups:  patient, 403
 #> Fixed Effects:
 #> (Intercept)   prevOIAIDS      obstime  
-#>     10.4443      -4.5307      -0.1785  
-#> optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 1 lme4 warnings
+#>     10.4447      -4.5162      -0.1788
 ```
 
 ``` r
@@ -428,11 +427,11 @@ summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
 #>     "-", horizons)]], model = TRUE, x = TRUE)
 #> 
-#>           coef exp(coef) se(coef)    z      p
-#> drugddI 0.3123    1.3665   0.1785 1.75 0.0802
+#>           coef exp(coef) se(coef)     z      p
+#> drugddI 0.3306    1.3918   0.1793 1.843 0.0653
 #> 
-#> Likelihood ratio test=3.08  on 1 df, p=0.07918
-#> n= 404, number of events= 127
+#> Likelihood ratio test=3.42  on 1 df, p=0.06425
+#> n= 403, number of events= 126
 ```
 
 Here are the performance metrics:
@@ -446,12 +445,12 @@ performance_metrics(
   auc_t = TRUE, c_index = FALSE,
   h_times = c(3, 6, 12)
 )
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
-#> 6-18        6      18 0.07900671 0.1651251 0.2342406 0.5437755 0.5539229
-#> 8-20        8      20 0.10044734 0.1701394 0.2442496 0.5357143 0.5626498
-#>        AUC(12)
-#> 6-18 0.5022860
-#> 8-20 0.4582525
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
+#> 6-18        6      18 0.07706756 0.1638480 0.2338849 0.5521678 0.5573471
+#> 8-20        8      20 0.09856622 0.1688013 0.2443032 0.5357143 0.5662291
+#>        AUC(18)
+#> 6-18 0.5040560
+#> 8-20 0.4597691
 ```
 
 ## Landmarking analysis with lcmm + coxph
@@ -546,22 +545,22 @@ summary(landmarking_object,
 #>  
 #> Statistical Model: 
 #>      Dataset: NULL 
-#>      Number of subjects: 404 
-#>      Number of observations: 1060 
+#>      Number of subjects: 403 
+#>      Number of observations: 1058 
 #>      Number of latent classes: 2 
 #>      Number of parameters: 12  
 #>  
 #> Iteration process: 
 #>      Convergence criteria satisfied 
 #>      Number of iterations:  1 
-#>      Convergence criteria: parameters= 4.9e-11 
-#>                          : likelihood= 1.5e-09 
-#>                          : second derivatives= 2.5e-10 
+#>      Convergence criteria: parameters= 1.1e-10 
+#>                          : likelihood= 5e-10 
+#>                          : second derivatives= 8.3e-11 
 #>  
 #> Goodness-of-fit statistics: 
-#>      maximum log-likelihood: -2578.12  
-#>      AIC: 5180.24  
-#>      BIC: 5228.26  
+#>      maximum log-likelihood: -2573.92  
+#>      AIC: 5171.84  
+#>      BIC: 5219.82  
 #>  
 #>  
 #> Maximum Likelihood Estimates: 
@@ -570,27 +569,27 @@ summary(landmarking_object,
 #> (the class of reference is the last class) 
 #> 
 #>                      coef      Se   Wald p-value
-#> intercept class1  0.02129 0.17671  0.120 0.90411
+#> intercept class1  0.02034 0.17564  0.116 0.90782
 #> 
 #> Fixed effects in the longitudinal model:
 #> 
 #>                       coef      Se   Wald p-value
-#> intercept class1   5.38287 0.31937 16.855 0.00000
-#> intercept class2  13.51657 0.49366 27.380 0.00000
-#> obstime class1    -0.16531 0.03393 -4.873 0.00000
-#> obstime class2    -0.19030 0.04637 -4.104 0.00004
-#> prevOIAIDS class1 -1.44437 0.31871 -4.532 0.00001
-#> prevOIAIDS class2 -4.82750 0.68248 -7.073 0.00000
+#> intercept class1   5.38687 0.31907 16.883 0.00000
+#> intercept class2  13.51821 0.49332 27.402 0.00000
+#> obstime class1    -0.16632 0.03397 -4.896 0.00000
+#> obstime class2    -0.19019 0.04641 -4.098 0.00004
+#> prevOIAIDS class1 -1.43232 0.31900 -4.490 0.00001
+#> prevOIAIDS class2 -4.81769 0.68299 -7.054 0.00000
 #> 
 #> 
 #> Variance-covariance matrix of the random-effects:
 #>           intercept obstime
-#> intercept  13.60174        
-#> obstime    -0.24982 0.16909
+#> intercept  13.59457        
+#> obstime    -0.24938 0.16877
 #> 
 #>                                     coef      Se
-#> Proportional coefficient class1  0.33917 0.04178
-#> Residual standard error:         1.54911 0.05468
+#> Proportional coefficient class1  0.33971 0.04181
+#> Residual standard error:         1.55098 0.05479
 ```
 
 ``` r
@@ -600,11 +599,11 @@ summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
 #>     "-", horizons)]], model = TRUE, x = TRUE)
 #> 
-#>           coef exp(coef) se(coef)    z      p
-#> drugddI 0.3123    1.3665   0.1785 1.75 0.0802
+#>           coef exp(coef) se(coef)     z      p
+#> drugddI 0.3306    1.3918   0.1793 1.843 0.0653
 #> 
-#> Likelihood ratio test=3.08  on 1 df, p=0.07918
-#> n= 404, number of events= 127
+#> Likelihood ratio test=3.42  on 1 df, p=0.06425
+#> n= 403, number of events= 126
 ```
 
 ``` r
@@ -616,10 +615,10 @@ performance_metrics(
   auc_t = TRUE, c_index = FALSE,
   h_times = c(3, 6, 12)
 )
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
-#> 6-18        6      18 0.07900671 0.1651251 0.2342406 0.5437755 0.5539229
-#> 8-20        8      20 0.10044734 0.1701394 0.2442496 0.5357143 0.5626498
-#>        AUC(12)
-#> 6-18 0.5022860
-#> 8-20 0.4582525
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
+#> 6-18        6      18 0.07706756 0.1638480 0.2338849 0.5521678 0.5573471
+#> 8-20        8      20 0.09856622 0.1688013 0.2443032 0.5357143 0.5662291
+#>        AUC(18)
+#> 6-18 0.5040560
+#> 8-20 0.4597691
 ```

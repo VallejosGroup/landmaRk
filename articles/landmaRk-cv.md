@@ -197,16 +197,16 @@ summary(landmarking_object,
 #> Linear mixed model fit by REML ['lmerMod']
 #> Formula: value ~ prevOI + obstime + (obstime | patient)
 #>    Data: dataframe
-#> REML criterion at convergence: 4263.201
+#> REML criterion at convergence: 4254.095
 #> Random effects:
 #>  Groups   Name        Std.Dev. Corr  
-#>  patient  (Intercept) 4.1584         
-#>           obstime     0.2392   -0.09 
-#>  Residual             1.6223         
-#> Number of obs: 853, groups:  patient, 321
+#>  patient  (Intercept) 4.1593         
+#>           obstime     0.2385   -0.09 
+#>  Residual             1.6248         
+#> Number of obs: 851, groups:  patient, 320
 #> Fixed Effects:
 #> (Intercept)   prevOIAIDS      obstime  
-#>     10.3201      -4.3287      -0.1757
+#>      10.321       -4.311       -0.176
 ```
 
 ``` r
@@ -216,11 +216,11 @@ summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
 #>     "-", horizons)]], model = TRUE, x = TRUE)
 #> 
-#>           coef exp(coef) se(coef)     z   p
-#> drugddI 0.2081    1.2313   0.2007 1.037 0.3
+#>           coef exp(coef) se(coef)     z     p
+#> drugddI 0.2306    1.2594   0.2019 1.142 0.253
 #> 
-#> Likelihood ratio test=1.08  on 1 df, p=0.299
-#> n= 321, number of events= 100
+#> Likelihood ratio test=1.31  on 1 df, p=0.2522
+#> n= 320, number of events= 99
 ```
 
 Here are the in-sample performance metrics:
@@ -234,12 +234,12 @@ performance_metrics(
   auc_t = TRUE, c_index = FALSE,
   h_times = c(3, 6, 12)
 )
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
-#> 6-18        6      18 0.07967156 0.1630371 0.2313983 0.5194303 0.5381293
-#> 8-20        8      20 0.10531988 0.1699368 0.2449021 0.5118598 0.5353575
-#>        AUC(12)
-#> 6-18 0.4853891
-#> 8-20 0.4644064
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
+#> 6-18        6      18 0.07725955 0.1614473 0.2309560 0.5293336 0.5424304
+#> 8-20        8      20 0.10304433 0.1683295 0.2449509 0.5118598 0.5396523
+#>        AUC(18)
+#> 6-18 0.4876483
+#> 8-20 0.4661287
 ```
 
 Out-of-sample performance metrics can be obtained by specifying
@@ -255,10 +255,10 @@ performance_metrics(
   h_times = c(3, 6, 12),
   train = FALSE
 )
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
-#> 6-18        6      18 0.07655582 0.1744548 0.2385842 0.6400376 0.6126645
-#> 8-20        8      20 0.08189975 0.1732424 0.2365391 0.6458753 0.6614730
-#>        AUC(12)
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
+#> 6-18        6      18 0.07650806 0.1743734 0.2385928 0.6400376 0.6126645
+#> 8-20        8      20 0.08163087 0.1728349 0.2370645 0.6458753 0.6614730
+#>        AUC(18)
 #> 6-18 0.5646015
 #> 8-20 0.4347708
 ```
@@ -327,42 +327,42 @@ for (k in 1:5) {
 
 metrics
 #> [[1]]
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
-#> 6-18        6      18 0.07430174 0.1628066 0.2331222 0.5165677 0.5332049
-#> 8-20        8      20 0.10693845 0.1686616 0.2472218 0.5129526 0.5464116
-#>        AUC(12)
-#> 6-18 0.4909934
-#> 8-20 0.4711122
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
+#> 6-18        6      18 0.07184892 0.1612296 0.2326964 0.5273167 0.5375056
+#> 8-20        8      20 0.10469373 0.1670153 0.2473288 0.5129526 0.5509932
+#>        AUC(18)
+#> 6-18 0.4932091
+#> 8-20 0.4728190
 #> 
 #> [[2]]
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
-#> 6-18        6      18 0.07878887 0.1649606 0.2357098 0.5245006 0.5430452
-#> 8-20        8      20 0.10599282 0.1717609 0.2397350 0.5231481 0.5536476
-#>        AUC(12)
-#> 6-18 0.5008851
-#> 8-20 0.4908798
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
+#> 6-18        6      18 0.07638709 0.1633966 0.2353011 0.5344016 0.5472043
+#> 8-20        8      20 0.10373758 0.1701512 0.2395004 0.5231481 0.5579315
+#>        AUC(18)
+#> 6-18 0.5030073
+#> 8-20 0.4927184
 #> 
 #> [[3]]
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
-#> 6-18        6      18 0.07071204 0.1598846 0.2288635 0.5448391 0.5714684
-#> 8-20        8      20 0.09567283 0.1690807 0.2444550 0.5446251 0.5772778
-#>        AUC(12)
-#> 6-18 0.5021795
-#> 8-20 0.4210204
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
+#> 6-18        6      18 0.06823000 0.1582112 0.2283218 0.5564865 0.5760020
+#> 8-20        8      20 0.09329432 0.1673781 0.2447129 0.5531478 0.5817774
+#>        AUC(18)
+#> 6-18 0.5044216
+#> 8-20 0.4228088
 #> 
 #> [[4]]
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
 #> 6-18        6      18 0.08955414 0.1686272 0.2363873 0.5502151 0.5302593
-#> 8-20        8      20 0.09355146 0.1656261 0.2322180 0.5037594 0.5340163
-#>        AUC(12)
+#> 8-20        8      20 0.09112097 0.1639479 0.2318162 0.5037594 0.5385344
+#>        AUC(18)
 #> 6-18 0.4867656
-#> 8-20 0.4807579
+#> 8-20 0.4831339
 #> 
 #> [[5]]
-#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(3)    AUC(6)
-#> 6-18        6      18 0.08130580 0.1681432 0.2359809 0.5782629 0.5907356
-#> 8-20        8      20 0.09911599 0.1739465 0.2599817 0.5934627 0.5997129
-#>        AUC(12)
-#> 6-18 0.5300017
+#>      landmark horizon   Brier(9) Brier(12) Brier(18)    AUC(9)   AUC(12)
+#> 6-18        6      18 0.07884724 0.1664794 0.2354732 0.5893467 0.5951622
+#> 8-20        8      20 0.09911599 0.1739465 0.2599817 0.5841044 0.5997129
+#>        AUC(18)
+#> 6-18 0.5322901
 #> 8-20 0.4345596
 ```
