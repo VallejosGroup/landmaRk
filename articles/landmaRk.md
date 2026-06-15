@@ -553,9 +553,9 @@ summary(landmarking_object,
 #> Iteration process: 
 #>      Convergence criteria satisfied 
 #>      Number of iterations:  1 
-#>      Convergence criteria: parameters= 1.1e-10 
-#>                          : likelihood= 5e-10 
-#>                          : second derivatives= 8.3e-11 
+#>      Convergence criteria: parameters= 1.2e-10 
+#>                          : likelihood= 5.5e-10 
+#>                          : second derivatives= 9.6e-11 
 #>  
 #> Goodness-of-fit statistics: 
 #>      maximum log-likelihood: -2573.92  
@@ -569,27 +569,27 @@ summary(landmarking_object,
 #> (the class of reference is the last class) 
 #> 
 #>                      coef      Se   Wald p-value
-#> intercept class1  0.02034 0.17564  0.116 0.90782
+#> intercept class1  0.02035 0.17887  0.114 0.90943
 #> 
 #> Fixed effects in the longitudinal model:
 #> 
 #>                       coef      Se   Wald p-value
-#> intercept class1   5.38687 0.31907 16.883 0.00000
-#> intercept class2  13.51821 0.49332 27.402 0.00000
+#> intercept class1   5.38688 0.31994 16.837 0.00000
+#> intercept class2  13.51822 0.49440 27.343 0.00000
 #> obstime class1    -0.16632 0.03397 -4.896 0.00000
 #> obstime class2    -0.19019 0.04641 -4.098 0.00004
-#> prevOIAIDS class1 -1.43232 0.31900 -4.490 0.00001
-#> prevOIAIDS class2 -4.81769 0.68299 -7.054 0.00000
+#> prevOIAIDS class1 -1.43232 0.31923 -4.487 0.00001
+#> prevOIAIDS class2 -4.81768 0.68368 -7.047 0.00000
 #> 
 #> 
 #> Variance-covariance matrix of the random-effects:
 #>           intercept obstime
-#> intercept  13.59457        
+#> intercept  13.59456        
 #> obstime    -0.24938 0.16877
 #> 
 #>                                     coef      Se
-#> Proportional coefficient class1  0.33971 0.04181
-#> Residual standard error:         1.55098 0.05479
+#> Proportional coefficient class1  0.33971 0.04196
+#> Residual standard error:         1.55098 0.05480
 ```
 
 ``` r
