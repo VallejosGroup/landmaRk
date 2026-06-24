@@ -13,7 +13,11 @@
 #' @param landmarks A vector of Landmark times.
 #' @param method Either \code{"lcmm"} or \code{"lme4"} or a function for fitting
 #'   a longitudinal data model, where the first argument is a formula, and also
-#'   has a \code{data} argument.
+#'   has a \code{data} argument. Only needed for fit-based prediction methods
+#'   used later in \code{\link{predict_longitudinal}} (e.g. \code{"lcmm"},
+#'   \code{"lme4"}); summary measures such as \code{"locf"} are computed
+#'   directly from the data and do not require a call to
+#'   \code{fit_longitudinal}.
 #' @param formula A formula to be used in longitudinal sub-model fitting.
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
@@ -177,7 +181,24 @@ setMethod(
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
 #' @param landmarks A numeric vector of landmark times.
-#' @param method Longitudinal data analysis method used to make predictions
+#' @param method Longitudinal data analysis method used to make
+#'   predictions. Either \code{"lcmm"}, \code{"lme4"}, \code{"locf"}, or a
+#'   function, which can be one of two kinds:
+#'   \itemize{
+#'     \item A summary measure, like \code{"locf"}, computed directly from
+#'       the raw longitudinal data and not requiring a model to have been
+#'       previously fit with \code{\link{fit_longitudinal}}. Such a
+#'       function must have the arguments \code{data}, \code{id},
+#'       \code{time}, \code{value} and \code{landmark} (and optionally
+#'       further arguments passed through \code{...}), and must return a
+#'       named vector (or a two-column data frame) with one summary value
+#'       per individual in the risk set.
+#'     \item A prediction function for a model previously fit with
+#'       \code{\link{fit_longitudinal}} (as is the case for \code{"lcmm"}
+#'       and \code{"lme4"}), where the first argument is the fitted model
+#'       object, and which also has \code{newdata} and \code{subject}
+#'       arguments.
+#'   }
 #' @param dynamic_covariates Vector of time-varying covariates to be modelled
 #'   as the outcome of a longitudinal model.
 #' @param validation_fold If positive, cross-validation fold where model is
@@ -230,8 +251,10 @@ setMethod(
     if (length(landmarks) == 1) {
       # Check that relevant risk set is available
       .check_riskset(x, landmarks)
-      if (inherits(method, "character") && method == "locf") {
-        # If model method is LOCF
+      if (.is_summary_method(method)) {
+        # If method is a summary measure (e.g. "locf", or a custom
+        # function), computed directly from the raw longitudinal data, with
+        # no model fit required
         # Relevant risk set
         risk_set <- x@risk_sets[[as.character(landmarks)]]
         for (dynamic_covariate in dynamic_covariates) {
@@ -239,12 +262,14 @@ setMethod(
           train_folds <- x@cv_folds |> filter(fold != validation_fold)
           x@longitudinal_predictions[[as.character(landmarks)]][[
             dynamic_covariate
-          ]] <- .compute_locf_predictions(
+          ]] <- .compute_summary_predictions(
             x,
             risk_set,
             dynamic_covariate,
             landmarks,
-            train_folds
+            train_folds,
+            method,
+            ...
           )
 
           # Test fold predictions (if cross-validation is enabled)
@@ -252,17 +277,22 @@ setMethod(
             test_folds <- x@cv_folds |> filter(fold == validation_fold)
             x@longitudinal_predictions_test[[as.character(landmarks)]][[
               dynamic_covariate
-            ]] <- .compute_locf_predictions(
+            ]] <- .compute_summary_predictions(
               x,
               risk_set,
               dynamic_covariate,
               landmarks,
-              test_folds
+              test_folds,
+              method,
+              ...
             )
           }
         }
       } else {
-        # Check that relevant model fit is available (if model is not LOCF)
+        # Check that relevant model fit is available (only required for
+        # fit-based methods, e.g. "lcmm"/"lme4" or a custom predict-from-fit
+        # function; summary measures are handled above and need no prior
+        # fit_longitudinal() call)
         .check_long_fit(x, landmarks)
 
         # Relevant risk set

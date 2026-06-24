@@ -24,7 +24,11 @@ the landmark times}
 
 \item{method}{Either \code{"lcmm"} or \code{"lme4"} or a function for fitting
 a longitudinal data model, where the first argument is a formula, and also
-has a \code{data} argument.}
+has a \code{data} argument. Only needed for fit-based prediction methods
+used later in \code{\link{predict_longitudinal}} (e.g. \code{"lcmm"},
+\code{"lme4"}); summary measures such as \code{"locf"} are computed
+directly from the data and do not require a call to
+\code{fit_longitudinal}.}
 
 \item{formula}{A formula to be used in longitudinal sub-model fitting.}
 
