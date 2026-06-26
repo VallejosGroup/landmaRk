@@ -168,7 +168,7 @@
 # convention shared by all summary-measure methods.
 .locf_summary <- function(data, id, time, value, landmark, ...) {
   data |>
-    dplyr::slice_max(get(time), by = dplyr::all_of(id)) |>
+    dplyr::slice_max(.data[[time]], by = dplyr::all_of(id)) |>
     dplyr::pull(value, name = id)
 }
 
