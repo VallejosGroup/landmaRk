@@ -15,7 +15,14 @@
 * `predict_longitudinal()` no longer requires `fit_longitudinal()` to have
   been called when `method` is a summary measure (e.g. `"locf"` or a custom
   function); the check for an existing model fit is now only applied to
-  fit-based prediction methods (e.g. `"lcmm"`, `"lme4"`).
+  fit-based prediction methods (e.g. `"lcmm"`, `"lme4"`). `"locf"' is 
+  implemented as a special case of summary measure
+
+## Other Changes
+
+* Removed `timeROC` from `Imports` as it is no longer used.
+* Resolved an R CMD check NOTE about a missing global binding for `AUC` in
+  `performance_metrics()`.
 
 # landmaRk 0.1.1
 
