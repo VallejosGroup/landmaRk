@@ -328,6 +328,76 @@ test_that("longitudinal_fit raises warning for too few observations", {
   )
 })
 
+test_that("Custom summary measure works without a prior fit_longitudinal call", {
+  # A custom summary measure (mean of observations before the landmark
+  # time) should work directly, without ever calling fit_longitudinal().
+  mean_summary <- function(data, id, time, value, landmark, ...) {
+    agg <- stats::aggregate(
+      data[[value]],
+      by = list(id = data[[id]]),
+      FUN = mean,
+      na.rm = TRUE
+    )
+    stats::setNames(agg$x, agg$id)
+  }
+
+  x <- initialise_longitudinal_test_(epileptic = epileptic)
+  x <- x |>
+    compute_risk_sets(365.25)
+
+  expect_no_error({
+    x <- predict_longitudinal(
+      x,
+      landmarks = 365.25,
+      method = mean_summary,
+      dynamic_covariates = "dose"
+    )
+  })
+
+  expect_equal(
+    x@longitudinal_predictions[["365.25"]][["dose"]],
+    {
+      ref <- x@data_dynamic[["dose"]] |>
+        dplyr::filter(time <= 365.25)
+      agg <- stats::aggregate(
+        ref$value,
+        by = list(id = ref$id),
+        FUN = mean,
+        na.rm = TRUE
+      )
+      mean_predictions <- stats::setNames(agg$x, agg$id)
+      full_ids <- x@risk_sets[["365.25"]]
+      mean_predictions <- mean_predictions[as.character(full_ids)]
+      names(mean_predictions) <- full_ids
+      # Mean imputation for individuals where no observations were made
+      mean_predictions[is.na(mean_predictions)] <- mean(
+        mean_predictions,
+        na.rm = TRUE
+      )
+      # Sort observations according to individual id
+      mean_predictions[order(as.integer(names(mean_predictions)))]
+    }
+  )
+})
+
+test_that("predict_longitudinal errors for fit-based methods without a prior fit", {
+  # A fit-based method (e.g. "lcmm"/"lme4") requires fit_longitudinal() to
+  # have been called first; .check_long_fit() should still catch this.
+  x <- initialise_longitudinal_test_(epileptic = epileptic)
+  x <- x |>
+    compute_risk_sets(365.25)
+
+  expect_error(
+    predict_longitudinal(
+      x,
+      landmarks = 365.25,
+      method = "lcmm",
+      dynamic_covariates = "dose"
+    ),
+    "Longitudinal model has not been fit for landmark time365.25"
+  )
+})
+
 test_that("predict_longitudinal works correctly with lcmm", {
   withr::local_seed(1)
 

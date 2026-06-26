@@ -2,13 +2,24 @@
 
 0 errors | 0 warnings | 1 note
 
-* Respond to comments raised by CRAN's team: adds missing Rd-tags and unwraps examples currently wrapped in 
-\donttest{}
+* The only NOTE ("checking for future file timestamps ... unable to verify
+  current time") is a local network artifact and unrelated to the package.
 
-* This is a resubmission. A full URL to the contributing guide has been added to
-  the README. A  missing reference to the method has been added.
+## This submission
 
-## Test environments 
+This is an update (version 0.1.2). Changes since the previous CRAN release:
+
+* `predict_longitudinal()` now supports custom "summary measure" functions for
+  `method` (in the same spirit as `"locf"`), computed directly from the raw
+  longitudinal data without requiring a prior `fit_longitudinal()` call.
+* `predict_longitudinal()` no longer requires `fit_longitudinal()` to have been
+  called when `method` is a summary measure.
+* Fixed the new implementation of LOCF (last observation carried forward).
+* Removed `timeROC` from `Imports` as it is no longer used.
+* Resolved an R CMD check NOTE about a missing global binding for `AUC` in
+  `performance_metrics()`.
+
+## Test environments
 
 - windows-latest (R release)
 - macOS-latest (R release)

@@ -18,7 +18,24 @@ predict_longitudinal(
 
 \item{landmarks}{A numeric vector of landmark times.}
 
-\item{method}{Longitudinal data analysis method used to make predictions}
+\item{method}{Longitudinal data analysis method used to make
+predictions. Either \code{"lcmm"}, \code{"lme4"}, \code{"locf"}, or a
+function, which can be one of two kinds:
+\itemize{
+\item A summary measure, like \code{"locf"}, computed directly from
+the raw longitudinal data and not requiring a model to have been
+previously fit with \code{\link{fit_longitudinal}}. Such a
+function must have the arguments \code{data}, \code{id},
+\code{time}, \code{value} and \code{landmark} (and optionally
+further arguments passed through \code{...}), and must return a
+named vector (or a two-column data frame) with one summary value
+per individual in the risk set.
+\item A prediction function for a model previously fit with
+\code{\link{fit_longitudinal}} (as is the case for \code{"lcmm"}
+and \code{"lme4"}), where the first argument is the fitted model
+object, and which also has \code{newdata} and \code{subject}
+arguments.
+}}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be modelled
 as the outcome of a longitudinal model.}

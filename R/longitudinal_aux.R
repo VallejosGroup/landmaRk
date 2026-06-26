@@ -33,7 +33,7 @@
   } else if (is(method)[1] == "character" && method == "lme4") {
     method <- .predict_lme4
   } else if (is(method)[1] == "character" && method == "locf") {
-    method <- "locf"
+    method <- .locf_summary
   } else if (!(is(method)[1] == "function")) {
     stop(
       "Argument method must be one of 'lme4', 'lcmm',",
@@ -42,6 +42,47 @@
     )
   }
   method
+}
+
+# Check whether `method` is a "summary measure": a function that computes a
+# longitudinal summary directly from the raw data (e.g. LOCF, or a
+# user-supplied last value/mean/etc. function), without requiring a model
+# to have been previously fit with fit_longitudinal(). Such functions are
+# identified by having `data`, `id`, `time`, `value` and `landmark` among
+# their formal arguments, as opposed to fit-based prediction functions
+# (e.g. lcmm, lme4) which take a fitted model object as their first
+# argument.
+.is_summary_method <- function(method) {
+  is.function(method) &&
+    all(
+      c("data", "id", "time", "value", "landmark") %in% names(formals(method))
+    )
+}
+
+# Check that a summary-measure method is a function with the arguments
+# required by .compute_summary_predictions(): data, id, time, value,
+# landmark, ...
+.check_method_long_summary <- function(method) {
+  if (!is.function(method)) {
+    stop(
+      "Argument ",
+      method,
+      " must be a function",
+      "\n"
+    )
+  }
+  required_args <- c("data", "id", "time", "value", "landmark")
+  missing_args <- setdiff(required_args, names(formals(method)))
+  if (length(missing_args) > 0) {
+    stop(
+      "A summary-measure method must be a function with arguments ",
+      paste(required_args, collapse = ", "),
+      ". Missing: ",
+      paste(missing_args, collapse = ", "),
+      "\n"
+    )
+  }
+  invisible(method)
 }
 
 
@@ -121,28 +162,67 @@
   cl
 }
 
-# Compute LOCF predictions for a given fold condition
-.compute_locf_predictions <- function(
+# Default summary measure: Last Observation Carried Forward. Picks, for
+# each individual, the most recent measurement recorded at or before the
+# landmark time. See .compute_summary_predictions() for the calling
+# convention shared by all summary-measure methods.
+.locf_summary <- function(data, id, time, value, landmark, ...) {
+  data |>
+    dplyr::slice_max(.data[[time]], by = dplyr::all_of(id)) |>
+    dplyr::pull(value, name = id)
+}
+
+# Compute summary-measure predictions for a given fold condition, using an
+# arbitrary user-supplied summary function (e.g. LOCF, or a custom
+# mean/last-value/etc. function). Unlike fit-based methods (lcmm, lme4),
+# summary methods operate directly on the raw longitudinal data and do not
+# require a model to have been previously fit with fit_longitudinal() (see
+# .is_summary_method() / .check_method_long_summary()).
+.compute_summary_predictions <- function(
   x,
   risk_set,
   dynamic_covariate,
   landmarks,
-  cv_folds_subset
+  cv_folds_subset,
+  method,
+  ...
 ) {
-  predictions <- as.data.frame(risk_set)
-  colnames(predictions) <- x@ids
-  predictions <- predictions |>
+  .check_method_long_summary(method)
+
+  at_risk_ids <- as.data.frame(risk_set)
+  colnames(at_risk_ids) <- x@ids
+  at_risk_ids <- at_risk_ids |>
     dplyr::inner_join(
       cv_folds_subset |> dplyr::select(x@ids),
       by = x@ids
-    ) |>
-    dplyr::left_join(
-      x@data_dynamic[[dynamic_covariate]] |>
-        dplyr::filter(get(x@times) <= landmarks) |>
-        dplyr::slice_max(get(x@times), by = x@ids),
-      by = stats::setNames(x@ids, x@ids)
     )
-  predictions <- predictions |> dplyr::pull(x@measurements, name = x@ids)
+
+  # Longitudinal data for the at-risk individuals, observed at or before the
+  # landmark time
+  data <- x@data_dynamic[[dynamic_covariate]] |>
+    dplyr::filter(get(x@times) <= landmarks) |>
+    dplyr::inner_join(at_risk_ids, by = x@ids)
+
+  predictions <- method(
+    data = data,
+    id = x@ids,
+    time = x@times,
+    value = x@measurements,
+    landmark = landmarks,
+    ...
+  )
+
+  if (is.data.frame(predictions)) {
+    predictions <- predictions |> dplyr::pull(x@measurements, name = x@ids)
+  }
+
+  # Re-index to the full set of at-risk individuals: those for which
+  # `method` did not return a prediction (e.g. no observations before the
+  # landmark time) become NA, and are imputed below
+  ids <- at_risk_ids[[x@ids]]
+  predictions <- predictions[as.character(ids)]
+  names(predictions) <- ids
+
   # Impute NAs
   if (any(is.na(predictions))) {
     n_imputed <- sum(is.na(predictions))

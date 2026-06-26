@@ -62,6 +62,7 @@ setMethod(
     train = TRUE,
     h_times = c()
   ) {
+    AUC <- model <- NULL
     # Early input validation
     .validate_performance_inputs(
       x,

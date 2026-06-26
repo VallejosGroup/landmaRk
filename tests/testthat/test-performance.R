@@ -51,15 +51,16 @@ test_that("auc_t uses per-subject predicted risks, not a scalar", {
   pred_risks <- 1 -
     matrix(sfit$surv, nrow = nrow(dataset), ncol = 1, byrow = TRUE)[, 1]
 
-  expected_auct <- unname(
-    timeROC::timeROC(
-      T = dataset[, "event_time"],
-      delta = dataset[, "event_status"],
-      marker = pred_risks,
-      cause = 1,
-      times = 365.25
-    )$AUC[2]
-  )
+  score <- riskRegression::Score(
+    object = list("model" = matrix(pred_risks, ncol = 1)),
+    formula = Surv(event_time, event_status) ~ 1,
+    data = dataset,
+    cause = 1,
+    times = 365.25,
+    cens.method = "ipcw",
+    cens.model = "km"
+  )$AUC$score
+  expected_auct <- unname(score$AUC[score$model != "Null model"])
 
   expect_equal(result[, "AUCt"], expected_auct, tolerance = 1e-6)
 })
