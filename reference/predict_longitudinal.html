@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">landmaRk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,22 @@
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Longitudinal data analysis method used to make predictions</p></dd>
+<dd><p>Longitudinal data analysis method used to make
+predictions. Either <code>"lcmm"</code>, <code>"lme4"</code>, <code>"locf"</code>, or a
+function, which can be one of two kinds:</p><ul><li><p>A summary measure, like <code>"locf"</code>, computed directly from
+the raw longitudinal data and not requiring a model to have been
+previously fit with <code><a href="fit_longitudinal.html">fit_longitudinal</a></code>. Such a
+function must have the arguments <code>data</code>, <code>id</code>,
+<code>time</code>, <code>value</code> and <code>landmark</code> (and optionally
+further arguments passed through <code>...</code>), and must return a
+named vector (or a two-column data frame) with one summary value
+per individual in the risk set.</p></li>
+<li><p>A prediction function for a model previously fit with
+<code><a href="fit_longitudinal.html">fit_longitudinal</a></code> (as is the case for <code>"lcmm"</code>
+and <code>"lme4"</code>), where the first argument is the fitted model
+object, and which also has <code>newdata</code> and <code>subject</code>
+arguments.</p></li>
+</ul></dd>
 
 
 <dt id="arg-dynamic-covariates">dynamic_covariates<a class="anchor" aria-label="anchor" href="#arg-dynamic-covariates"></a></dt>

@@ -34,7 +34,12 @@ fit_longitudinal(
 
   Either `"lcmm"` or `"lme4"` or a function for fitting a longitudinal
   data model, where the first argument is a formula, and also has a
-  `data` argument.
+  `data` argument. Only needed for fit-based prediction methods used
+  later in
+  [`predict_longitudinal`](https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal.md)
+  (e.g. `"lcmm"`, `"lme4"`); summary measures such as `"locf"` are
+  computed directly from the data and do not require a call to
+  `fit_longitudinal`.
 
 - formula:
 

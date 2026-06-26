@@ -15,7 +15,7 @@ the landmark times"><meta property="og:image" content="https://vallejosgroup.git
 
     <a class="navbar-brand me-2" href="../index.html">landmaRk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,11 @@ the landmark times</p>
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>Either <code>"lcmm"</code> or <code>"lme4"</code> or a function for fitting
 a longitudinal data model, where the first argument is a formula, and also
-has a <code>data</code> argument.</p></dd>
+has a <code>data</code> argument. Only needed for fit-based prediction methods
+used later in <code><a href="predict_longitudinal.html">predict_longitudinal</a></code> (e.g. <code>"lcmm"</code>,
+<code>"lme4"</code>); summary measures such as <code>"locf"</code> are computed
+directly from the data and do not require a call to
+<code>fit_longitudinal</code>.</p></dd>
 
 
 <dt id="arg-formula">formula<a class="anchor" aria-label="anchor" href="#arg-formula"></a></dt>

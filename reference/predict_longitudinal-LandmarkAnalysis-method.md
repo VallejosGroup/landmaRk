@@ -29,7 +29,24 @@ predict_longitudinal(
 
 - method:
 
-  Longitudinal data analysis method used to make predictions
+  Longitudinal data analysis method used to make predictions. Either
+  `"lcmm"`, `"lme4"`, `"locf"`, or a function, which can be one of two
+  kinds:
+
+  - A summary measure, like `"locf"`, computed directly from the raw
+    longitudinal data and not requiring a model to have been previously
+    fit with
+    [`fit_longitudinal`](https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal.md).
+    Such a function must have the arguments `data`, `id`, `time`,
+    `value` and `landmark` (and optionally further arguments passed
+    through `...`), and must return a named vector (or a two-column data
+    frame) with one summary value per individual in the risk set.
+
+  - A prediction function for a model previously fit with
+    [`fit_longitudinal`](https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal.md)
+    (as is the case for `"lcmm"` and `"lme4"`), where the first argument
+    is the fitted model object, and which also has `newdata` and
+    `subject` arguments.
 
 - dynamic_covariates:
 

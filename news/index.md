@@ -1,5 +1,34 @@
 # Changelog
 
+## landmaRk (development version)
+
+### New Features
+
+- [`predict_longitudinal()`](https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal.md)
+  now supports custom “summary measure” functions for `method` (in the
+  same spirit as `"locf"`), computed directly from the raw longitudinal
+  data without requiring a prior
+  [`fit_longitudinal()`](https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal.md)
+  call. Such functions must have arguments `data`, `id`, `time`, `value`
+  and `landmark`.
+
+### Bug Fixes
+
+- [`predict_longitudinal()`](https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal.md)
+  no longer requires
+  [`fit_longitudinal()`](https://vallejosgroup.github.io/landmaRk/reference/fit_longitudinal.md)
+  to have been called when `method` is a summary measure (e.g. `"locf"`
+  or a custom function); the check for an existing model fit is now only
+  applied to fit-based prediction methods (e.g. `"lcmm"`, `"lme4"`).
+  \`“locf”’ is implemented as a special case of summary measure
+
+### Other Changes
+
+- Removed `timeROC` from `Imports` as it is no longer used.
+- Resolved an R CMD check NOTE about a missing global binding for `AUC`
+  in
+  [`performance_metrics()`](https://vallejosgroup.github.io/landmaRk/reference/performance_metrics.md).
+
 ## landmaRk 0.1.1
 
 CRAN release: 2026-05-27
