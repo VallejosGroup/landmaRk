@@ -39,7 +39,6 @@ Imports:
     doParallel,
     foreach,
     utils,
-    timeROC,
     prodlim
 Suggests: 
     JMbayes2,
