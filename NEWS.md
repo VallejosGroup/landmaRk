@@ -1,6 +1,6 @@
 # landmaRk
 
-# landmaRk (development version)
+# landmaRk 0.1.2
 
 ## New Features
 
