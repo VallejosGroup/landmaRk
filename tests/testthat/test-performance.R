@@ -53,7 +53,7 @@ test_that("auc_t uses per-subject predicted risks, not a scalar", {
 
   score <- riskRegression::Score(
     object = list("model" = matrix(pred_risks, ncol = 1)),
-    formula = survival::Surv(event_time, event_status) ~ 1,
+    formula = Surv(event_time, event_status) ~ 1,
     data = dataset,
     cause = 1,
     times = 365.25,
