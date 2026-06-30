@@ -207,13 +207,13 @@
     data = data,
     id = x@ids,
     time = x@times,
-    value = x@measurements,
+    value = dynamic_covariate,
     landmark = landmarks,
     ...
   )
 
   if (is.data.frame(predictions)) {
-    predictions <- predictions |> dplyr::pull(x@measurements, name = x@ids)
+    predictions <- predictions |> dplyr::pull(dynamic_covariate, name = x@ids)
   }
 
   # Re-index to the full set of at-risk individuals: those for which

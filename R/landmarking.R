@@ -90,7 +90,7 @@ setValidity("LandmarkAnalysis", function(object) {
       )
     }
     if (
-      !(object@measurements %in% colnames(object@data_dynamic[[covariate]]))
+      !(covariate %in% colnames(object@data_dynamic[[covariate]]))
     ) {
       error_str <- c(
         error_str,
@@ -177,12 +177,12 @@ LandmarkAnalysis <- function(
 
   # Find out dynamic covariates of type characters
   for (dynamic_covariate in names(data_dynamic)) {
-    if (measurements %in% names(data_dynamic[[dynamic_covariate]])) {
+    if (dynamic_covariate %in% names(data_dynamic[[dynamic_covariate]])) {
       if (
-        inherits(data_dynamic[[dynamic_covariate]][[measurements]], "character")
+        inherits(data_dynamic[[dynamic_covariate]][[dynamic_covariate]], "character")
       ) {
-        data_dynamic[[dynamic_covariate]][[measurements]] <-
-          as.factor(data_dynamic[[dynamic_covariate]][[measurements]])
+        data_dynamic[[dynamic_covariate]][[dynamic_covariate]] <-
+          as.factor(data_dynamic[[dynamic_covariate]][[dynamic_covariate]])
         message(
           "Dynamic covariate ",
           dynamic_covariate,
