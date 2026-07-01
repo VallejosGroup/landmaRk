@@ -20,13 +20,13 @@ Source:
 
 Velasco-Pardo V, Constantine-Cooke N, Lees C, Vallejos C (2026).
 *landmaRk: Time-to-Event Landmark Analysis using an Array of
-Longitudinal and Survival Sub-Models*. R package version 0.1.2,
+Longitudinal and Survival Sub-Models*. R package version 0.1.2.9000,
 <https://vallejosgroup.github.io/landmaRk/>.
 
     @Manual{,
       title = {landmaRk: Time-to-Event Landmark Analysis using an Array of Longitudinal and Survival Sub-Models},
       author = {Victor Velasco-Pardo and Nathan Constantine-Cooke and Charlie Lees and Catalina Vallejos},
       year = {2026},
-      note = {R package version 0.1.2},
+      note = {R package version 0.1.2.9000},
       url = {https://vallejosgroup.github.io/landmaRk/},
     }

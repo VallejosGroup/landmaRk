@@ -83,5 +83,5 @@ modelling of longitudinal and competing risks data. *Stats Med.* 2008;
 
 ## See also
 
-[joineR::epileptic](https://rdrr.io/pkg/joineR/man/epileptic.html),
+[joineR::epileptic](https://graemeleehickey.github.io/joineR/reference/epileptic.html),
 which this dataset was modified from.
