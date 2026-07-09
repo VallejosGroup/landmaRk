@@ -1,23 +1,24 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 3 notes
 
-* The only NOTE ("checking for future file timestamps ... unable to verify
-  current time") is a local network artifact and unrelated to the package.
+* "checking CRAN incoming feasibility ... Days since last update: 5". This
+  update is submitted shortly after 0.1.2 because it fixes an important bug:
+  landmaRk can now correctly handle more than one dynamic (longitudinal)
+  covariate. The previous release did not handle this case correctly.
+* "checking for future file timestamps ... unable to verify current time" is a
+  local network artifact and unrelated to the package.
+* "checking HTML version of manual" reports `<main> is not recognized` errors.
+  These come from an outdated local HTML Tidy that does not know the HTML5
+  `<main>` element inserted into help pages; they do not appear on CRAN's own
+  check machines.
 
 ## This submission
 
-This is an update (version 0.1.2). Changes since the previous CRAN release:
+This is an update (version 0.1.3). Key change since the previous CRAN release:
 
-* `predict_longitudinal()` now supports custom "summary measure" functions for
-  `method` (in the same spirit as `"locf"`), computed directly from the raw
-  longitudinal data without requiring a prior `fit_longitudinal()` call.
-* `predict_longitudinal()` no longer requires `fit_longitudinal()` to have been
-  called when `method` is a summary measure.
-* Fixed the new implementation of LOCF (last observation carried forward).
-* Removed `timeROC` from `Imports` as it is no longer used.
-* Resolved an R CMD check NOTE about a missing global binding for `AUC` in
-  `performance_metrics()`.
+* Fixed an important bug so that landmaRk can now handle more than one dynamic
+  (longitudinal) covariate.
 
 ## Test environments
 
