@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides a modular end-to-end framework for dynamic risk prediction based on time-to-event and longitudinal data. This allows flexible specifications for the longitudinal and survival sub-models. The 'landmaRk' package enables reproducible benchmarks of different model choices, including cross-validation to assess out-of-sample predictive performance. Methods are described in Velasco-Pardo, Constantine-Cooke, Lees and Vallejos (2026, manuscript under preparation) 'Landmarking with Latent Class Mixed Models for Dynamic Prediction of Time-to-event Data with Heterogeneous Biomarker Trajectories'.
+Provides a modular end-to-end framework for dynamic risk prediction based on time-to-event and longitudinal data. This allows flexible specifications for the longitudinal and survival sub-models. The 'landmaRk' package enables reproducible benchmarks of different model choices, including cross-validation to assess out-of-sample predictive performance. Methods are described in Velasco-Pardo, et al. (2026) \href{https://arxiv.org/abs/2606.24678}{arXiv:2606.24678}.
 }
 \seealso{
 Useful links:
