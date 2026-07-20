@@ -179,8 +179,8 @@ landmarking_object <- landmarking_object |>
     horizons = 12 + c(6, 8),
     validation_fold = 5
   )
-#> Warning: the 'findbars' function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainer to do so.
-#> This warning is displayed once per session.
+#> Warning: the 'findbars' function has moved to the reformulas package. Please
+#> update your imports, or ask an upstream package maintainer to do so.
 ```
 
 We can also use [`summary()`](https://rdrr.io/r/base/summary.html) to

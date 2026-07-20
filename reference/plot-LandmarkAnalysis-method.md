@@ -1,10 +1,29 @@
 # Plot longitudinal observations and predicted survival curve for one individual
 
-Produces a single-panel plot with a common time axis. The left of the
-landmark dashed line shows the individual's observed longitudinal
-measurements; the right shows their predicted survival curve. The
-summary value at the landmark that feeds into the survival sub-model is
-highlighted.
+Produces a single, self-explanatory panel with a common time axis. To
+the left of the landmark dashed line, the individual's observed
+longitudinal measurements are shown, together with model-based context
+depending on the longitudinal sub-model used at that landmark:
+
+- **LOCF** (or another summary measure): the last observed value is
+  carried forward to the landmark (dashed segment).
+
+- **lme4**: the population-average trajectory (fixed effects only) and
+  the individual's predicted trajectory (including their predicted
+  random effects) are both drawn.
+
+- **lcmm**: the average trajectory of *every* latent cluster is drawn,
+  together with the individual's own predicted trajectory (each
+  cluster's fixed effects plus the individual's predicted random
+  effects, averaged across clusters using the individual's posterior
+  class-membership probabilities). The individual's most likely cluster
+  and their posterior probability of belonging to each cluster are noted
+  in the plot title/subtitle.
+
+In every case, the value that is actually fed into the survival
+sub-model is highlighted at the landmark. To the right of the landmark
+dashed line, the individual's predicted survival curve is shown on a
+secondary axis. A legend identifies every series.
 
 ## Usage
 

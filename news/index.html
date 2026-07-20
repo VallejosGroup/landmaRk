@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">landmaRk</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,19 +43,27 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="landmark-development-version">landmaRk (development version)<a class="anchor" aria-label="anchor" href="#landmark-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.3" id="landmark-013">landmaRk 0.1.3<a class="anchor" aria-label="anchor" href="#landmark-013"></a></h2><p class="text-muted">CRAN release: 2026-07-02</p>
 <div class="section level3">
-<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="bug-fixes-0-1-3">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-3"></a></h3>
+<ul><li>
+<code>landmaRk</code> now supports more than one dynamic covariate.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.2" id="landmark-012">landmaRk 0.1.2<a class="anchor" aria-label="anchor" href="#landmark-012"></a></h2><p class="text-muted">CRAN release: 2026-06-26</p>
+<div class="section level3">
+<h3 id="new-features-0-1-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-1-2"></a></h3>
 <ul><li>
 <code><a href="../reference/predict_longitudinal.html">predict_longitudinal()</a></code> now supports custom “summary measure” functions for <code>method</code> (in the same spirit as <code>"locf"</code>), computed directly from the raw longitudinal data without requiring a prior <code><a href="../reference/fit_longitudinal.html">fit_longitudinal()</a></code> call. Such functions must have arguments <code>data</code>, <code>id</code>, <code>time</code>, <code>value</code> and <code>landmark</code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<h3 id="bug-fixes-0-1-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-2"></a></h3>
 <ul><li>
 <code><a href="../reference/predict_longitudinal.html">predict_longitudinal()</a></code> no longer requires <code><a href="../reference/fit_longitudinal.html">fit_longitudinal()</a></code> to have been called when <code>method</code> is a summary measure (e.g. <code>"locf"</code> or a custom function); the check for an existing model fit is now only applied to fit-based prediction methods (e.g. <code>"lcmm"</code>, <code>"lme4"</code>). `“locf”’ is implemented as a special case of summary measure</li>
 </ul></div>
 <div class="section level3">
-<h3 id="other-changes-development-version">Other Changes<a class="anchor" aria-label="anchor" href="#other-changes-development-version"></a></h3>
+<h3 id="other-changes-0-1-2">Other Changes<a class="anchor" aria-label="anchor" href="#other-changes-0-1-2"></a></h3>
 <ul><li>Removed <code>timeROC</code> from <code>Imports</code> as it is no longer used.</li>
 <li>Resolved an R CMD check NOTE about a missing global binding for <code>AUC</code> in <code><a href="../reference/performance_metrics.html">performance_metrics()</a></code>.</li>
 </ul></div>
@@ -122,7 +130,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

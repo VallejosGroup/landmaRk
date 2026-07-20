@@ -1,6 +1,16 @@
 # Changelog
 
-## landmaRk (development version)
+## landmaRk 0.1.3
+
+CRAN release: 2026-07-02
+
+### Bug Fixes
+
+- `landmaRk` now supports more than one dynamic covariate.
+
+## landmaRk 0.1.2
+
+CRAN release: 2026-06-26
 
 ### New Features
 
