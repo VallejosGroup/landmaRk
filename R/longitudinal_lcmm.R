@@ -383,7 +383,9 @@
   # not generally match newdata's row order. Re-align predictions to
   # newdata's row order before names(predictions) <- newdata[, subject] is
   # assigned further down.
-  predictions <- predictions[match(newdata[, subject], predictions[, subject]), ]
+  predictions <- predictions[
+    match(newdata[, subject], predictions[, subject]),
+  ]
   # If avg == TRUE, we return an average weighted according to cluster
   # probabilities. If avg == FALSE, we return the prediction according to the
   # most likely cluster

@@ -156,7 +156,9 @@ setMethod(
     # LOCF (and other summary measures) do not fit a model, so there is no
     # trajectory to compute; longitudinal_fits is left unpopulated in that
     # case (see fit_longitudinal()/predict_longitudinal()).
-    long_fit <- x@longitudinal_fits[[as.character(landmark)]][[dynamic_covariate]]
+    long_fit <- x@longitudinal_fits[[as.character(landmark)]][[
+      dynamic_covariate
+    ]]
     is_locf <- is.null(long_fit)
     trajectory <- if (is_locf) {
       NULL
@@ -349,7 +351,11 @@ setMethod(
           labels = c("0", "0.25", "0.50", "0.75", "1")
         )
       ) +
-      ggplot2::scale_colour_manual(name = NULL, values = palette, breaks = names(palette)) +
+      ggplot2::scale_colour_manual(
+        name = NULL,
+        values = palette,
+        breaks = names(palette)
+      ) +
       ggplot2::xlab("Time") +
       ggplot2::ggtitle(
         if (!is.null(cluster)) {

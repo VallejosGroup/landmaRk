@@ -1,7 +1,13 @@
 # Build a fine time grid for one individual, holding their static covariate
 # profile fixed and varying time from (at or before) 0 through to the
 # landmark time. Used as `newdata` for model-based trajectory predictions.
-.trajectory_newdata <- function(x, dynamic_covariate, id, landmark, n_pts = 100L) {
+.trajectory_newdata <- function(
+  x,
+  dynamic_covariate,
+  id,
+  landmark,
+  n_pts = 100L
+) {
   obs_times <- x@data_dynamic[[dynamic_covariate]][[x@times]]
   t_min <- min(0, suppressWarnings(min(obs_times, na.rm = TRUE)))
   grid <- seq(t_min, landmark, length.out = n_pts)
@@ -11,8 +17,11 @@
   static_row <- x@data_static[x@data_static[[x@ids]] == id, , drop = FALSE]
   if (nrow(static_row) != 1L) {
     stop(
-      "Individual ", id, " must appear exactly once in @data_static (found ",
-      nrow(static_row), ")."
+      "Individual ",
+      id,
+      " must appear exactly once in @data_static (found ",
+      nrow(static_row),
+      ")."
     )
   }
 
@@ -71,7 +80,14 @@
 #    (there is no latent-class structure for lme4)
 #  - ind_curve: data.frame(time, individual)
 #  - cluster / probs: NULL (no latent-class structure for lme4)
-.lme4_trajectory <- function(fit, x, dynamic_covariate, id, landmark, n_pts = 100L) {
+.lme4_trajectory <- function(
+  fit,
+  x,
+  dynamic_covariate,
+  id,
+  landmark,
+  n_pts = 100L
+) {
   newdata <- .trajectory_newdata(x, dynamic_covariate, id, landmark, n_pts)
   marginal <- as.numeric(predict(
     fit,
@@ -142,7 +158,14 @@
 #    single-class models / when no pre-landmark observations are available)
 #  - probs: named numeric vector of posterior class-membership probabilities
 #    (names are the class labels "1", "2", ...)
-.lcmm_trajectory <- function(fit, x, dynamic_covariate, id, landmark, n_pts = 100L) {
+.lcmm_trajectory <- function(
+  fit,
+  x,
+  dynamic_covariate,
+  id,
+  landmark,
+  n_pts = 100L
+) {
   hlme <- NULL # Global var (see .predict_lcmm())
   # .fit_lcmm() stores a namespace-qualified call (lcmm::hlme); lcmm's
   # predictY()/predictRE()/predictClass() reconstruct calls internally via
@@ -198,13 +221,20 @@
   # observations; fall back to the (RE-free) class-average predictions
   # otherwise
   if (nrow(obs_data) > 0L) {
-    predRE <- lcmm::predictRE(fit, obs_data, subject = x@ids, classpredRE = TRUE)
-    ind_pred <- as.matrix(lcmm::predictY(
+    predRE <- lcmm::predictRE(
       fit,
-      newdata = newdata,
-      var.time = x@times,
-      predRE = predRE
-    )$pred)
+      obs_data,
+      subject = x@ids,
+      classpredRE = TRUE
+    )
+    ind_pred <- as.matrix(
+      lcmm::predictY(
+        fit,
+        newdata = newdata,
+        var.time = x@times,
+        predRE = predRE
+      )$pred
+    )
   } else {
     ind_pred <- class_pred
   }
@@ -232,7 +262,14 @@
 # unsupported model types or if trajectory computation fails, so that
 # plot() can gracefully fall back to showing only the landmark-time
 # prediction.
-.model_trajectory <- function(fit, x, dynamic_covariate, id, landmark, n_pts = 100L) {
+.model_trajectory <- function(
+  fit,
+  x,
+  dynamic_covariate,
+  id,
+  landmark,
+  n_pts = 100L
+) {
   tryCatch(
     {
       if (is(fit, "hlme")) {

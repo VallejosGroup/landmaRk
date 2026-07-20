@@ -114,7 +114,11 @@ test_that("plot() shows population-average and individual trajectories for lme4"
   )
   # Every trajectory point should be at or before the landmark time
   trajectory_data <- p$layers[[
-    which(vapply(p$layers, function(l) "average" %in% colnames(l$data), logical(1)))[1]
+    which(vapply(
+      p$layers,
+      function(l) "average" %in% colnames(l$data),
+      logical(1)
+    ))[1]
   ]]$data
   expect_true(all(trajectory_data$time <= 365.25))
 })
@@ -166,10 +170,13 @@ test_that("plot() shows cluster-average and individual trajectories for lcmm", {
   )
   breaks <- legend_breaks(p)
   # Both clusters' average trajectories are shown, not just the assigned one
-  expect_true(all(c(
-    "Cluster 1 average trajectory",
-    "Cluster 2 average trajectory"
-  ) %in% breaks))
+  expect_true(all(
+    c(
+      "Cluster 1 average trajectory",
+      "Cluster 2 average trajectory"
+    ) %in%
+      breaks
+  ))
   expect_true("Individual predicted trajectory" %in% breaks)
   expect_true("Predicted value (landmark)" %in% breaks)
   expect_true("Survival probability" %in% breaks)
@@ -180,10 +187,18 @@ test_that("plot() shows cluster-average and individual trajectories for lcmm", {
   # by Fortran code that is not always safe to invoke repeatedly, and doing
   # so has been observed to crash the R session
   avg_layer <- p$layers[[
-    which(vapply(p$layers, function(l) "average" %in% colnames(l$data), logical(1)))[1]
+    which(vapply(
+      p$layers,
+      function(l) "average" %in% colnames(l$data),
+      logical(1)
+    ))[1]
   ]]
   ind_layer <- p$layers[[
-    which(vapply(p$layers, function(l) "individual" %in% colnames(l$data), logical(1)))[1]
+    which(vapply(
+      p$layers,
+      function(l) "individual" %in% colnames(l$data),
+      logical(1)
+    ))[1]
   ]]
   expect_setequal(levels(avg_layer$data$cluster), c("1", "2"))
   expect_equal(nrow(avg_layer$data), 200L)
