@@ -379,7 +379,7 @@
   } else {
     predictions <- predictions_step1
   }
-  # arrange()/rbind() above reorder rows by ascending subject id, which does
+  # arrange()/rbind() above reorders rows by ascending subject id, which does
   # not generally match newdata's row order. Re-align predictions to
   # newdata's row order before names(predictions) <- newdata[, subject] is
   # assigned further down.
