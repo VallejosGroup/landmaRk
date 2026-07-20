@@ -26,6 +26,23 @@
   method
 }
 
+# Fits a Cox PH model via survival::coxph, raising an error instead of a
+# warning if the underlying optimiser fails to converge
+.fit_coxph_survival <- function(formula, data) {
+  withCallingHandlers(
+    survival::coxph(formula, data = data, x = TRUE, model = TRUE),
+    warning = function(w) {
+      if (grepl("did not converge", conditionMessage(w), fixed = TRUE)) {
+        stop(
+          "Cox proportional hazards model failed to converge: ",
+          conditionMessage(w),
+          call. = FALSE
+        )
+      }
+    }
+  )
+}
+
 # Check risk set is available
 .check_riskset_survival <- function(x, landmarks) {
   if (!(landmarks %in% x@landmarks)) {

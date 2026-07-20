@@ -143,12 +143,11 @@ setMethod(
 
       # Call to method that performs survival analysis
       if (is(method)[1] == "character" && method == "coxph") {
-        x@survival_fits[[paste0(landmarks, "-", horizons)]] <- survival::coxph(
-          formula,
-          data = x@survival_datasets[[paste0(landmarks, "-", horizons)]],
-          x = TRUE,
-          model = TRUE
-        )
+        x@survival_fits[[paste0(landmarks, "-", horizons)]] <-
+          .fit_coxph_survival(
+            formula,
+            data = x@survival_datasets[[paste0(landmarks, "-", horizons)]]
+          )
       } else {
         x@survival_fits[[paste0(landmarks, "-", horizons)]] <- method(
           formula,
