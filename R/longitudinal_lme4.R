@@ -31,6 +31,7 @@
       newdata = newdata,
       allow.new.levels = TRUE
     )
+    names(lme4_predictions) <- newdata[, subject]
     lme4_predictions
     # Outwith the training set, lme4 predictions are marginal predictions
     # We make BLUP predictions and add them to the marginal predictions
@@ -90,6 +91,8 @@
     re_contribution <- matrix(0, nrow = nrow(newdata), ncol = ncol(Z_block))
     present_idx <- match(subject_levels, newdata[, subject])
     re_contribution[present_idx, ] <- b_hat
-    lme4_predictions + rowSums(Z_block * re_contribution)
+    lme4_predictions <- lme4_predictions + rowSums(Z_block * re_contribution)
+    names(lme4_predictions) <- newdata[, subject]
+    lme4_predictions
   }
 }
