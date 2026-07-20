@@ -1,6 +1,12 @@
 # landmaRk
 
-# landmaRk (development version)
+# landmaRk 0.1.3 
+
+## Bug Fixes
+
+* `landmaRk` now supports more than one dynamic covariate.
+
+# landmaRk 0.1.2 
 
 ## New Features
 
