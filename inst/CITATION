@@ -13,6 +13,6 @@ bibentry(
   ),
   publisher = "arXiv",
   year = 2026,
-  doi = "https://doi.org/10.48550/arXiv.2606.24678",
+  doi = "10.48550/arXiv.2606.24678",
   url = "https://arxiv.org/abs/2606.24678"
 )
