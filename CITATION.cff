@@ -1,7 +1,7 @@
-# --------------------------------------------
-# CITATION file created with {cffr} R package
+# ------------------------------------------------
+# CITATION.cff file created with {cffr} R package
 # See also: https://docs.ropensci.org/cffr/
-# --------------------------------------------
+# ------------------------------------------------
  
 cff-version: 1.2.0
 message: 'To cite package "landmaRk" in publications use:'
@@ -9,12 +9,13 @@ type: software
 license: GPL-3.0-or-later
 title: 'landmaRk: Time-to-Event Landmark Analysis using an Array of Longitudinal and
   Survival Sub-Models'
-version: 0.1.1
+version: 0.1.4.9000
+doi: 10.32614/CRAN.package.landmaRk
 abstract: Provides a modular end-to-end framework for dynamic risk prediction based
   on time-to-event and longitudinal data. This allows flexible specifications for
   the longitudinal and survival sub-models. The 'landmaRk' package enables reproducible
   benchmarks of different model choices, including cross-validation to assess out-of-sample
-  predictive performance.
+  predictive performance. Methods are described in Velasco-Pardo, et al. (2026) <arXiv:2606.24678>.
 authors:
 - family-names: Velasco-Pardo
   given-names: Victor
@@ -24,14 +25,15 @@ authors:
   given-names: Nathan
   email: nathan.constantine-cooke@ed.ac.uk
   orcid: https://orcid.org/0000-0002-4437-8713
-- family-names: Vallejos
-  given-names: Catalina
-  email: catalina.vallejos@ed.ac.uk
-  orcid: https://orcid.org/0000-0003-3638-1960
 - family-names: Lees
   given-names: Charlie
   email: charlie.lees@ed.ac.uk
   orcid: https://orcid.org/0000-0002-0732-8215
+- family-names: Vallejos
+  given-names: Catalina
+  email: catalina.vallejos@ed.ac.uk
+  orcid: https://orcid.org/0000-0003-3638-1960
+repository: https://CRAN.R-project.org/package=landmaRk
 repository-code: https://github.com/VallejosGroup/landmaRk
 url: https://vallejosgroup.github.io/landmaRk/
 contact:
@@ -52,10 +54,13 @@ references:
   url: https://www.R-project.org/
   authors:
   - name: R Core Team
+    website: https://ror.org/02zz1nj61
   institution:
     name: R Foundation for Statistical Computing
+    website: https://ror.org/05qewa988
     address: Vienna, Austria
   year: '2026'
+  doi: 10.32614/R.manuals
   version: '>= 4.1.0'
 - type: software
   title: survival
@@ -66,7 +71,7 @@ references:
   authors:
   - family-names: Therneau
     given-names: Terry M
-    email: therneau.terry@mayo.edu
+    email: terry.therneau@proton.me
   year: '2026'
   doi: 10.32614/CRAN.package.survival
 - type: software
@@ -154,6 +159,12 @@ references:
   - family-names: Walker
     given-names: Steven
     orcid: https://orcid.org/0000-0002-4394-9078
+  - family-names: Ly
+    given-names: Anna
+    orcid: https://orcid.org/0000-0002-0210-0342
+  - family-names: Jagan
+    given-names: Mikael
+    orcid: https://orcid.org/0000-0002-3542-2938
   year: '2026'
   doi: 10.32614/CRAN.package.lme4
 - type: software
@@ -181,10 +192,13 @@ references:
   notes: Imports
   authors:
   - name: R Core Team
+    website: https://ror.org/02zz1nj61
   institution:
     name: R Foundation for Statistical Computing
+    website: https://ror.org/05qewa988
     address: Vienna, Austria
   year: '2026'
+  doi: 10.32614/R.manuals
 - type: software
   title: pec
   abstract: 'pec: Prediction Error Curves for Risk Prediction Models in Survival Analysis'
@@ -275,20 +289,13 @@ references:
   notes: Imports
   authors:
   - name: R Core Team
+    website: https://ror.org/02zz1nj61
   institution:
     name: R Foundation for Statistical Computing
+    website: https://ror.org/05qewa988
     address: Vienna, Austria
   year: '2026'
-- type: software
-  title: timeROC
-  abstract: 'timeROC: Time-Dependent ROC Curve and AUC for Censored Survival Data'
-  notes: Imports
-  repository: https://CRAN.R-project.org/package=timeROC
-  authors:
-  - family-names: Blanche
-    given-names: Paul
-  year: '2026'
-  doi: 10.32614/CRAN.package.timeROC
+  doi: 10.32614/R.manuals
 - type: software
   title: prodlim
   abstract: 'prodlim: Product-Limit Estimation for Censored Event History Analysis'
@@ -312,9 +319,10 @@ references:
     given-names: Dimitris
     email: d.rizopoulos@erasmusmc.nl
     orcid: https://orcid.org/0000-0001-9397-0900
-  - family-names: Miranda Afonso
+  - family-names: Miranda-Afonso
     given-names: Pedro
     email: p.mirandaafonso@erasmusmc.nl
+    orcid: https://orcid.org/0000-0001-6708-9597
   - family-names: Papageorgiou
     given-names: Grigorios
     email: papageorgiou.grigorios@gmail.com
@@ -438,7 +446,7 @@ references:
   title: joineR
   abstract: 'joineR: Joint Modelling of Repeated Measurements and Time-to-Event Data'
   notes: Suggests
-  url: https://github.com/graemeleehickey/joineR/
+  url: https://graemeleehickey.github.io/joineR/
   repository: https://CRAN.R-project.org/package=joineR
   authors:
   - family-names: Philipson
