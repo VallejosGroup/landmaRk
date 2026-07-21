@@ -17,7 +17,12 @@
 #' @param formula A formula to be used in survival sub-model fitting.
 #' @param horizons Vector of prediction horizons up to when the survival
 #'   submodel is fitted.
-#' @param method Method for survival analysis, either "survfit" or "coxph".
+#' @param method Method for survival analysis: "survfit", "coxph" or
+#'   "finegray". "finegray" fits a Fine-Gray model for the subdistribution
+#'   hazard of \code{cause}, by transforming the data with
+#'   \code{\link[survival]{finegray}} and fitting a weighted Cox model to the
+#'   result; this requires \code{@event_indicator} to encode competing risks
+#'   as 0 (censoring) plus one numeric code per competing cause.
 #' @param dynamic_covariates Vector of time-varying covariates to be used
 #'   in the survival model.
 #' @param include_clusters Boolean indicating whether to propagate cluster
@@ -26,6 +31,10 @@
 #'   at horizon times
 #' @param validation_fold If positive, cross-validation fold where model is
 #'   fitted. If 0 (default), model fitting is performed on the complete dataset.
+#' @param cause Only used when \code{method = "finegray"}. Numeric code (in
+#'   \code{@event_indicator}) of the cause of interest whose subdistribution
+#'   hazard is modelled; competing events are coded as any other non-zero,
+#'   non-\code{cause} value. Defaults to 1.
 #'
 #' @returns An object of class \code{\link{LandmarkAnalysis}}.
 #' @export
@@ -42,7 +51,8 @@ setGeneric(
     dynamic_covariates = c(),
     include_clusters = FALSE,
     censor_at_horizon = FALSE,
-    validation_fold = 0
+    validation_fold = 0,
+    cause = 1
   ) {
     standardGeneric("fit_survival")
   }
@@ -80,7 +90,8 @@ setMethod(
     dynamic_covariates = c(),
     include_clusters = FALSE,
     censor_at_horizon = FALSE,
-    validation_fold = 0
+    validation_fold = 0,
+    cause = 1
   ) {
     # Early input validation
     if (length(landmarks) != length(horizons)) {
@@ -143,12 +154,18 @@ setMethod(
 
       # Call to method that performs survival analysis
       if (is(method)[1] == "character" && method == "coxph") {
-        x@survival_fits[[paste0(landmarks, "-", horizons)]] <- survival::coxph(
-          formula,
-          data = x@survival_datasets[[paste0(landmarks, "-", horizons)]],
-          x = TRUE,
-          model = TRUE
-        )
+        x@survival_fits[[paste0(landmarks, "-", horizons)]] <-
+          .fit_coxph_survival(
+            formula,
+            data = x@survival_datasets[[paste0(landmarks, "-", horizons)]]
+          )
+      } else if (is(method)[1] == "character" && method == "finegray") {
+        x@survival_fits[[paste0(landmarks, "-", horizons)]] <-
+          .fit_finegray_survival(
+            formula,
+            data = x@survival_datasets[[paste0(landmarks, "-", horizons)]],
+            cause = cause
+          )
       } else {
         x@survival_fits[[paste0(landmarks, "-", horizons)]] <- method(
           formula,
@@ -166,7 +183,8 @@ setMethod(
         dynamic_covariates,
         include_clusters,
         censor_at_horizon,
-        validation_fold
+        validation_fold,
+        cause
       )
       x <- fit_survival(
         x,
@@ -177,7 +195,8 @@ setMethod(
         dynamic_covariates,
         include_clusters,
         censor_at_horizon,
-        validation_fold
+        validation_fold,
+        cause
       )
     }
     x
