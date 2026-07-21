@@ -7,7 +7,7 @@ bibentry(
   title = "Landmarking with Latent Class Mixed Models for Dynamic Prediction of Time-to-event Data with Heterogeneous Biomarker Trajectories",
   author = c(
     person("Víctor", "Velasco-Pardo"),
-    person("Nathan Constantine-Cooke"),
+    person("Nathan", "Constantine-Cooke"),
     person("Charlie W.", "Lees"),
     person("Catalina A.", "Vallejos")
   ),
