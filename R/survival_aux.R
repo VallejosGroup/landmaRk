@@ -58,6 +58,9 @@
 # .create_survival_dataframe(), with `event_status` coded as 0 = censored
 # and other numeric values identifying each competing cause.
 .fit_finegray_survival <- function(formula, data, cause = 1) {
+  if (!(is.numeric(cause) && length(cause) == 1L && !is.na(cause) && is.finite(cause))) {
+    stop("`cause` must be a length-1, finite, non-NA numeric value.\n", call. = FALSE)
+  }
   if (is.factor(data$event_status)) {
     data$event_status <- suppressWarnings(as.numeric(as.character(data$event_status)))
   }
