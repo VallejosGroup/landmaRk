@@ -3,7 +3,9 @@
 .check_method_survival_predict <- function(method) {
   if (is(method)[1] == "character" && method == "survfit") {
     method <- survival::survfit
-  } else if (is(method)[1] == "character" && method %in% c("coxph", "finegray")) {
+  } else if (
+    is(method)[1] == "character" && method %in% c("coxph", "finegray")
+  ) {
     # Leave as-is; dispatched by name in fit_survival()
   } else if (!(is(method)[1] == "function")) {
     stop(

@@ -3,7 +3,12 @@ test_that(".fit_finegray_survival fits a convergent model without error", {
   n <- 300
   data <- data.frame(
     event_time = rexp(n, rate = 0.05),
-    event_status = sample(c(0, 1, 2), n, replace = TRUE, prob = c(0.3, 0.4, 0.3)),
+    event_status = sample(
+      c(0, 1, 2),
+      n,
+      replace = TRUE,
+      prob = c(0.3, 0.4, 0.3)
+    ),
     age = rnorm(n, 60, 10),
     sex = factor(sample(c("M", "F"), n, replace = TRUE))
   )
