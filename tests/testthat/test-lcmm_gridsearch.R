@@ -78,34 +78,31 @@ test_that(".fit_lcmm parallel grid search (rep > 1, cl > 1) converges", {
   )
 })
 
-test_that(
-  ".fit_lcmm requires lcmm to be attached for rep > 1 grid search",
-  {
-    was_attached <- "package:lcmm" %in% search()
-    if (was_attached) {
-      suppressWarnings(detach("package:lcmm", unload = FALSE, force = TRUE))
-    }
-    withr::defer({
-      if (was_attached) suppressPackageStartupMessages(library(lcmm))
-    })
-
-    data(data_hlme, package = "lcmm")
-    expect_error(
-      .fit_lcmm(
-        Y ~ Time * X1,
-        data = data_hlme,
-        mixture = ~Time,
-        random = ~Time,
-        subject = "ID",
-        ng = 2,
-        rep = 2,
-        classmb = ~ X2 + X3,
-        maxiter = 30
-      ),
-      "requires the lcmm package to be attached"
-    )
+test_that(".fit_lcmm requires lcmm to be attached for rep > 1 grid search", {
+  was_attached <- "package:lcmm" %in% search()
+  if (was_attached) {
+    suppressWarnings(detach("package:lcmm", unload = FALSE, force = TRUE))
   }
-)
+  withr::defer({
+    if (was_attached) suppressPackageStartupMessages(library(lcmm))
+  })
+
+  data(data_hlme, package = "lcmm")
+  expect_error(
+    .fit_lcmm(
+      Y ~ Time * X1,
+      data = data_hlme,
+      mixture = ~Time,
+      random = ~Time,
+      subject = "ID",
+      ng = 2,
+      rep = 2,
+      classmb = ~ X2 + X3,
+      maxiter = 30
+    ),
+    "requires the lcmm package to be attached"
+  )
+})
 
 test_that("fit_longitudinal rejects cores > 1 combined with `cl`", {
   # lcmm::gridsearch()'s own (PSOCK) parallelism, nested inside landmaRk's
@@ -187,75 +184,73 @@ test_that("fit_longitudinal uses a single process across landmarks when cores = 
   expect_length(unique(pids), 1)
 })
 
-test_that(
-  "fit_longitudinal actually uses `cl`'s worker processes for lcmm grid search",
-  {
-    library(lcmm)
-    withr::local_seed(123)
+test_that("fit_longitudinal actually uses `cl`'s worker processes for lcmm grid search", {
+  library(lcmm)
+  withr::local_seed(123)
 
-    # A cluster we create (and own) ourselves, rather than an integer, so we
-    # can directly query its worker PIDs after fitting. lcmm::gridsearch()
-    # never stops a caller-supplied cluster (only one it creates itself from
-    # an integer `cl`), so it is still alive to query afterwards.
-    my_cl <- parallel::makeCluster(2)
-    withr::defer(parallel::stopCluster(my_cl))
+  # A cluster we create (and own) ourselves, rather than an integer, so we
+  # can directly query its worker PIDs after fitting. lcmm::gridsearch()
+  # never stops a caller-supplied cluster (only one it creates itself from
+  # an integer `cl`), so it is still alive to query afterwards.
+  my_cl <- parallel::makeCluster(2)
+  withr::defer(parallel::stopCluster(my_cl))
 
-    x <- .gridsearch_test_landmarks(365.25) |>
-      fit_longitudinal(
-        landmarks = 365.25,
-        method = "lcmm",
-        formula = value ~ treat + age + gender + learn.dis + time,
-        mixture = ~ treat + age + gender + learn.dis + time,
-        random = ~time,
-        subject = "id",
-        ng = 2,
-        rep = 3,
-        cl = my_cl,
-        dynamic_covariates = "dose"
-      )
+  x <- .gridsearch_test_landmarks(365.25) |>
+    fit_longitudinal(
+      landmarks = 365.25,
+      method = "lcmm",
+      formula = value ~ treat + age + gender + learn.dis + time,
+      mixture = ~ treat + age + gender + learn.dis + time,
+      random = ~time,
+      subject = "id",
+      ng = 2,
+      rep = 3,
+      cl = my_cl,
+      dynamic_covariates = "dose"
+    )
 
-    fit <- x@longitudinal_fits[["365.25"]][["dose"]]
-    expect_s3_class(fit, "hlme")
-    expect_equal(fit$conv, 1)
+  fit <- x@longitudinal_fits[["365.25"]][["dose"]]
+  expect_s3_class(fit, "hlme")
+  expect_equal(fit$conv, 1)
 
-    worker_pids <- unlist(parallel::clusterCall(my_cl, Sys.getpid))
-    cat("worker pids used by lcmm::gridsearch()'s `cl`:\n")
-    print(worker_pids)
-    # rep = 3 restarts statically split across our 2-worker cluster: both
-    # workers actually computed at least one restart, not just 2 available
-    expect_length(unique(worker_pids), 2)
-  }
-)
+  worker_pids <- unlist(parallel::clusterCall(my_cl, Sys.getpid))
+  cat("worker pids used by lcmm::gridsearch()'s `cl`:\n")
+  print(worker_pids)
+  # rep = 3 restarts statically split across our 2-worker cluster: both
+  # workers actually computed at least one restart, not just 2 available
+  expect_length(unique(worker_pids), 2)
+})
 
-test_that(
-  "fit_longitudinal's lcmm grid search runs single-process when `cl` is not set",
-  {
-    library(lcmm)
-    withr::local_seed(123)
+test_that("fit_longitudinal's lcmm grid search runs single-process when `cl` is not set", {
+  library(lcmm)
+  withr::local_seed(123)
 
-    x <- .gridsearch_test_landmarks(365.25) |>
-      fit_longitudinal(
-        landmarks = 365.25,
-        method = "lcmm",
-        formula = value ~ treat + age + gender + learn.dis + time,
-        mixture = ~ treat + age + gender + learn.dis + time,
-        random = ~time,
-        subject = "id",
-        ng = 2,
-        rep = 3,
-        dynamic_covariates = "dose"
-      )
+  x <- .gridsearch_test_landmarks(365.25) |>
+    fit_longitudinal(
+      landmarks = 365.25,
+      method = "lcmm",
+      formula = value ~ treat + age + gender + learn.dis + time,
+      mixture = ~ treat + age + gender + learn.dis + time,
+      random = ~time,
+      subject = "id",
+      ng = 2,
+      rep = 3,
+      dynamic_covariates = "dose"
+    )
 
-    fit <- x@longitudinal_fits[["365.25"]][["dose"]]
-    expect_s3_class(fit, "hlme")
-    expect_equal(fit$conv, 1)
-    # No extra worker cluster was created for the grid search: the only
-    # artifact a *parallel* grid search would leave behind (the temporary
-    # global-environment data binding used to work around
-    # lcmm::gridsearch()'s cluster-export mechanism) is absent, confirming
-    # the plain, single-process lcmm::gridsearch() code path ran.
-    leftover <- ls(envir = globalenv(), pattern = "^\\.landmaRk_gridsearch_data_")
-    cat("parallel-gridsearch artifacts left behind (expect none):", length(leftover), "\n")
-    expect_length(leftover, 0)
-  }
-)
+  fit <- x@longitudinal_fits[["365.25"]][["dose"]]
+  expect_s3_class(fit, "hlme")
+  expect_equal(fit$conv, 1)
+  # No extra worker cluster was created for the grid search: the only
+  # artifact a *parallel* grid search would leave behind (the temporary
+  # global-environment data binding used to work around
+  # lcmm::gridsearch()'s cluster-export mechanism) is absent, confirming
+  # the plain, single-process lcmm::gridsearch() code path ran.
+  leftover <- ls(envir = globalenv(), pattern = "^\\.landmaRk_gridsearch_data_")
+  cat(
+    "parallel-gridsearch artifacts left behind (expect none):",
+    length(leftover),
+    "\n"
+  )
+  expect_length(leftover, 0)
+})
