@@ -9,6 +9,16 @@
 #' @param rep Number of times the model fitting algorithm is run using grid
 #'   search.
 #' @param maxiter Maximum number of iterations for the LCMM optimiser.
+#' @param cl Only used when \code{rep} > 1. Either an integer giving the
+#'   number of cores, or a cluster created by
+#'   \code{\link[parallel]{makeCluster}}, to parallelise
+#'   \code{\link[lcmm]{gridsearch}}'s \code{rep} random restarts. This is a
+#'   different axis of parallelism from \code{\link{fit_longitudinal}}'s
+#'   \code{cores} argument, which parallelises across landmark times instead
+#'   of across restarts within a single grid search; combining both
+#'   multiplies the number of worker processes (\code{cores * cl}), so size
+#'   them accordingly. Requires the lcmm package to be attached
+#'   (\code{library(lcmm)}). Defaults to \code{NULL} (sequential).
 #' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
 #'   function.
 #' @seealso  [lcmm::hlme()]
@@ -26,6 +36,7 @@
   rep = 1,
   classmb = ~1,
   maxiter = 500,
+  cl = NULL,
   ...
 ) {
   model_init <- lcmm::hlme(
@@ -57,23 +68,52 @@
         ...
       )
     } else {
-      model_fit <- lcmm::gridsearch(
-        m = hlme(
-          formula,
+      # lcmm::gridsearch() re-evaluates its `m` call (rather than reusing a
+      # value) both for each grid-search restart and for the final model, so
+      # `hlme` must resolve as an unqualified function name; unlike the
+      # lcmm::hlme() calls elsewhere in this file, that requires the lcmm
+      # package to be attached, not just imported.
+      if (!("package:lcmm" %in% search())) {
+        stop(
+          "Fitting an LCMM model with `rep` > 1 (grid search) requires the ",
+          "lcmm package to be attached: please call library(lcmm) before ",
+          "fit_longitudinal().\n"
+        )
+      }
+      if (is.null(cl)) {
+        model_fit <- lcmm::gridsearch(
+          m = hlme(
+            formula,
+            data = data,
+            mixture = mixture,
+            random = random,
+            subject = subject,
+            ng = ng,
+            classmb = classmb,
+            returndata = TRUE,
+            maxiter = 24000,
+            ...
+          ),
+          rep = rep,
+          maxiter = maxiter,
+          minit = model_init
+        )
+      } else {
+        model_fit <- .gridsearch_lcmm(
+          formula = formula,
           data = data,
           mixture = mixture,
           random = random,
           subject = subject,
           ng = ng,
           classmb = classmb,
-          returndata = TRUE,
-          maxiter = 24000,
+          model_init = model_init,
+          rep = rep,
+          maxiter = maxiter,
+          cl = cl,
           ...
-        ),
-        rep = rep,
-        maxiter = maxiter,
-        minit = model_init
-      )
+        )
+      }
     }
   }
 
@@ -92,6 +132,70 @@
   model_fit
 }
 
+# Runs lcmm::gridsearch()'s `rep` random restarts in parallel via its `cl`
+# argument.
+#
+# gridsearch() reconstructs and re-evaluates the `m` call it is given on
+# each cluster worker (do.call(as.character(mc[[1]]), as.list(mc[-1]))),
+# using the symbols captured via match.call() rather than the values bound
+# in the caller's frame. It only re-exports one argument by name: whichever
+# object was passed as `data`, which it deparses and looks up from its own
+# (lexical) environment -- this reaches .GlobalEnv and the search path, but
+# not this function's local frame. Any other bare variable name in the call
+# (mixture, random, subject, ng, classmb, maxiter, formula, or a `...`
+# argument) would therefore fail on the worker with "object '<name>' not
+# found", since gridsearch never exports those.
+#
+# We work around this by building the inner hlme() call with literal
+# values spliced in for everything except `data`, which we temporarily bind
+# under a unique name in .GlobalEnv so that gridsearch's own lookup
+# succeeds. That name never leaks to the caller: .fit_lcmm() immediately
+# overwrites model_fit$call$data with the real `data` object after fitting.
+.gridsearch_lcmm <- function(
+  formula,
+  data,
+  mixture,
+  random,
+  subject,
+  ng,
+  classmb,
+  model_init,
+  rep,
+  maxiter,
+  cl,
+  ...
+) {
+  data_name <- paste0(
+    ".landmaRk_gridsearch_data_",
+    sample.int(.Machine$integer.max, 1)
+  )
+  assign(data_name, data, envir = globalenv())
+  on.exit(rm(list = data_name, envir = globalenv()), add = TRUE)
+
+  inner_call <- as.call(c(
+    quote(hlme),
+    list(formula, data = as.symbol(data_name)),
+    list(
+      mixture = mixture,
+      random = random,
+      subject = subject,
+      ng = ng,
+      classmb = classmb,
+      returndata = TRUE,
+      maxiter = 24000
+    ),
+    list(...)
+  ))
+
+  eval(as.call(list(
+    quote(lcmm::gridsearch),
+    m = inner_call,
+    rep = rep,
+    maxiter = maxiter,
+    minit = model_init,
+    cl = cl
+  )))
+}
 
 .check_lcmm_convergence <- function(model_fit) {
   switch(
