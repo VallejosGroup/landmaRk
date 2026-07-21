@@ -15,7 +15,8 @@ performance_metrics(
   brier = TRUE,
   auc_t = FALSE,
   train = TRUE,
-  h_times = c()
+  h_times = c(),
+  cause = 1
 )
 ```
 
@@ -56,6 +57,13 @@ performance_metrics(
 
   A numeric vector of prediction horizon times, specified relative to
   each landmark time, at which auc_t and Brier scores are calculated.
+
+- cause:
+
+  Numeric code (in `@event_indicator`) of the event of interest used
+  when computing competing-risks metrics with
+  [`Score`](https://rdrr.io/pkg/riskRegression/man/Score.html). Defaults
+  to 1.
 
 ## Value
 

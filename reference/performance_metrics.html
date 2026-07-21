@@ -60,7 +60,8 @@ landmark times and prediction horizons.</p>
 <span>  brier <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  auc_t <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  train <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  h_times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  h_times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  cause <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -102,6 +103,12 @@ in the training set. If FALSE, they are computed in the test set.</p></dd>
 <dd><p>A numeric vector of prediction horizon times, specified
 relative to each landmark time, at which auc_t and Brier scores are
 calculated.</p></dd>
+
+
+<dt id="arg-cause">cause<a class="anchor" aria-label="anchor" href="#arg-cause"></a></dt>
+<dd><p>Numeric code (in <code>@event_indicator</code>) of the event of
+interest used when computing competing-risks metrics with
+<code><a href="https://rdrr.io/pkg/riskRegression/man/Score.html" class="external-link">Score</a></code>. Defaults to 1.</p></dd>
 
 </dl></div>
     <div class="section level2">

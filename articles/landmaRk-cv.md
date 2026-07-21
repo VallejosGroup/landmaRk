@@ -213,8 +213,8 @@ summary(landmarking_object,
 
 summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> Call:
-#> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
-#>     "-", horizons)]], model = TRUE, x = TRUE)
+#> survival::coxph(formula = formula, data = data, model = TRUE, 
+#>     x = TRUE)
 #> 
 #>           coef exp(coef) se(coef)     z     p
 #> drugddI 0.2306    1.2594   0.2019 1.142 0.253

@@ -72,8 +72,8 @@ x <- LandmarkAnalysis(
   )
 summary(x, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
 #> Call:
-#> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
-#>     "-", horizons)]], model = TRUE, x = TRUE)
+#> survival::coxph(formula = formula, data = data, model = TRUE, 
+#>     x = TRUE)
 #> 
 #>               coef exp(coef)  se(coef)      z      p
 #> treatLTG  0.111859  1.118356  0.197679  0.566 0.5715
@@ -129,8 +129,8 @@ summary(x2, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose"
 #> optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 2 lme4 warnings 
 summary(x2, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
 #> Call:
-#> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
-#>     "-", horizons)]], model = TRUE, x = TRUE)
+#> survival::coxph(formula = formula, data = data, model = TRUE, 
+#>     x = TRUE)
 #> 
 #>                   coef exp(coef)  se(coef)      z        p
 #> treatLTG      0.110243  1.116549  0.197993  0.557 0.577664

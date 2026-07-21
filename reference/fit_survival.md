@@ -15,7 +15,8 @@ fit_survival(
   dynamic_covariates = c(),
   include_clusters = FALSE,
   censor_at_horizon = FALSE,
-  validation_fold = 0
+  validation_fold = 0,
+  cause = 1
 )
 ```
 
@@ -41,7 +42,13 @@ fit_survival(
 
 - method:
 
-  Method for survival analysis, either "survfit" or "coxph".
+  Method for survival analysis: "survfit", "coxph" or "finegray".
+  "finegray" fits a Fine-Gray model for the subdistribution hazard of
+  `cause`, by transforming the data with
+  [`finegray`](https://rdrr.io/pkg/survival/man/finegray.html) and
+  fitting a weighted Cox model to the result; this requires
+  `@event_indicator` to encode competing risks as 0 (censoring) plus one
+  numeric code per competing cause.
 
 - dynamic_covariates:
 
@@ -60,6 +67,13 @@ fit_survival(
 
   If positive, cross-validation fold where model is fitted. If 0
   (default), model fitting is performed on the complete dataset.
+
+- cause:
+
+  Only used when `method = "finegray"`. Numeric code (in
+  `@event_indicator`) of the cause of interest whose subdistribution
+  hazard is modelled; competing events are coded as any other non-zero,
+  non-`cause` value. Defaults to 1.
 
 ## Value
 

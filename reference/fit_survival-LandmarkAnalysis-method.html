@@ -62,7 +62,8 @@ times specified by the user</p>
 <span>  dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  include_clusters <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  censor_at_horizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  validation_fold <span class="op">=</span> <span class="fl">0</span></span>
+<span>  validation_fold <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  cause <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -88,7 +89,12 @@ submodel is fitted.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Method for survival analysis, either "survfit" or "coxph".</p></dd>
+<dd><p>Method for survival analysis: "survfit", "coxph" or
+"finegray". "finegray" fits a Fine-Gray model for the subdistribution
+hazard of <code>cause</code>, by transforming the data with
+<code><a href="https://rdrr.io/pkg/survival/man/finegray.html" class="external-link">finegray</a></code> and fitting a weighted Cox model to the
+result; this requires <code>@event_indicator</code> to encode competing risks
+as 0 (censoring) plus one numeric code per competing cause.</p></dd>
 
 
 <dt id="arg-dynamic-covariates">dynamic_covariates<a class="anchor" aria-label="anchor" href="#arg-dynamic-covariates"></a></dt>
@@ -109,6 +115,13 @@ at horizon times</p></dd>
 <dt id="arg-validation-fold">validation_fold<a class="anchor" aria-label="anchor" href="#arg-validation-fold"></a></dt>
 <dd><p>If positive, cross-validation fold where model is
 fitted. If 0 (default), model fitting is performed on the complete dataset.</p></dd>
+
+
+<dt id="arg-cause">cause<a class="anchor" aria-label="anchor" href="#arg-cause"></a></dt>
+<dd><p>Only used when <code>method = "finegray"</code>. Numeric code (in
+<code>@event_indicator</code>) of the cause of interest whose subdistribution
+hazard is modelled; competing events are coded as any other non-zero,
+non-<code>cause</code> value. Defaults to 1.</p></dd>
 
 </dl></div>
     <div class="section level2">

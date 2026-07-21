@@ -296,8 +296,8 @@ To display the results, one can use the method `summary`, specifying
 
 summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> Call:
-#> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
-#>     "-", horizons)]], model = TRUE, x = TRUE)
+#> survival::coxph(formula = formula, data = data, model = TRUE, 
+#>     x = TRUE)
 #> 
 #>           coef exp(coef) se(coef)     z      p
 #> drugddI 0.3306    1.3918   0.1793 1.843 0.0653
@@ -424,8 +424,8 @@ summary(landmarking_object,
 
 summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> Call:
-#> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
-#>     "-", horizons)]], model = TRUE, x = TRUE)
+#> survival::coxph(formula = formula, data = data, model = TRUE, 
+#>     x = TRUE)
 #> 
 #>           coef exp(coef) se(coef)     z      p
 #> drugddI 0.3306    1.3918   0.1793 1.843 0.0653
@@ -596,8 +596,8 @@ summary(landmarking_object,
 
 summary(landmarking_object, type = "survival", landmark = 6, horizon = 18)
 #> Call:
-#> survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, 
-#>     "-", horizons)]], model = TRUE, x = TRUE)
+#> survival::coxph(formula = formula, data = data, model = TRUE, 
+#>     x = TRUE)
 #> 
 #>           coef exp(coef) se(coef)     z      p
 #> drugddI 0.3306    1.3918   0.1793 1.843 0.0653

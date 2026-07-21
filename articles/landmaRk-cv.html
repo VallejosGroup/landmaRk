@@ -260,8 +260,8 @@ part of the original dataset for validation.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">6</span>, horizon <span class="op">=</span> <span class="fl">18</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; survival::coxph(formula = formula, data = x@survival_datasets[[paste0(landmarks, </span></span>
-<span><span class="co">#&gt;     "-", horizons)]], model = TRUE, x = TRUE)</span></span>
+<span><span class="co">#&gt; survival::coxph(formula = formula, data = data, model = TRUE, </span></span>
+<span><span class="co">#&gt;     x = TRUE)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;           coef exp(coef) se(coef)     z     p</span></span>
 <span><span class="co">#&gt; drugddI 0.2306    1.2594   0.2019 1.142 0.253</span></span>
