@@ -37,7 +37,10 @@ test_that(".fit_coxph_survival propagates unrelated warnings without erroring", 
   )
 
   expect_warning(
-    result <- landmaRk:::.fit_coxph_survival(Surv(time, status) ~ x, data = data),
+    result <- landmaRk:::.fit_coxph_survival(
+      Surv(time, status) ~ x,
+      data = data
+    ),
     "some unrelated warning"
   )
   expect_equal(result, "fit")

@@ -29,7 +29,10 @@ test_that(".fit_finegray_survival requires a censoring code of 0", {
   )
 
   expect_error(
-    landmaRk:::.fit_finegray_survival(Surv(event_time, event_status) ~ x, data = data),
+    landmaRk:::.fit_finegray_survival(
+      Surv(event_time, event_status) ~ x,
+      data = data
+    ),
     "must include a censoring code of 0"
   )
 })
@@ -73,7 +76,10 @@ test_that(".fit_finegray_survival raises an error when coxph fails to converge",
   )
 
   expect_error(
-    landmaRk:::.fit_finegray_survival(Surv(event_time, event_status) ~ x, data = data),
+    landmaRk:::.fit_finegray_survival(
+      Surv(event_time, event_status) ~ x,
+      data = data
+    ),
     "Cox proportional hazards model failed to converge"
   )
 })
