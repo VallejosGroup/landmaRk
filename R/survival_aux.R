@@ -58,6 +58,15 @@
 # .create_survival_dataframe(), with `event_status` coded as 0 = censored
 # and other numeric values identifying each competing cause.
 .fit_finegray_survival <- function(formula, data, cause = 1) {
+  if (is.factor(data$event_status)) {
+    data$event_status <- suppressWarnings(as.numeric(as.character(data$event_status)))
+  }
+  if (!is.numeric(data$event_status) || anyNA(data$event_status)) {
+    stop(
+      "`event_status` must be numeric with 0 for censoring and positive codes for causes.\n",
+      call. = FALSE
+    )
+  }
   status_levels <- sort(unique(data$event_status))
   if (!(0 %in% status_levels)) {
     stop(

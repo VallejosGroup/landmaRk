@@ -13,7 +13,7 @@ test_that(".fit_finegray_survival fits a convergent model without error", {
     sex = factor(sample(c("M", "F"), n, replace = TRUE))
   )
 
-  fit <- .fit_finegray_survival(
+  fit <- landmaRk:::.fit_finegray_survival(
     Surv(event_time, event_status) ~ age + sex,
     data = data,
     cause = 1
@@ -29,7 +29,7 @@ test_that(".fit_finegray_survival requires a censoring code of 0", {
   )
 
   expect_error(
-    .fit_finegray_survival(Surv(event_time, event_status) ~ x, data = data),
+    landmaRk:::.fit_finegray_survival(Surv(event_time, event_status) ~ x, data = data),
     "must include a censoring code of 0"
   )
 })
@@ -42,7 +42,7 @@ test_that(".fit_finegray_survival requires a valid non-censoring `cause`", {
   )
 
   expect_error(
-    .fit_finegray_survival(
+    landmaRk:::.fit_finegray_survival(
       Surv(event_time, event_status) ~ x,
       data = data,
       cause = 5
@@ -51,7 +51,7 @@ test_that(".fit_finegray_survival requires a valid non-censoring `cause`", {
   )
 
   expect_error(
-    .fit_finegray_survival(
+    landmaRk:::.fit_finegray_survival(
       Surv(event_time, event_status) ~ x,
       data = data,
       cause = 0
@@ -73,7 +73,7 @@ test_that(".fit_finegray_survival raises an error when coxph fails to converge",
   )
 
   expect_error(
-    .fit_finegray_survival(Surv(event_time, event_status) ~ x, data = data),
+    landmaRk:::.fit_finegray_survival(Surv(event_time, event_status) ~ x, data = data),
     "Cox proportional hazards model failed to converge"
   )
 })

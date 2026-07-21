@@ -7,7 +7,7 @@ test_that(".fit_coxph_survival fits a convergent model without error", {
     x = rnorm(n)
   )
 
-  fit <- .fit_coxph_survival(Surv(time, status) ~ x, data = data)
+  fit <- landmaRk:::.fit_coxph_survival(Surv(time, status) ~ x, data = data)
   expect_s3_class(fit, "coxph")
 })
 
@@ -20,7 +20,7 @@ test_that(".fit_coxph_survival raises an error when coxph fails to converge", {
   )
 
   expect_error(
-    .fit_coxph_survival(Surv(time, status) ~ x, data = data),
+    landmaRk:::.fit_coxph_survival(Surv(time, status) ~ x, data = data),
     "Cox proportional hazards model failed to converge"
   )
 })
@@ -37,7 +37,7 @@ test_that(".fit_coxph_survival propagates unrelated warnings without erroring", 
   )
 
   expect_warning(
-    result <- .fit_coxph_survival(Surv(time, status) ~ x, data = data),
+    result <- landmaRk:::.fit_coxph_survival(Surv(time, status) ~ x, data = data),
     "some unrelated warning"
   )
   expect_equal(result, "fit")
