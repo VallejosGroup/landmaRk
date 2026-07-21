@@ -7,7 +7,8 @@
   brier,
   auc_t,
   train,
-  h_times
+  h_times,
+  cause
 ) {
   error_str <- NULL
 
@@ -34,6 +35,9 @@
   }
   if (!(is.logical(train) && length(train) == 1L && !is.na(train))) {
     error_str <- c(error_str, "@train must be a length-1, non-NA logical")
+  }
+  if (!(is.numeric(cause) && length(cause) == 1L && !is.na(cause))) {
+    error_str <- c(error_str, "@cause must be a length-1, non-NA numeric")
   }
   if (length(landmarks) != length(horizons)) {
     error_str <- c(

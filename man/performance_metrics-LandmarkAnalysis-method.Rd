@@ -12,7 +12,8 @@
   brier = TRUE,
   auc_t = FALSE,
   train = TRUE,
-  h_times = c()
+  h_times = c(),
+  cause = 1
 )
 }
 \arguments{
@@ -35,6 +36,10 @@ in the training set. If FALSE, they are computed in the test set.}
 \item{h_times}{A numeric vector of prediction horizon times, specified
 relative to each landmark time, at which auc_t and Brier scores are
 calculated.}
+
+\item{cause}{Numeric code (in \code{@event_indicator}) of the event of
+interest used when computing competing-risks metrics with
+\code{\link[riskRegression]{Score}}. Defaults to 1.}
 }
 \value{
 Data frame with performance metrics across the specified landmark
