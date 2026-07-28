@@ -44,8 +44,7 @@ Additionally, the `landmaRk` package provides a modular system allowing
 making it possible to incorporate additional models both for the
 longitudinal and the survival components
 
-![Diagram of the landmaRk package
-pipeline](../../../_temp/Library/landmaRk/diagram.svg)
+![Diagram of the landmaRk package pipeline](diagram.svg)
 
 Diagram of the landmaRk package pipeline
 

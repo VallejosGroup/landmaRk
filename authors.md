@@ -16,17 +16,19 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/VallejosGroup/landmaRk/blob/main/DESCRIPTION)
+[`inst/CITATION`](https://github.com/VallejosGroup/landmaRk/blob/main/inst/CITATION)
 
 Velasco-Pardo V, Constantine-Cooke N, Lees C, Vallejos C (2026).
-*landmaRk: Time-to-Event Landmark Analysis using an Array of
-Longitudinal and Survival Sub-Models*. R package version 0.1.4.9000,
-<https://vallejosgroup.github.io/landmaRk/>.
+“Landmarking with Latent Class Mixed Models for Dynamic Prediction of
+Time-to-event Data with Heterogeneous Biomarker Trajectories.”
+[doi:10.48550/arXiv.2606.24678](https://doi.org/10.48550/arXiv.2606.24678).
+<https://arxiv.org/abs/2606.24678>.
 
-    @Manual{,
-      title = {landmaRk: Time-to-Event Landmark Analysis using an Array of Longitudinal and Survival Sub-Models},
-      author = {Victor Velasco-Pardo and Nathan Constantine-Cooke and Charlie Lees and Catalina Vallejos},
+    @Misc{landmaRk,
+      title = {Landmarking with Latent Class Mixed Models for Dynamic Prediction of Time-to-event Data with Heterogeneous Biomarker Trajectories},
+      author = {Víctor Velasco-Pardo and Nathan Constantine-Cooke and Charlie W. Lees and Catalina A. Vallejos},
+      publisher = {arXiv},
       year = {2026},
-      note = {R package version 0.1.4.9000},
-      url = {https://vallejosgroup.github.io/landmaRk/},
+      doi = {10.48550/arXiv.2606.24678},
+      url = {https://arxiv.org/abs/2606.24678},
     }
