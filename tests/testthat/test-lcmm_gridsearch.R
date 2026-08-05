@@ -190,6 +190,11 @@ test_that("fit_longitudinal uses a single process across landmarks when cores = 
 })
 
 test_that("fit_longitudinal actually uses `cl`'s worker processes for lcmm grid search", {
+  # fit_longitudinal() now rejects `cl` for lcmm grid search on Windows
+  # entirely (see "fit_longitudinal rejects `cl` for lcmm grid search on
+  # Windows"), so this success-path assertion does not apply there.
+  skip_on_os("windows")
+
   library(lcmm)
   withr::local_seed(123)
 
