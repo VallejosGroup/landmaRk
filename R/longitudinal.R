@@ -120,6 +120,18 @@ setMethod(
       )
     }
 
+    if (
+      is(method)[1] == "character" &&
+        method == "lcmm" &&
+        "cl" %in% names(list(...)) &&
+        !.supports_parallel()
+    ) {
+      stop(
+        "Parallelising lcmm::gridsearch()'s grid search restarts via `cl` ",
+        "is not supported on Windows.\n"
+      )
+    }
+
     method <- .check_method_long_fit(method)
 
     if (.supports_parallel()) {
@@ -127,6 +139,12 @@ setMethod(
       `%doparallel%` <- foreach::`%dopar%`
       on.exit(parallel::stopCluster(cl), add = TRUE)
     } else {
+      if (cores > 1) {
+        stop(
+          "Parallelising across landmark times (`cores` > 1) is not ",
+          "supported on Windows.\n"
+        )
+      }
       `%doparallel%` <- foreach::`%do%`
     }
 

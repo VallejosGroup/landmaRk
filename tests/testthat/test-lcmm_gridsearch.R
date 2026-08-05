@@ -141,6 +141,11 @@ test_that("fit_longitudinal rejects cores > 1 combined with `cl`", {
 }
 
 test_that("fit_longitudinal actually uses 2 distinct processes when cores = 2", {
+  # cores > 1 relies on a FORK cluster, which does not exist on Windows;
+  # fit_longitudinal() already falls back to single-threaded execution
+  # there (see .supports_parallel()), so this assertion does not hold.
+  skip_on_os("windows")
+
   landmarks <- seq(365.25, 4 * 365.25, by = 365.25)
   x <- .gridsearch_test_landmarks(landmarks) |>
     fit_longitudinal(
