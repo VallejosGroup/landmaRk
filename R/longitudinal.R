@@ -105,7 +105,7 @@ setMethod(
       is(method)[1] == "character" &&
         method == "lcmm" &&
         cores > 1 &&
-        "cl" %in% names(list(...))
+        "cl" %in% names(match.call(expand.dots = FALSE)$...)
     ) {
       stop(
         "Combining `cores` > 1 with a `cl` argument for lcmm::gridsearch() ",
@@ -116,7 +116,7 @@ setMethod(
     if (
       is(method)[1] == "character" &&
         method == "lcmm" &&
-        "cl" %in% names(list(...)) &&
+        "cl" %in% names(match.call(expand.dots = FALSE)$...) &&
         !.supports_parallel()
     ) {
       stop(
