@@ -5,8 +5,7 @@
 #'   ## Parallel processing
 #'   As the longitudinal model for each landmark time is independent of
 #'   the longitudinal models for other landmark times, parallel processing can
-#'   be used to vastly speed up computation. However, due to issues with
-#'   parallel processing in R, currently only Unix-like operating systems
+#'   be used to vastly speed up computation. Currently only Unix-like operating systems
 #'   are supported by \code{landmaRk}.
 #'
 #' @param x An object of class \code{\link{LandmarkAnalysis}}.
@@ -100,6 +99,32 @@ setMethod(
       )
     }
 
+    # Nesting landmaRk's per-landmark (FORK-based) parallelism with
+    # lcmm::gridsearch()'s own (PSOCK-based) parallelism is not supported.
+    if (
+      is(method)[1] == "character" &&
+        method == "lcmm" &&
+        cores > 1 &&
+        "cl" %in% names(match.call(expand.dots = FALSE)$...)
+    ) {
+      stop(
+        "Combining `cores` > 1 with a `cl` argument for lcmm::gridsearch() ",
+        "is not supported"
+      )
+    }
+
+    if (
+      is(method)[1] == "character" &&
+        method == "lcmm" &&
+        "cl" %in% names(match.call(expand.dots = FALSE)$...) &&
+        !.supports_parallel()
+    ) {
+      stop(
+        "Parallelising lcmm::gridsearch()'s grid search restarts via `cl` ",
+        "is not supported on Windows.\n"
+      )
+    }
+
     method <- .check_method_long_fit(method)
 
     if (.supports_parallel()) {
@@ -107,6 +132,12 @@ setMethod(
       `%doparallel%` <- foreach::`%dopar%`
       on.exit(parallel::stopCluster(cl), add = TRUE)
     } else {
+      if (cores > 1) {
+        stop(
+          "Parallelising across landmark times (`cores` > 1) is not ",
+          "supported on Windows.\n"
+        )
+      }
       `%doparallel%` <- foreach::`%do%`
     }
 
