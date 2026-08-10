@@ -100,10 +100,7 @@ setMethod(
     }
 
     # Nesting landmaRk's per-landmark (FORK-based) parallelism with
-    # lcmm::gridsearch()'s own (PSOCK-based) parallelism is not supported:
-    # sibling forked workers can race to create their own inner cluster and
-    # collide on the same port, failing with "creation of server socket
-    # failed". Require users to pick one axis of parallelism or the other.
+    # lcmm::gridsearch()'s own (PSOCK-based) parallelism is not supported.
     if (
       is(method)[1] == "character" &&
         method == "lcmm" &&
@@ -112,11 +109,7 @@ setMethod(
     ) {
       stop(
         "Combining `cores` > 1 with a `cl` argument for lcmm::gridsearch() ",
-        "is not supported: nesting landmaRk's per-landmark parallelism ",
-        "with grid search's own parallelism can fail with port collisions ",
-        "between forked workers. Parallelise across landmark times ",
-        "(`cores`) or across grid-search restarts (`cl`), but not both in ",
-        "the same call.\n"
+        "is not supported"
       )
     }
 
