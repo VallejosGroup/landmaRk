@@ -16,8 +16,7 @@
 #'   different axis of parallelism from \code{\link{fit_longitudinal}}'s
 #'   \code{cores} argument, which parallelises across landmark times instead
 #'   of across restarts within a single grid search; combining both
-#'   multiplies the number of worker processes (\code{cores * cl}), so size
-#'   them accordingly. Requires the lcmm package to be attached
+#'   is not supported. Requires the lcmm package to be attached
 #'   (\code{library(lcmm)}). Defaults to \code{NULL} (sequential).
 #' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
 #'   function.
