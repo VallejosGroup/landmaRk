@@ -15,6 +15,9 @@
 #' @param h_times A numeric vector of prediction horizon times, specified
 #'   relative to each landmark time, at which auc_t and Brier scores are
 #'   calculated.
+#' @param cause Numeric code (in \code{@event_indicator}) of the event of
+#'   interest used when computing competing-risks metrics with
+#'   \code{\link[riskRegression]{Score}}. Defaults to 1.
 #'
 #' @returns Data frame with performance metrics across the specified landmark
 #' times and prediction horizons.
@@ -31,7 +34,8 @@ setGeneric(
     brier = TRUE,
     auc_t = FALSE,
     train = TRUE,
-    h_times = c()
+    h_times = c(),
+    cause = 1
   ) {
     standardGeneric("performance_metrics")
   }
@@ -60,7 +64,8 @@ setMethod(
     brier = TRUE,
     auc_t = FALSE,
     train = TRUE,
-    h_times = c()
+    h_times = c(),
+    cause = 1
   ) {
     AUC <- model <- NULL
     # Early input validation
@@ -72,7 +77,8 @@ setMethod(
       brier,
       auc_t,
       train,
-      h_times
+      h_times,
+      cause
     )
 
     model <- NULL
@@ -120,7 +126,7 @@ setMethod(
             object = list(x@survival_fits[[paste0(landmark, "-", horizon)]]),
             formula = Surv(event_time, event_status) ~ 1,
             data = dataset,
-            cause = 1,
+            cause = cause,
             times = horizon - landmark,
             cens.method = "ipcw",
             cens.model = "km"
@@ -135,7 +141,7 @@ setMethod(
                 object = list("model" = pred_matrix[, j, drop = FALSE]),
                 formula = Surv(event_time, event_status) ~ 1,
                 data = dataset,
-                cause = 1,
+                cause = cause,
                 times = h_times[j],
                 cens.method = "ipcw",
                 cens.model = "km"
@@ -178,7 +184,7 @@ setMethod(
             object = list(x@survival_fits[[paste0(landmark, "-", horizon)]]),
             formula = Surv(event_time, event_status) ~ 1,
             data = dataset,
-            cause = 1,
+            cause = cause,
             times = horizon - landmark,
             cens.method = "ipcw",
             cens.model = "km"
@@ -193,7 +199,7 @@ setMethod(
                 object = list("model" = pred_matrix[, j, drop = FALSE]),
                 formula = Surv(event_time, event_status) ~ 1,
                 data = dataset,
-                cause = 1,
+                cause = cause,
                 times = h_times[j],
                 cens.method = "ipcw",
                 cens.model = "km"

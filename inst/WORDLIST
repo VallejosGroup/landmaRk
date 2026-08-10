@@ -25,6 +25,7 @@ bimj
 codecov
 coxph
 doi
+finegray
 ge
 hlme
 joineR
@@ -36,4 +37,5 @@ lmer
 locf
 md
 modeling
+subdistribution
 survfit

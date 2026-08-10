@@ -1,0 +1,18 @@
+citHeader("To cite landmaRk in publications use:")
+
+
+bibentry(
+  key = "landmaRk",
+  bibtype = "Misc",
+  title = "Landmarking with Latent Class Mixed Models for Dynamic Prediction of Time-to-event Data with Heterogeneous Biomarker Trajectories",
+  author = c(
+    person("Víctor", "Velasco-Pardo"),
+    person("Nathan", "Constantine-Cooke"),
+    person("Charlie W.", "Lees"),
+    person("Catalina A.", "Vallejos")
+  ),
+  publisher = "arXiv",
+  year = 2026,
+  doi = "10.48550/arXiv.2606.24678",
+  url = "https://arxiv.org/abs/2606.24678"
+)

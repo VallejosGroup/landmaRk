@@ -1,9 +1,12 @@
-# Check that method is coxph, survfit or a function with argument data, ...
+# Check that method is coxph, finegray, survfit or a function with argument
+# data, ...
 .check_method_survival_predict <- function(method) {
   if (is(method)[1] == "character" && method == "survfit") {
     method <- survival::survfit
-  } else if (is(method)[1] == "character" && method == "coxph") {
-    method <- "coxph"
+  } else if (
+    is(method)[1] == "character" && method %in% c("coxph", "finegray")
+  ) {
+    # Leave as-is; dispatched by name in fit_survival()
   } else if (!(is(method)[1] == "function")) {
     stop(
       "Argument ",
@@ -24,6 +27,107 @@
     )
   }
   method
+}
+
+# Warning handler shared by .fit_coxph_survival() and .fit_finegray_survival():
+# raises an error instead of a warning if the underlying optimiser in
+# survival::coxph() fails to converge
+.coxph_convergence_handler <- function(w) {
+  if (grepl("did not converge", conditionMessage(w), fixed = TRUE)) {
+    stop(
+      "Cox proportional hazards model failed to converge: ",
+      conditionMessage(w),
+      call. = FALSE
+    )
+  }
+}
+
+# Fits a Cox PH model via survival::coxph, raising an error instead of a
+# warning if the underlying optimiser fails to converge
+.fit_coxph_survival <- function(formula, data) {
+  withCallingHandlers(
+    survival::coxph(formula, data = data, x = TRUE, model = TRUE),
+    warning = .coxph_convergence_handler
+  )
+}
+
+# Fits a Fine-Gray model for the subdistribution hazard of `cause`, by
+# transforming `data` with survival::finegray() and fitting a weighted Cox
+# model to the result (the approach documented in ?survival::finegray).
+# `data` must contain the `event_time`/`event_status` columns produced by
+# .create_survival_dataframe(), with `event_status` coded as 0 = censored
+# and other numeric values identifying each competing cause.
+.fit_finegray_survival <- function(formula, data, cause = 1) {
+  if (
+    !(is.numeric(cause) &&
+      length(cause) == 1L &&
+      !is.na(cause) &&
+      is.finite(cause))
+  ) {
+    stop(
+      "`cause` must be a length-1, finite, non-NA numeric value.\n",
+      call. = FALSE
+    )
+  }
+  if (is.factor(data$event_status)) {
+    data$event_status <- suppressWarnings(as.numeric(as.character(
+      data$event_status
+    )))
+  }
+  if (!is.numeric(data$event_status) || anyNA(data$event_status)) {
+    stop(
+      "`event_status` must be numeric with 0 for censoring and positive codes for causes.\n",
+      call. = FALSE
+    )
+  }
+  status_levels <- sort(unique(data$event_status))
+  if (!(0 %in% status_levels)) {
+    stop(
+      "`event_status` must include a censoring code of 0 to fit a ",
+      "Fine-Gray model.\n"
+    )
+  }
+  if (!(cause %in% setdiff(status_levels, 0))) {
+    stop(
+      "`cause` (",
+      cause,
+      ") is not a non-censoring level of `event_status`.\n"
+    )
+  }
+
+  data$event_status <- factor(
+    data$event_status,
+    levels = status_levels,
+    labels = c("censoring", paste0("cause_", setdiff(status_levels, 0)))
+  )
+
+  finegray_data <- survival::finegray(
+    formula,
+    data = data,
+    etype = paste0("cause_", cause)
+  )
+
+  finegray_formula <- stats::as.formula(
+    paste(
+      "survival::Surv(fgstart, fgstop, fgstatus) ~",
+      as.character(formula)[3]
+    )
+  )
+
+  # `fgwt` is looked up as a column of `finegray_data` (as in
+  # ?survival::finegray's own example); it must be referenced directly rather
+  # than via a local variable, since coxph() re-evaluates the `weights`
+  # argument against `data`, not against this function's environment.
+  withCallingHandlers(
+    survival::coxph(
+      finegray_formula,
+      data = finegray_data,
+      weights = fgwt,
+      x = TRUE,
+      model = TRUE
+    ),
+    warning = .coxph_convergence_handler
+  )
 }
 
 # Check risk set is available

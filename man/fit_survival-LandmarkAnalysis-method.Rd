@@ -14,7 +14,8 @@ times specified by the user}
   dynamic_covariates = c(),
   include_clusters = FALSE,
   censor_at_horizon = FALSE,
-  validation_fold = 0
+  validation_fold = 0,
+  cause = 1
 )
 }
 \arguments{
@@ -27,7 +28,12 @@ times specified by the user}
 \item{horizons}{Vector of prediction horizons up to when the survival
 submodel is fitted.}
 
-\item{method}{Method for survival analysis, either "survfit" or "coxph".}
+\item{method}{Method for survival analysis: "survfit", "coxph" or
+"finegray". "finegray" fits a Fine-Gray model for the subdistribution
+hazard of \code{cause}, by transforming the data with
+\code{\link[survival]{finegray}} and fitting a weighted Cox model to the
+result; this requires \code{@event_indicator} to encode competing risks
+as 0 (censoring) plus one numeric code per competing cause.}
 
 \item{dynamic_covariates}{Vector of time-varying covariates to be used
 in the survival model.}
@@ -40,6 +46,11 @@ at horizon times}
 
 \item{validation_fold}{If positive, cross-validation fold where model is
 fitted. If 0 (default), model fitting is performed on the complete dataset.}
+
+\item{cause}{Only used when \code{method = "finegray"}. Numeric code (in
+\code{@event_indicator}) of the cause of interest whose subdistribution
+hazard is modelled; competing events are coded as any other non-zero,
+non-\code{cause} value. Defaults to 1.}
 }
 \value{
 An object of class \code{\link{LandmarkAnalysis}}.

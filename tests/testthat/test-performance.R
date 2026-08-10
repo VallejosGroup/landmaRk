@@ -64,3 +64,65 @@ test_that("auc_t uses per-subject predicted risks, not a scalar", {
 
   expect_equal(result[, "AUCt"], expected_auct, tolerance = 1e-6)
 })
+
+test_that("performance_metrics propagates cause to riskRegression::Score", {
+  withr::local_seed(123)
+  epileptic_dfs <- split_wide_df(
+    epileptic,
+    ids = "id",
+    times = "time",
+    static = c(
+      "with.time",
+      "with.status",
+      "treat",
+      "age",
+      "gender",
+      "learn.dis"
+    ),
+    dynamic = c("dose"),
+    measurement_name = "value"
+  )
+
+  x <- LandmarkAnalysis(
+    data_static = epileptic_dfs$df_static,
+    data_dynamic = epileptic_dfs$df_dynamic,
+    event_indicator = "with.status",
+    ids = "id",
+    event_time = "with.time",
+    times = "time",
+    measurements = "value"
+  ) |>
+    compute_risk_sets(365.25) |>
+    fit_survival(
+      formula = survival::Surv(event_time, event_status) ~
+        treat + age + gender + learn.dis,
+      landmarks = 365.25,
+      horizons = 2 * 365.25,
+      method = "coxph"
+    ) |>
+    predict_survival(landmarks = 365.25, horizons = 2 * 365.25)
+
+  local_mocked_bindings(
+    Score = function(...) {
+      args <- list(...)
+      list(
+        AUC = list(
+          score = data.frame(model = "model", AUC = args$cause)
+        )
+      )
+    },
+    .package = "riskRegression"
+  )
+
+  result <- performance_metrics(
+    x,
+    landmarks = 365.25,
+    horizons = 2 * 365.25,
+    c_index = FALSE,
+    brier = FALSE,
+    auc_t = TRUE,
+    cause = 2
+  )
+
+  expect_equal(result[, "AUCt"], 2)
+})
