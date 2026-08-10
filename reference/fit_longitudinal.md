@@ -84,9 +84,8 @@ An object of class
 
 As the longitudinal model for each landmark time is independent of the
 longitudinal models for other landmark times, parallel processing can be
-used to vastly speed up computation. However, due to issues with
-parallel processing in R, currently only Unix-like operating systems are
-supported by `landmaRk`.
+used to vastly speed up computation. Currently only Unix-like operating
+systems are supported by `landmaRk`.
 
 ## See also
 
