@@ -132,7 +132,7 @@
 }
 
 # Runs `rep` random restarts of lcmm::hlme() in parallel across a cluster,
-# then re-fits from the best restart's estimates, reimplementing 
+# then re-fits from the best restart's estimates, reimplementing
 # lcmm::gridsearch()'s `cl` branch.
 .gridsearch_lcmm <- function(
   formula,
