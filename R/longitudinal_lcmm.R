@@ -149,7 +149,7 @@
   ...
 ) {
   if (model_init$conv != 1) {
-    stop("The model minit did not converge")
+    stop("Initial (minit) model did not converge; cannot run grid search.")
   }
 
   extra_args <- list(...)
