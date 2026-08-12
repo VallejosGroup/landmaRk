@@ -188,8 +188,8 @@
     cl,
     seq_len(rep),
     function(i, hlme_call, model_init, maxiter) {
-      eval(hlme_call(maxiter, as.call(list(quote(random), model_init))))
-    },
+      eval(hlme_call(maxiter, lcmm::random(model_init)))
+    }
     hlme_call = hlme_call,
     model_init = model_init,
     maxiter = maxiter
