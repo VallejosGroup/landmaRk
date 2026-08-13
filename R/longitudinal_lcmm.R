@@ -184,14 +184,19 @@
   }
   parallel::clusterSetRNGStream(cl)
 
+  # `random(model_init)` is never actually called: hlme() detects this
+  # literal, unevaluated call passed as `B` and generates randomised
+  # initial values from it internally.
+  random_B <- as.call(list(quote(random), model_init))
+
   models <- parallel::parLapply(
     cl,
     seq_len(rep),
-    function(i, hlme_call, model_init, maxiter) {
-      eval(hlme_call(maxiter, lcmm::random(model_init)))
+    function(i, hlme_call, random_B, maxiter) {
+      eval(hlme_call(maxiter, random_B))
     },
     hlme_call = hlme_call,
-    model_init = model_init,
+    random_B = random_B,
     maxiter = maxiter
   )
 
