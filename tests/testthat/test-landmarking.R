@@ -106,6 +106,29 @@ test_that("Validity checks for LandmarkAnalysis class work", {
     ),
     "@measurements must be a column in every dataframe in @data_dynamic"
   )
+
+  # Test: duplicated (id, time) pairs in a data_dynamic dataframe
+  duplicated_dynamic <- dynamic
+  duplicated_dynamic[["dose"]] <- rbind(
+    duplicated_dynamic[["dose"]],
+    duplicated_dynamic[["dose"]][1, ]
+  )
+
+  expect_error(
+    LandmarkAnalysis(
+      data_static = static,
+      data_dynamic = duplicated_dynamic,
+      event_indicator = "with.status",
+      ids = "id",
+      event_time = "with.time",
+      times = "time",
+      measurements = "value"
+    ),
+    paste0(
+      "@data_dynamic dataframe 'dose' must contain a single measurement ",
+      "per individual per time point"
+    )
+  )
 })
 
 test_that("Character covariates are converted to factor", {

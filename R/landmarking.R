@@ -97,6 +97,31 @@ setValidity("LandmarkAnalysis", function(object) {
         "@measurements must be a column in every dataframe in @data_dynamic"
       )
     }
+    # Check that (id, time) pairs are unique (and release an error if not)
+    if (
+      (object@ids %in% colnames(object@data_dynamic[[covariate]])) &&
+        (object@times %in% colnames(object@data_dynamic[[covariate]]))
+    ) {
+      id_time <- object@data_dynamic[[covariate]][,
+        c(object@ids, object@times)
+      ]
+      duplicated_rows <- duplicated(id_time) |
+        duplicated(id_time, fromLast = TRUE)
+      if (any(duplicated_rows)) {
+        duplicated_ids <- unique(id_time[duplicated_rows, object@ids])
+        error_str <- c(
+          error_str,
+          paste0(
+            "@data_dynamic dataframe '",
+            covariate,
+            "' must contain a single measurement per individual per time ",
+            "point. Multiple measurements found for individual(s): ",
+            paste(duplicated_ids, collapse = ", "),
+            "\n"
+          )
+        )
+      }
+    }
   }
   if (!(object@event_indicator %in% colnames(object@data_static))) {
     error_str <- c(
