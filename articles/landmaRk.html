@@ -568,9 +568,9 @@ model.</p></li>
 <span><span class="co">#&gt; Iteration process: </span></span>
 <span><span class="co">#&gt;      Convergence criteria satisfied </span></span>
 <span><span class="co">#&gt;      Number of iterations:  1 </span></span>
-<span><span class="co">#&gt;      Convergence criteria: parameters= 1.1e-10 </span></span>
-<span><span class="co">#&gt;                          : likelihood= 5e-10 </span></span>
-<span><span class="co">#&gt;                          : second derivatives= 8.3e-11 </span></span>
+<span><span class="co">#&gt;      Convergence criteria: parameters= 1.2e-10 </span></span>
+<span><span class="co">#&gt;                          : likelihood= 5.5e-10 </span></span>
+<span><span class="co">#&gt;                          : second derivatives= 9.6e-11 </span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; Goodness-of-fit statistics: </span></span>
 <span><span class="co">#&gt;      maximum log-likelihood: -2573.92  </span></span>
@@ -584,27 +584,27 @@ model.</p></li>
 <span><span class="co">#&gt; (the class of reference is the last class) </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                      coef      Se   Wald p-value</span></span>
-<span><span class="co">#&gt; intercept class1  0.02034 0.17564  0.116 0.90782</span></span>
+<span><span class="co">#&gt; intercept class1  0.02035 0.17887  0.114 0.90943</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Fixed effects in the longitudinal model:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                       coef      Se   Wald p-value</span></span>
-<span><span class="co">#&gt; intercept class1   5.38687 0.31907 16.883 0.00000</span></span>
-<span><span class="co">#&gt; intercept class2  13.51821 0.49332 27.402 0.00000</span></span>
+<span><span class="co">#&gt; intercept class1   5.38688 0.31994 16.837 0.00000</span></span>
+<span><span class="co">#&gt; intercept class2  13.51822 0.49440 27.343 0.00000</span></span>
 <span><span class="co">#&gt; obstime class1    -0.16632 0.03397 -4.896 0.00000</span></span>
 <span><span class="co">#&gt; obstime class2    -0.19019 0.04641 -4.098 0.00004</span></span>
-<span><span class="co">#&gt; prevOIAIDS class1 -1.43232 0.31900 -4.490 0.00001</span></span>
-<span><span class="co">#&gt; prevOIAIDS class2 -4.81769 0.68299 -7.054 0.00000</span></span>
+<span><span class="co">#&gt; prevOIAIDS class1 -1.43232 0.31923 -4.487 0.00001</span></span>
+<span><span class="co">#&gt; prevOIAIDS class2 -4.81768 0.68368 -7.047 0.00000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variance-covariance matrix of the random-effects:</span></span>
 <span><span class="co">#&gt;           intercept obstime</span></span>
-<span><span class="co">#&gt; intercept  13.59457        </span></span>
+<span><span class="co">#&gt; intercept  13.59456        </span></span>
 <span><span class="co">#&gt; obstime    -0.24938 0.16877</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                                     coef      Se</span></span>
-<span><span class="co">#&gt; Proportional coefficient class1  0.33971 0.04181</span></span>
-<span><span class="co">#&gt; Residual standard error:         1.55098 0.05479</span></span></code></pre></div>
+<span><span class="co">#&gt; Proportional coefficient class1  0.33971 0.04196</span></span>
+<span><span class="co">#&gt; Residual standard error:         1.55098 0.05480</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">6</span>, horizon <span class="op">=</span> <span class="fl">18</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call:</span></span>
