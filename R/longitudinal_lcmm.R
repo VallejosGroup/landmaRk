@@ -131,25 +131,9 @@
   model_fit
 }
 
-# Runs lcmm::gridsearch()'s `rep` random restarts in parallel via its `cl`
-# argument.
-#
-# gridsearch() reconstructs and re-evaluates the `m` call it is given on
-# each cluster worker (do.call(as.character(mc[[1]]), as.list(mc[-1]))),
-# using the symbols captured via match.call() rather than the values bound
-# in the caller's frame. It only re-exports one argument by name: whichever
-# object was passed as `data`, which it deparses and looks up from its own
-# (lexical) environment -- this reaches .GlobalEnv and the search path, but
-# not this function's local frame. Any other bare variable name in the call
-# (mixture, random, subject, ng, classmb, maxiter, formula, or a `...`
-# argument) would therefore fail on the worker with "object '<name>' not
-# found", since gridsearch never exports those.
-#
-# We work around this by building the inner hlme() call with literal
-# values spliced in for everything except `data`, which we temporarily bind
-# under a unique name in .GlobalEnv so that gridsearch's own lookup
-# succeeds. That name never leaks to the caller: .fit_lcmm() immediately
-# overwrites model_fit$call$data with the real `data` object after fitting.
+# Runs `rep` random restarts of lcmm::hlme() in parallel across a cluster,
+# then re-fits from the best restart's estimates, reimplementing
+# lcmm::gridsearch()'s `cl` branch.
 .gridsearch_lcmm <- function(
   formula,
   data,
@@ -164,36 +148,62 @@
   cl,
   ...
 ) {
-  data_name <- paste0(
-    ".landmaRk_gridsearch_data_",
-    sample.int(.Machine$integer.max, 1)
+  if (model_init$conv != 1) {
+    stop("Initial (minit) model did not converge; cannot run grid search.")
+  }
+
+  extra_args <- list(...)
+  hlme_call <- function(fit_maxiter, B) {
+    as.call(c(
+      quote(lcmm::hlme),
+      list(formula, data = data),
+      list(
+        mixture = mixture,
+        random = random,
+        subject = subject,
+        ng = ng,
+        classmb = classmb,
+        returndata = TRUE,
+        maxiter = fit_maxiter,
+        B = B
+      ),
+      extra_args
+    ))
+  }
+
+  owns_cluster <- !inherits(cl, "cluster")
+  if (owns_cluster) {
+    if (!is.numeric(cl)) {
+      stop(
+        "argument cl should be either a cluster or a numeric value ",
+        "indicating the number of cores"
+      )
+    }
+    cl <- parallel::makeCluster(cl)
+    on.exit(parallel::stopCluster(cl), add = TRUE)
+  }
+  parallel::clusterSetRNGStream(cl)
+
+  # `random(model_init)` is never actually called: hlme() detects this
+  # literal, unevaluated call passed as `B` and generates randomised
+  # initial values from it internally.
+  random_B <- as.call(list(quote(random), model_init))
+
+  models <- parallel::parLapply(
+    cl,
+    seq_len(rep),
+    function(i, hlme_call, random_B, maxiter) {
+      eval(hlme_call(maxiter, random_B))
+    },
+    hlme_call = hlme_call,
+    random_B = random_B,
+    maxiter = maxiter
   )
-  assign(data_name, data, envir = globalenv())
-  on.exit(rm(list = data_name, envir = globalenv()), add = TRUE)
 
-  inner_call <- as.call(c(
-    quote(hlme),
-    list(formula, data = as.symbol(data_name)),
-    list(
-      mixture = mixture,
-      random = random,
-      subject = subject,
-      ng = ng,
-      classmb = classmb,
-      returndata = TRUE,
-      maxiter = 24000
-    ),
-    list(...)
-  ))
-
-  eval(as.call(list(
-    quote(lcmm::gridsearch),
-    m = inner_call,
-    rep = rep,
-    maxiter = maxiter,
-    minit = model_init,
-    cl = cl
-  )))
+  best <- models[[
+    which.max(vapply(models, function(x) x$loglik, numeric(1)))
+  ]]
+  eval(hlme_call(24000, best$best))
 }
 
 .check_lcmm_convergence <- function(model_fit) {
