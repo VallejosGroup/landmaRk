@@ -280,6 +280,279 @@
 #' @noRd
 #'
 #' @examples
+# Errors if the number of individuals with random effect predictions does not
+# match the number expected.
+.check_predRE_count <- function(predRE, subject, expected) {
+  n_pred <- length(unique(predRE[, subject]))
+  if (n_pred != expected) {
+    stop(sprintf(
+      paste(
+        "lcmm::predictRE produced %d predictions but expected",
+        "%d predictions.\n",
+        "Probable reason: static covariates contain missing data.\n"
+      ),
+      n_pred,
+      expected
+    ))
+  }
+}
+
+# Random effects predictions for individuals in the training set
+.predict_re_train <- function(x, in_train_set, subject) {
+  predRE <- lcmm::predictRE(
+    x,
+    x$data |> filter(get(subject) %in% in_train_set),
+    subject = subject,
+    classpredRE = TRUE
+  )
+  .check_predRE_count(predRE, subject, length(in_train_set))
+  predRE
+}
+
+# Random effects predictions for the test set. Individuals without
+# observations get zero random effects in every class.
+.predict_re_test <- function(x, newdata, newdata_long, subject) {
+  predRE <- lcmm::predictRE(
+    x,
+    newdata_long,
+    subject = subject,
+    classpredRE = TRUE
+  )
+  subjects_no_obs <- setdiff(
+    newdata[, subject],
+    unique(newdata_long[, subject])
+  )
+  if (length(subjects_no_obs) > 0) {
+    re_cols <- setdiff(colnames(predRE), c(subject, "class"))
+    predRE_default <- expand.grid(
+      id = subjects_no_obs,
+      class = 1:x$ng
+    )
+    colnames(predRE_default)[1] <- subject
+    predRE_default[, re_cols] <- 0
+    predRE <- rbind(predRE, predRE_default)
+  }
+  .check_predRE_count(predRE, subject, nrow(newdata))
+  list(predRE = predRE, subjects_no_obs = subjects_no_obs)
+}
+
+# Converts the matrix of predictions made by sapply into a data frame with a
+# leading subject column
+.predictions_to_df <- function(predictions, ng, ids, subject) {
+  if (ng == 1) {
+    predictions <- as.data.frame(t(predictions))
+  } else {
+    predictions <- as.data.frame(predictions)
+  }
+  predictions[, subject] <- ids
+  predictions |> relocate(all_of(subject))
+}
+
+# Class-specific predictions for individuals not used in model fitting, made
+# without random effects predictions
+.make_untrained_predictions <- function(x, individuals, newdata, subject) {
+  predictions <- t(sapply(
+    individuals,
+    function(individual) {
+      lcmm::predictY(
+        x,
+        newdata = newdata |> filter(get(subject) == individual)
+      )$pred
+    }
+  ))
+  .predictions_to_df(predictions, x$call$ng, individuals, subject)
+}
+
+# Class-specific predictions for all individuals in newdata
+.make_all_class_predictions <- function(
+  x,
+  newdata,
+  predRE,
+  subject,
+  in_train_set,
+  not_in_train_set,
+  test
+) {
+  if (test) {
+    return(
+      .make_class_predictions(x, not_in_train_set, newdata, predRE, subject) |>
+        arrange(get(subject))
+    )
+  }
+  predictions <- .make_class_predictions(
+    x,
+    in_train_set,
+    newdata,
+    predRE,
+    subject
+  )
+  colnames(predictions) <- c(
+    subject,
+    paste0("Ypred_class", 1:(ncol(predictions) - 1))
+  )
+  if (length(not_in_train_set) == 0) {
+    return(predictions)
+  }
+  predictions_step2 <- .make_untrained_predictions(
+    x,
+    not_in_train_set,
+    newdata,
+    subject
+  )
+  colnames(predictions_step2) <- colnames(predictions)
+  rbind(predictions, predictions_step2) |>
+    arrange(get(subject))
+}
+
+# Appends rows with sample-average class probabilities for individuals without
+# observations
+.append_default_class_probs <- function(
+  probs,
+  subjects_no_obs,
+  mode_cluster
+) {
+  if (length(subjects_no_obs) == 0) {
+    return(probs)
+  }
+  prob_means <- colMeans(probs[, -c(1, 2)])
+  probs_default <- data.frame(
+    id = subjects_no_obs,
+    class = mode_cluster,
+    matrix(
+      rep(prob_means, each = length(subjects_no_obs)),
+      nrow = length(subjects_no_obs),
+      dimnames = list(NULL, names(prob_means))
+    )
+  )
+  colnames(probs_default) <- colnames(probs)
+  rbind(probs, probs_default)
+}
+
+# Augments pprob using the sample average for individuals not used in model
+# fitting (posterior probabilities are unavailable for them), assigning them
+# to the largest cluster.
+.impute_pprob <- function(pprob, newdata, subject, mode_cluster) {
+  missing_ids <- setdiff(newdata[, subject], pprob[, subject])
+  warning(
+    "Individuals ",
+    paste(missing_ids, collapse = ", "),
+    ", have not been used in LCMM model fitting. ",
+    "Imputing values for those individuals"
+  )
+  pprob_extra <- data.frame(id = missing_ids, cluster = mode_cluster)
+
+  # Column means of the probability matrix (excluding id and class columns),
+  # repeated for each individual in pprob_extra
+  prob_means_df <- t(as.data.frame(colMeans(pprob[, -c(1, 2)])))
+  repeated_means <- apply(prob_means_df, 2, rep, each = nrow(pprob_extra))
+  pprob_extra <- cbind(pprob_extra, repeated_means)
+
+  rownames(pprob_extra) <- NULL
+  colnames(pprob_extra) <- colnames(pprob)
+
+  rbind(pprob, pprob_extra) |> arrange(get(subject))
+}
+
+# Posterior class probabilities for individuals in newdata
+.get_pprob <- function(
+  x,
+  newdata,
+  subject,
+  test,
+  include_clusters,
+  newdata_long,
+  subjects_no_obs,
+  mode_cluster
+) {
+  pprob <- x$pprob |>
+    filter(
+      get(subject) %in%
+        intersect(unique(newdata[, subject]), unique(x$data[, subject]))
+    )
+  if (!test && nrow(newdata) != nrow(pprob)) {
+    return(.impute_pprob(pprob, newdata, subject, mode_cluster))
+  }
+  if (test && include_clusters) {
+    # In the test set, use lcmm::predictClass to estimate cluster allocation
+    pprob <- lcmm::predictClass(x, newdata = newdata_long)
+    if (length(subjects_no_obs) > 0) {
+      pprob <- .append_default_class_probs(
+        pprob,
+        subjects_no_obs,
+        mode_cluster
+      )
+      pprob <- pprob[match(newdata[, subject], pprob[, subject]), ]
+    }
+  }
+  pprob
+}
+
+# Weighted average of class-specific predictions using test-set class
+# probabilities
+.average_test_predictions <- function(
+  x,
+  predictions,
+  newdata,
+  newdata_long,
+  subject,
+  subjects_no_obs,
+  mode_cluster
+) {
+  class_predictions <- lcmm::predictClass(x, newdata_long, subject = subject)
+  class_predictions <- .append_default_class_probs(
+    class_predictions,
+    subjects_no_obs,
+    mode_cluster
+  )
+  class_predictions <- class_predictions[
+    match(newdata[, subject], class_predictions[, subject]),
+  ]
+  result <- rowSums(class_predictions[, -c(1, 2)] * predictions[, -1])
+  names(result) <- NULL
+  result
+}
+
+# Reduces class-specific predictions to a single prediction per individual
+.reduce_class_predictions <- function(
+  x,
+  predictions,
+  pprob,
+  newdata,
+  newdata_long,
+  subject,
+  avg,
+  test,
+  subjects_no_obs,
+  mode_cluster
+) {
+  if (avg && test) {
+    return(.average_test_predictions(
+      x,
+      predictions,
+      newdata,
+      newdata_long,
+      subject,
+      subjects_no_obs,
+      mode_cluster
+    ))
+  }
+  if (avg) {
+    return(rowSums(
+      as.matrix(predictions[, -1]) * as.matrix(pprob[, -c(1, 2)])
+    ))
+  }
+  if (x$call$ng == 1) {
+    return(predictions[, -1])
+  }
+  rowSums(
+    as.matrix(predictions[, -1]) *
+      model.matrix(
+        ~ factor(pprob$class, levels = as.character(1:x$ng)) - 1,
+        data = as.data.frame(pprob$class)
+      )
+  )
+}
+
 .predict_lcmm <- function(
   x,
   newdata,
@@ -293,210 +566,50 @@
   newdata_long = NULL
 ) {
   hlme <- NULL
-  # Step 1. we make predictions for individuals in the training set.
-
-  # Step 1a. We estimate the random effects for individuals in the training set
   x$call[[1]] <- expr(hlme)
-  # Step 1b. Find ids of individuals in the training set
+
   in_train_set <- intersect(
     unique(newdata[, subject]),
     unique(x$data[, subject])
   )
-  if (!test) {
-    predRE <- lcmm::predictRE(
-      x,
-      x$data |> filter(get(subject) %in% in_train_set),
-      subject = subject,
-      classpredRE = TRUE
-    )
+  not_in_train_set <- setdiff(unique(newdata[, subject]), in_train_set)
 
-    if (length(unique(predRE[, subject])) != length(in_train_set)) {
-      stop(sprintf(
-        paste(
-          "lcmm::predictRE produced %d predictions but expected",
-          "%d predictions.\n",
-          "Probable reason: static covariates contain missing data.\n"
-        ),
-        length(unique(predRE[, subject])),
-        length(in_train_set)
-      ))
-    }
+  # Random effects
+  subjects_no_obs <- NULL
+  if (test) {
+    re <- .predict_re_test(x, newdata, newdata_long, subject)
+    predRE <- re$predRE
+    subjects_no_obs <- re$subjects_no_obs
   } else {
-    predRE <- lcmm::predictRE(
-      x,
-      newdata_long,
-      subject = subject,
-      classpredRE = TRUE
-    )
-
-    subjects_no_obs <- setdiff(
-      newdata[, subject],
-      unique(newdata_long[, subject])
-    )
-    if (length(subjects_no_obs) > 0) {
-      re_cols <- setdiff(colnames(predRE), c(subject, "class"))
-      predRE_default <- expand.grid(
-        id = subjects_no_obs,
-        class = 1:x$ng
-      )
-      colnames(predRE_default)[1] <- subject
-      predRE_default[, re_cols] <- 0
-      predRE <- rbind(predRE, predRE_default)
-    }
-
-    if (length(unique(predRE[, subject])) != nrow(newdata)) {
-      stop(sprintf(
-        paste(
-          "lcmm::predictRE produced %d predictions but expected",
-          "%d predictions.\n",
-          "Probable reason: static covariates contain missing data.\n"
-        ),
-        length(unique(predRE[, subject])),
-        nrow(newdata)
-      ))
-    }
+    predRE <- .predict_re_train(x, in_train_set, subject)
   }
 
-  # Step 1c. Find class-specific predictions for individuals in the training
-  # set.
-  if (!test) {
-    predictions_step1 <- .make_class_predictions(
-      x,
-      in_train_set,
-      newdata,
-      predRE,
-      subject
-    )
-    colnames(predictions_step1) <- c(
-      subject,
-      paste0("Ypred_class", 1:(ncol(predictions_step1) - 1))
-    )
-  }
-
-  # Step 2. we make predictions for individuals outwith the training set.
-
-  # Step 2a. Find ids of individuals outwith the training set
-  not_in_train_set <- setdiff(
-    unique(newdata[, subject]),
-    in_train_set
+  predictions <- .make_all_class_predictions(
+    x,
+    newdata,
+    predRE,
+    subject,
+    in_train_set,
+    not_in_train_set,
+    test
   )
 
-  # Step 2b. Find class-specific predictions for individuals outside the
-  # training set.
-  if (length(not_in_train_set) > 0) {
-    if (test) {
-      predictions_step2 <- .make_class_predictions(
-        x,
-        not_in_train_set,
-        newdata,
-        predRE,
-        subject
-      )
-    } else {
-      # For individuals not in training set, make predictions without predRE
-      predictions_step2 <- t(sapply(
-        not_in_train_set,
-        function(individual) {
-          lcmm::predictY(
-            x,
-            newdata = newdata |> filter(get(subject) == individual)
-          )$pred
-        }
-      ))
-      if (x$call$ng == 1) {
-        predictions_step2 <- as.data.frame(t(predictions_step2))
-      } else {
-        predictions_step2 <- as.data.frame(predictions_step2)
-      }
-      predictions_step2[, subject] <- not_in_train_set
-      predictions_step2 <- predictions_step2 |> relocate(dplyr::all_of(subject))
-    }
-  }
-
-  # pprob contains probabilities for subjects belonging to each certain cluster,
-  # However posterior probabilities are unavailable for  individuals not
-  # included in the model fitting.
-  # We augment pprob using the sample average for individuals not used in
-  # model fitting.
-  pprob <- x$pprob |>
-    filter(
-      get(subject) %in%
-        intersect(unique(newdata[, subject]), unique(x$data[, subject]))
-    )
-  # Find the largest cluster
+  # Largest cluster
   mode_cluster <- as.integer(names(sort(-table(x$pprob$class)))[1])
   if (is.na(mode_cluster)) {
     mode_cluster <- 1L
   }
+  pprob <- .get_pprob(
+    x,
+    newdata,
+    subject,
+    test,
+    include_clusters,
+    newdata_long,
+    subjects_no_obs,
+    mode_cluster
+  )
 
-  # If there are individuals in newdata that had not been used in model fitting,
-  # we augment pprob imputing the sample average in those individuals
-  if (!test && (nrow(newdata) != nrow(pprob))) {
-    warning(
-      "Individuals ",
-      paste(setdiff(newdata[, subject], pprob[, subject]), collapse = ", "),
-      ", have not been used in LCMM model fitting. ",
-      "Imputing values for those individuals"
-    )
-    # Assign individuals not included in model fitting to the biggest cluster
-    pprob_extra <- data.frame(
-      id = setdiff(newdata[, subject], pprob[, subject]),
-      cluster = mode_cluster
-    )
-
-    # Compute the column means for the probability matrix
-    # (excluding id and class columns)
-    prob_means <- colMeans(pprob[, -c(1, 2)])
-
-    # Convert the column means into a dataframe and transpose it
-    prob_means_df <- t(as.data.frame(prob_means))
-
-    # Repeat the column means for each individual in pprob_extra
-    repeated_means <- apply(prob_means_df, 2, rep, each = nrow(pprob_extra))
-
-    # Combine the repeated means with pprob_extra
-    pprob_extra <- cbind(pprob_extra, repeated_means)
-
-    # Reset row names and column names to match the original pprob structure
-    rownames(pprob_extra) <- NULL
-    colnames(pprob_extra) <- colnames(pprob)
-
-    pprob <- rbind(pprob, pprob_extra) |> arrange(get(subject))
-  } else if (test && include_clusters) {
-    # In the test set, use lcmm::predictClass to estimate cluster allocation
-    pprob <- lcmm::predictClass(x, newdata = newdata_long)
-    if (length(subjects_no_obs) > 0) {
-      prob_means <- colMeans(pprob[, -c(1, 2)])
-      pprob_default <- data.frame(
-        id = subjects_no_obs,
-        class = mode_cluster,
-        matrix(
-          rep(prob_means, each = length(subjects_no_obs)),
-          nrow = length(subjects_no_obs),
-          dimnames = list(NULL, names(prob_means))
-        )
-      )
-      colnames(pprob_default) <- colnames(pprob)
-      pprob <- rbind(pprob, pprob_default)
-      pprob <- pprob[match(newdata[, subject], pprob[, subject]), ]
-    }
-  }
-
-  if (length(not_in_train_set) > 0) {
-    if (test) {
-      predictions <- predictions_step2 |>
-        arrange(get(subject))
-    } else {
-      colnames(predictions_step2) <- colnames(predictions_step1)
-      predictions <- rbind(
-        predictions_step1,
-        predictions_step2
-      ) |>
-        arrange(get(subject))
-    }
-  } else {
-    predictions <- predictions_step1
-  }
   # arrange()/rbind() above reorders rows by ascending subject id, which does
   # not generally match newdata's row order. Re-align predictions to
   # newdata's row order before names(predictions) <- newdata[, subject] is
@@ -504,63 +617,25 @@
   predictions <- predictions[
     match(newdata[, subject], predictions[, subject]),
   ]
+
   # If avg == TRUE, we return an average weighted according to cluster
   # probabilities. If avg == FALSE, we return the prediction according to the
   # most likely cluster
-  if (avg) {
-    if (test) {
-      class_predictions <- lcmm::predictClass(
-        x,
-        newdata_long,
-        subject = subject
-      )
-      if (length(subjects_no_obs) > 0) {
-        prob_means <- colMeans(class_predictions[, -c(1, 2)])
-        class_predictions_default <- data.frame(
-          id = subjects_no_obs,
-          class = mode_cluster,
-          matrix(
-            rep(prob_means, each = length(subjects_no_obs)),
-            nrow = length(subjects_no_obs),
-            dimnames = list(NULL, names(prob_means))
-          )
-        )
-        colnames(class_predictions_default) <- colnames(class_predictions)
-        class_predictions <- rbind(class_predictions, class_predictions_default)
-      }
-      class_predictions <- class_predictions[
-        match(newdata[, subject], class_predictions[, subject]),
-      ]
-      predictions <- predictions[
-        match(newdata[, subject], predictions[, subject]),
-      ]
-      predictions <- rowSums(class_predictions[, -c(1, 2)] * predictions[, -1])
-      names(predictions) <- NULL
-    } else {
-      predictions <- rowSums(
-        as.matrix(predictions[, -1]) *
-          as.matrix(pprob[, -c(1, 2)])
-      )
-    }
-  } else {
-    if (x$call$ng == 1) {
-      predictions <- predictions[, -1]
-    } else {
-      predictions <- rowSums(
-        as.matrix(predictions[, -1]) *
-          model.matrix(
-            ~ factor(pprob$class, levels = as.character(1:x$ng)) - 1,
-            data = as.data.frame(pprob$class)
-          )
-      )
-    }
-  }
-
-  # Store predictions in LandmarkAnalysis object
+  predictions <- .reduce_class_predictions(
+    x,
+    predictions,
+    pprob,
+    newdata,
+    newdata_long,
+    subject,
+    avg,
+    test,
+    subjects_no_obs,
+    mode_cluster
+  )
   names(predictions) <- newdata[, subject]
 
   if (include_clusters) {
-    # Append class labels
     predictions <- cbind(predictions, cluster = pprob[, "class"])
     predictions <- as.data.frame(predictions)
     predictions$cluster <- as.factor(predictions$cluster)
