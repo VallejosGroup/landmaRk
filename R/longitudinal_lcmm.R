@@ -19,8 +19,8 @@
 #'   is not supported. Requires the lcmm package to be attached
 #'   (\code{library(lcmm)}). Defaults to \code{NULL} (sequential).
 #' @param idiag Logical. If TRUE, the random effects covariance matrix is
-#'   constrained to be diagonal. Passed to the initialization model; also
-#'   passed to subsequent model fits via `...`. Defaults to FALSE.
+#'   constrained to be diagonal. Passed to the initialization model and all
+#'   subsequent model fits. Defaults to FALSE.
 #' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
 #'   function.
 #' @seealso  [lcmm::hlme()]
@@ -67,6 +67,7 @@
         ng = ng,
         B = model_init,
         classmb = classmb,
+        idiag = idiag,
         returndata = TRUE,
         maxiter = maxiter,
         ...
@@ -94,6 +95,7 @@
             subject = subject,
             ng = ng,
             classmb = classmb,
+            idiag = idiag,
             returndata = TRUE,
             maxiter = 24000,
             ...
@@ -111,6 +113,7 @@
           subject = subject,
           ng = ng,
           classmb = classmb,
+          idiag = idiag,
           model_init = model_init,
           rep = rep,
           maxiter = maxiter,
@@ -147,6 +150,7 @@
   subject,
   ng,
   classmb,
+  idiag,
   model_init,
   rep,
   maxiter,
@@ -168,6 +172,7 @@
         subject = subject,
         ng = ng,
         classmb = classmb,
+        idiag = idiag,
         returndata = TRUE,
         maxiter = fit_maxiter,
         B = B
