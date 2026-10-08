@@ -79,7 +79,7 @@ test_that("plot() shows population-average and individual trajectories for lme4"
       fit_longitudinal(
         landmarks = 365.25,
         method = "lme4",
-        formula = value ~ treat + age + (time | id),
+        formula = value ~ treat + age + (1 | id),
         dynamic_covariates = "dose"
       ) |>
       predict_longitudinal(
@@ -291,7 +291,7 @@ test_that("plot() shows out-of-sample (train = FALSE) trajectories for lme4", {
       fit_longitudinal(
         landmarks = 365.25,
         method = "lme4",
-        formula = value ~ treat + age + (time | id),
+        formula = value ~ treat + age + (1 | id),
         dynamic_covariates = "dose",
         validation_fold = 1
       ) |>
