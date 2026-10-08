@@ -211,7 +211,7 @@ test set when calling <code><a href="../reference/fit_longitudinal.html">fit_lon
 <span>  <span class="fu"><a href="../reference/fit_longitudinal.html">fit_longitudinal</a></span><span class="op">(</span></span>
 <span>    landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"lme4"</span>,</span>
-<span>    formula <span class="op">=</span> <span class="va">value</span> <span class="op">~</span> <span class="va">prevOI</span> <span class="op">+</span> <span class="va">obstime</span> <span class="op">+</span> <span class="op">(</span><span class="va">obstime</span> <span class="op">|</span> <span class="va">patient</span><span class="op">)</span>,</span>
+<span>    formula <span class="op">=</span> <span class="va">value</span> <span class="op">~</span> <span class="va">prevOI</span> <span class="op">+</span> <span class="va">obstime</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">patient</span><span class="op">)</span>,</span>
 <span>    dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD4"</span><span class="op">)</span>,</span>
 <span>    validation_fold <span class="op">=</span> <span class="fl">5</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -245,18 +245,17 @@ part of the original dataset for validation.</p>
 <span>        landmark <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>        dynamic_covariate <span class="op">=</span> <span class="st">"CD4"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Linear mixed model fit by REML ['lmerMod']</span></span>
-<span><span class="co">#&gt; Formula: value ~ prevOI + obstime + (obstime | patient)</span></span>
+<span><span class="co">#&gt; Formula: value ~ prevOI + obstime + (1 | patient)</span></span>
 <span><span class="co">#&gt;    Data: dataframe</span></span>
-<span><span class="co">#&gt; REML criterion at convergence: 4254.095</span></span>
+<span><span class="co">#&gt; REML criterion at convergence: 4261.615</span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
-<span><span class="co">#&gt;  Groups   Name        Std.Dev. Corr  </span></span>
-<span><span class="co">#&gt;  patient  (Intercept) 4.1593         </span></span>
-<span><span class="co">#&gt;           obstime     0.2385   -0.09 </span></span>
-<span><span class="co">#&gt;  Residual             1.6248         </span></span>
+<span><span class="co">#&gt;  Groups   Name        Std.Dev.</span></span>
+<span><span class="co">#&gt;  patient  (Intercept) 4.125   </span></span>
+<span><span class="co">#&gt;  Residual             1.776   </span></span>
 <span><span class="co">#&gt; Number of obs: 851, groups:  patient, 320</span></span>
 <span><span class="co">#&gt; Fixed Effects:</span></span>
 <span><span class="co">#&gt; (Intercept)   prevOIAIDS      obstime  </span></span>
-<span><span class="co">#&gt;      10.321       -4.311       -0.176</span></span></code></pre></div>
+<span><span class="co">#&gt;     10.3236      -4.3140      -0.1758</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">landmarking_object</span>, type <span class="op">=</span> <span class="st">"survival"</span>, landmark <span class="op">=</span> <span class="fl">6</span>, horizon <span class="op">=</span> <span class="fl">18</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call:</span></span>
@@ -327,7 +326,7 @@ cross-validation:</p>
 <span>    <span class="fu"><a href="../reference/fit_longitudinal.html">fit_longitudinal</a></span><span class="op">(</span></span>
 <span>      landmarks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>,</span>
 <span>      method <span class="op">=</span> <span class="st">"lme4"</span>,</span>
-<span>      formula <span class="op">=</span> <span class="va">value</span> <span class="op">~</span> <span class="va">prevOI</span> <span class="op">+</span> <span class="va">obstime</span> <span class="op">+</span> <span class="op">(</span><span class="va">obstime</span> <span class="op">|</span> <span class="va">patient</span><span class="op">)</span>,</span>
+<span>      formula <span class="op">=</span> <span class="va">value</span> <span class="op">~</span> <span class="va">prevOI</span> <span class="op">+</span> <span class="va">obstime</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">patient</span><span class="op">)</span>,</span>
 <span>      dynamic_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD4"</span><span class="op">)</span>,</span>
 <span>      validation_fold <span class="op">=</span> <span class="va">k</span></span>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span></span>

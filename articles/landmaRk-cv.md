@@ -156,7 +156,7 @@ landmarking_object <- landmarking_object |>
   fit_longitudinal(
     landmarks = c(6, 8),
     method = "lme4",
-    formula = value ~ prevOI + obstime + (obstime | patient),
+    formula = value ~ prevOI + obstime + (1 | patient),
     dynamic_covariates = c("CD4"),
     validation_fold = 5
   ) |>
@@ -195,18 +195,17 @@ summary(landmarking_object,
         landmark = 6,
         dynamic_covariate = "CD4")
 #> Linear mixed model fit by REML ['lmerMod']
-#> Formula: value ~ prevOI + obstime + (obstime | patient)
+#> Formula: value ~ prevOI + obstime + (1 | patient)
 #>    Data: dataframe
-#> REML criterion at convergence: 4254.095
+#> REML criterion at convergence: 4261.615
 #> Random effects:
-#>  Groups   Name        Std.Dev. Corr  
-#>  patient  (Intercept) 4.1593         
-#>           obstime     0.2385   -0.09 
-#>  Residual             1.6248         
+#>  Groups   Name        Std.Dev.
+#>  patient  (Intercept) 4.125   
+#>  Residual             1.776   
 #> Number of obs: 851, groups:  patient, 320
 #> Fixed Effects:
 #> (Intercept)   prevOIAIDS      obstime  
-#>      10.321       -4.311       -0.176
+#>     10.3236      -4.3140      -0.1758
 ```
 
 ``` r
@@ -293,7 +292,7 @@ for (k in 1:5) {
     fit_longitudinal(
       landmarks = c(6, 8),
       method = "lme4",
-      formula = value ~ prevOI + obstime + (obstime | patient),
+      formula = value ~ prevOI + obstime + (1 | patient),
       dynamic_covariates = c("CD4"),
       validation_fold = k
     ) |>

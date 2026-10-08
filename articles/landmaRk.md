@@ -374,7 +374,7 @@ landmarking_object <- landmarking_object |>
   fit_longitudinal(
     landmarks = c(6, 8),
     method = "lme4",
-    formula = value ~ prevOI + obstime + (obstime | patient),
+    formula = value ~ prevOI + obstime + (1 | patient),
     dynamic_covariates = c("CD4")
   ) |>
   predict_longitudinal(
@@ -405,18 +405,17 @@ summary(landmarking_object,
         landmark = 6,
         dynamic_covariate = "CD4")
 #> Linear mixed model fit by REML ['lmerMod']
-#> Formula: value ~ prevOI + obstime + (obstime | patient)
+#> Formula: value ~ prevOI + obstime + (1 | patient)
 #>    Data: dataframe
-#> REML criterion at convergence: 5298.972
+#> REML criterion at convergence: 5304.865
 #> Random effects:
-#>  Groups   Name        Std.Dev. Corr 
-#>  patient  (Intercept) 3.9915        
-#>           obstime     0.2085   0.00 
-#>  Residual             1.6926        
+#>  Groups   Name        Std.Dev.
+#>  patient  (Intercept) 4.005   
+#>  Residual             1.804   
 #> Number of obs: 1058, groups:  patient, 403
 #> Fixed Effects:
 #> (Intercept)   prevOIAIDS      obstime  
-#>     10.4447      -4.5162      -0.1788
+#>     10.4445      -4.5148      -0.1793
 ```
 
 ``` r
@@ -540,7 +539,7 @@ summary(landmarking_object,
 #>  
 #> hlme(fixed = value ~ obstime + prevOI, mixture = ~obstime + prevOI, 
 #>     random = ~obstime, subject = "patient", classmb = ~1, ng = 2, 
-#>     nwg = TRUE, maxiter = 24000, returndata = TRUE)
+#>     idiag = FALSE, nwg = TRUE, maxiter = 24000, returndata = TRUE)
 #>  
 #> Statistical Model: 
 #>      Dataset: NULL 
@@ -552,9 +551,9 @@ summary(landmarking_object,
 #> Iteration process: 
 #>      Convergence criteria satisfied 
 #>      Number of iterations:  1 
-#>      Convergence criteria: parameters= 1.2e-10 
-#>                          : likelihood= 5.5e-10 
-#>                          : second derivatives= 9.6e-11 
+#>      Convergence criteria: parameters= 1.1e-10 
+#>                          : likelihood= 5e-10 
+#>                          : second derivatives= 8.3e-11 
 #>  
 #> Goodness-of-fit statistics: 
 #>      maximum log-likelihood: -2573.92  
@@ -568,27 +567,27 @@ summary(landmarking_object,
 #> (the class of reference is the last class) 
 #> 
 #>                      coef      Se   Wald p-value
-#> intercept class1  0.02035 0.17887  0.114 0.90943
+#> intercept class1  0.02034 0.17564  0.116 0.90782
 #> 
 #> Fixed effects in the longitudinal model:
 #> 
 #>                       coef      Se   Wald p-value
-#> intercept class1   5.38688 0.31994 16.837 0.00000
-#> intercept class2  13.51822 0.49440 27.343 0.00000
+#> intercept class1   5.38687 0.31907 16.883 0.00000
+#> intercept class2  13.51821 0.49332 27.402 0.00000
 #> obstime class1    -0.16632 0.03397 -4.896 0.00000
 #> obstime class2    -0.19019 0.04641 -4.098 0.00004
-#> prevOIAIDS class1 -1.43232 0.31923 -4.487 0.00001
-#> prevOIAIDS class2 -4.81768 0.68368 -7.047 0.00000
+#> prevOIAIDS class1 -1.43232 0.31900 -4.490 0.00001
+#> prevOIAIDS class2 -4.81769 0.68299 -7.054 0.00000
 #> 
 #> 
 #> Variance-covariance matrix of the random-effects:
 #>           intercept obstime
-#> intercept  13.59456        
+#> intercept  13.59457        
 #> obstime    -0.24938 0.16877
 #> 
 #>                                     coef      Se
-#> Proportional coefficient class1  0.33971 0.04196
-#> Residual standard error:         1.55098 0.05480
+#> Proportional coefficient class1  0.33971 0.04181
+#> Residual standard error:         1.55098 0.05479
 ```
 
 ``` r

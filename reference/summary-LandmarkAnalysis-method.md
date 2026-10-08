@@ -94,7 +94,7 @@ x2 <- LandmarkAnalysis(
   fit_longitudinal(
     landmarks = 365.25,
     method = "lme4",
-    formula = value ~ treat + age + gender + learn.dis + (time | id),
+    formula = value ~ treat + age + gender + learn.dis + (1 | id),
     dynamic_covariates = c("dose")
   ) |>
   predict_longitudinal(
@@ -114,32 +114,30 @@ x2 <- LandmarkAnalysis(
   predict_survival(landmarks = 365.25, horizons = 2 * 365.25)
 summary(x2, type = "longitudinal", landmark = 365.25, dynamic_covariate = "dose")
 #> Linear mixed model fit by REML ['lmerMod']
-#> Formula: value ~ treat + age + gender + learn.dis + (time | id)
+#> Formula: value ~ treat + age + gender + learn.dis + (1 | id)
 #>    Data: dataframe
-#> REML criterion at convergence: 2246.377
+#> REML criterion at convergence: 2420.099
 #> Random effects:
-#>  Groups   Name        Std.Dev. Corr  
-#>  id       (Intercept) 0.713682       
-#>           time        0.003222 -0.22 
-#>  Residual             0.358703       
+#>  Groups   Name        Std.Dev.
+#>  id       (Intercept) 0.7638  
+#>  Residual             0.5132  
 #> Number of obs: 1074, groups:  id, 427
 #> Fixed Effects:
 #>  (Intercept)      treatLTG           age       genderM  learn.disYes  
-#>    1.9585547    -0.1244086    -0.0006828     0.1257524    -0.2773500  
-#> optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 2 lme4 warnings 
+#>    2.0315626    -0.0320387    -0.0007089     0.1570440    -0.2471645  
 summary(x2, type = "survival", landmark = 365.25, horizon = 2 * 365.25)
 #> Call:
 #> survival::coxph(formula = formula, data = data, model = TRUE, 
 #>     x = TRUE)
 #> 
-#>                   coef exp(coef)  se(coef)      z        p
-#> treatLTG      0.110243  1.116549  0.197993  0.557 0.577664
-#> age          -0.014894  0.985216  0.005952 -2.502 0.012341
-#> genderM      -0.022325  0.977923  0.198184 -0.113 0.910311
-#> learn.disYes -0.488076  0.613806  0.436477 -1.118 0.263475
-#> dose          0.276647  1.318700  0.082287  3.362 0.000774
+#>                   coef exp(coef)  se(coef)      z       p
+#> treatLTG      0.141183  1.151635  0.198293  0.712 0.47647
+#> age          -0.015029  0.985083  0.005941 -2.530 0.01142
+#> genderM      -0.022615  0.977639  0.198106 -0.114 0.90912
+#> learn.disYes -0.453466  0.635422  0.436578 -1.039 0.29895
+#> dose          0.375751  1.456084  0.128157  2.932 0.00337
 #> 
-#> Likelihood ratio test=17.86  on 5 df, p=0.003126
+#> Likelihood ratio test=15.45  on 5 df, p=0.008608
 #> n= 430, number of events= 105 
 # }
 ```
