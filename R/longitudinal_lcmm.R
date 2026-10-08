@@ -467,7 +467,8 @@
   include_clusters,
   newdata_long,
   subjects_no_obs,
-  mode_cluster
+  mode_cluster,
+  avg = FALSE
 ) {
   pprob <- x$pprob |>
     filter(
@@ -477,17 +478,20 @@
   if (!test && nrow(newdata) != nrow(pprob)) {
     return(.impute_pprob(pprob, newdata, subject, mode_cluster))
   }
-  if (test && include_clusters) {
+  # Test subjects are absent from x$data, so x$pprob is empty for them. Class
+  # allocation is needed whenever clusters are returned or a multi-class model
+  # selects class-specific predictions (avg = FALSE).
+  if (test && (include_clusters || (x$ng > 1 && !avg))) {
     # In the test set, use lcmm::predictClass to estimate cluster allocation
-    pprob <- lcmm::predictClass(x, newdata = newdata_long)
+    pprob <- lcmm::predictClass(x, newdata = newdata_long, subject = subject)
     if (length(subjects_no_obs) > 0) {
       pprob <- .append_default_class_probs(
         pprob,
         subjects_no_obs,
         mode_cluster
       )
-      pprob <- pprob[match(newdata[, subject], pprob[, subject]), ]
     }
+    pprob <- pprob[match(newdata[, subject], pprob[, subject]), ]
   }
   pprob
 }
@@ -612,7 +616,8 @@
     include_clusters,
     newdata_long,
     subjects_no_obs,
-    mode_cluster
+    mode_cluster,
+    avg
   )
 
   # arrange()/rbind() above reorders rows by ascending subject id, which does
