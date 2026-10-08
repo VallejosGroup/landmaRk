@@ -18,6 +18,9 @@
 #'   of across restarts within a single grid search; combining both
 #'   is not supported. Requires the lcmm package to be attached
 #'   (\code{library(lcmm)}). Defaults to \code{NULL} (sequential).
+#' @param idiag Logical. If TRUE, the random effects covariance matrix is
+#'   constrained to be diagonal. Passed to the initialization model; also
+#'   passed to subsequent model fits via `...`. Defaults to FALSE.
 #' @param ... Additional arguments passed to the \code{\link[lcmm]{hlme}}
 #'   function.
 #' @seealso  [lcmm::hlme()]
@@ -36,6 +39,7 @@
   classmb = ~1,
   maxiter = 500,
   cl = NULL,
+  idiag = FALSE,
   ...
 ) {
   model_init <- lcmm::hlme(
@@ -44,6 +48,7 @@
     random = random,
     subject = subject,
     ng = 1,
+    idiag = idiag,
     returndata = TRUE,
     maxiter = maxiter
   )
