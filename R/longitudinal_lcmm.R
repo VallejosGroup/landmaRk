@@ -130,6 +130,9 @@
   model_fit$call$mixture <- mixture
   model_fit$call$subject <- subject
   model_fit$call$ng <- ng
+  # Store the evaluated value: lcmm::predictClass() re-evaluates the stored
+  # call, where a bare `idiag` symbol would not be found.
+  model_fit$call$idiag <- idiag
   model_fit$call$data <- data
   model_fit$call$B <- model_init
   if (ng > 1) {
@@ -576,6 +579,11 @@
 ) {
   hlme <- NULL
   x$call[[1]] <- expr(hlme)
+  # predictClass() re-evaluates the call; make sure idiag is a value, not an
+  # unresolvable symbol (or missing) in models fitted without it stored.
+  if (is.null(x$call$idiag) || is.name(x$call$idiag)) {
+    x$call$idiag <- FALSE
+  }
 
   in_train_set <- intersect(
     unique(newdata[, subject]),
