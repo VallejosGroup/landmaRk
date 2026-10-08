@@ -301,12 +301,12 @@
       data = dataframe,
       ...
     )
-    
+
     # Check convergence for lme4 models
     if (inherits(model_fit, "lmerMod")) {
       .check_lme4_convergence(model_fit)
     }
-    
+
     model_fits[[
       dynamic_covariate
     ]] <- model_fit
