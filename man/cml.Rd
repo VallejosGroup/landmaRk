@@ -35,14 +35,9 @@ data(cml)
 \description{
 Survival outcome and baseline (static) risk factors for 190
 patients from the Benelux Chronic Myeloid Leukaemia (CML) trial
-(Kluin-Nelemans et al. 1998). This is "Data Set 2" of van Houwelingen &
-Putter (2012), used there (Chapter 8) to illustrate dynamic prediction
-with a longitudinal biomarker: white blood cell count (WBC), recorded
-every one to two months and shipped separately as \code{\link{cml_wbc}}.
+(Kluin-Nelemans et al. 1998).
 The data were originally distributed in the archived \pkg{dynpred}
-package (as \code{wbc1}), with permission from the clinical
-investigators to redistribute freely; readers using this data are
-requested to cite the clinical paper below.
+package (as \code{wbc1}).
 }
 \references{
 van Houwelingen HC, Putter H (2012). \emph{Dynamic Prediction in Clinical

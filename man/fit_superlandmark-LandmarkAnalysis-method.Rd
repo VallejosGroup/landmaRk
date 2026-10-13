@@ -17,7 +17,7 @@
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
-\item{formula}{A formula to be used in survival sub-model fitting. Must
+\item{formula}{A formula to be used in survival submodel fitting. Must
 reference the \code{LM} column directly to model landmark-varying
 covariate effects (e.g. via an interaction with a function of
 \code{LM}) or a landmark-varying baseline hazard (via

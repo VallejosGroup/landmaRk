@@ -51,18 +51,8 @@ Plot the hazard ratio of a covariate as a function of landmark time
 }
 \details{
 For every landmark time, the hazard ratio associated with a
-\code{contrast}-unit increase in \code{covariate} is computed as a
-contrast between two synthetic covariate patterns run through the
-fitted model: \eqn{\log(HR) = (x_1 - x_0)^\top \hat\beta}, with
-\eqn{x_1 - x_0} built from the model's own formula (via
-\code{\link[stats]{model.matrix}}), so this works whether
-\code{covariate} enters the formula as a plain linear term (as in the
-crude per-landmark fits of \code{\link{fit_survival}}) or interacts
-with landmark time or other covariates (as in the pooled supermodel of
-\code{\link{fit_superlandmark}}) — the functional form never needs to
-be hard-coded. Standard errors use the same contrast against
-\code{vcov(fit)} (the robust, cluster-adjusted covariance matrix, for
-superlandmark fits).
+\code{contrast}-unit increase in \code{covariate} is computed as
+\eqn{\log(HR) = (x_1 - x_0)^\top \hat\beta}.
 
 Any other covariate present in the formula is held fixed at the mean
 (numeric) or first level (factor) of \code{x@data_static}, unless

@@ -43,13 +43,9 @@ data(ova)
 }
 \description{
 Data from two clinical trials comparing combination
-chemotherapies for advanced ovarian cancer, carried out in the
-Netherlands around 1980 (Neijt et al. 1984, 1987). This is "Data Set 1"
-of van Houwelingen & Putter (2012), used there (Chapter 3, Chapter 7) to
-illustrate landmarking and superlandmarking. The data were originally
-distributed in the archived \pkg{dynpred} package (as \code{ova}), with
-permission from the clinical investigators to redistribute freely;
-readers using this data are requested to cite the clinical papers below.
+chemotherapies for advanced ovarian cancer (Neijt et al. 1984, 1987).
+The data were originally
+distributed in the archived \pkg{dynpred} package (as \code{ova}).
 }
 \references{
 van Houwelingen HC, Putter H (2012). \emph{Dynamic Prediction in Clinical

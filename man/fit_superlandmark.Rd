@@ -17,7 +17,7 @@ fit_superlandmark(
 \arguments{
 \item{x}{An object of class \code{\link{LandmarkAnalysis}}.}
 
-\item{formula}{A formula to be used in survival sub-model fitting. Must
+\item{formula}{A formula to be used in survival submodel fitting. Must
 reference the \code{LM} column directly to model landmark-varying
 covariate effects (e.g. via an interaction with a function of
 \code{LM}) or a landmark-varying baseline hazard (via
@@ -47,19 +47,16 @@ An object of class \code{\link{LandmarkAnalysis}}.
 Fits a survival model pooled across several landmark times (superlandmarking)
 }
 \details{
-This implements the "superlandmarking" approach of Chapter 7 of
-van Houwelingen HC, Putter H (2012), \emph{Dynamic Prediction in
-Clinical Survival Analysis}, Chapman & Hall. A single Cox model is fitted to a stacked
-"superdataset" pooling the risk sets of every landmark time in
-\code{landmarks}. The landmark time is available to \code{formula} as
+This function implements "superlandmarking": a single Cox model is fitted to a
+"superdataset" subjects are present as many times as
+\code{landmarks} they are at risk. The landmark time is available to \code{formula} as
 the \code{LM} column, so that covariate effects and/or the baseline
-hazard can be allowed to vary with landmark time (e.g. via a
-covariate:f(LM) interaction, or \code{strata(LM)}).
+hazard can be allowed to vary with landmark time (via an interaction term with
+covariates f(LM), or \code{strata(LM)}).
 
 Because each subject contributes one row per landmark at which they
 are still at risk, a \code{cluster(@ids)} term is added to
-\code{formula} automatically (unless already present), for the robust,
-cluster-adjusted standard errors this pooling requires.
+\code{formula} automatically (unless already present).
 }
 \examples{
 data(epileptic)

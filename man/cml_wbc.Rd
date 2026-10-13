@@ -32,13 +32,8 @@ data(cml_wbc)
 Repeated white blood cell count (WBC) measurements for the
 190 patients of \code{\link{cml}}, recorded every one to two months
 during the first stage of the Benelux Chronic Myeloid Leukaemia (CML)
-trial (Kluin-Nelemans et al. 1998). This is the longitudinal biomarker
-of "Data Set 2" of van Houwelingen & Putter (2012), used in Chapter 8 to
-illustrate dynamic prediction by landmarking with a time-varying
-covariate. The data were originally distributed in the archived
-\pkg{dynpred} package (as \code{wbc2}), with permission from the
-clinical investigators to redistribute freely; readers using this data
-are requested to cite the clinical paper below.
+trial (Kluin-Nelemans et al. 1998). The data were originally distributed in the archived
+\pkg{dynpred} package (as \code{wbc2}).
 }
 \references{
 van Houwelingen HC, Putter H (2012). \emph{Dynamic Prediction in Clinical
