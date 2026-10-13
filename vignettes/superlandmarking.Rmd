@@ -67,7 +67,7 @@ The outcome of interest is overall survival. Following Section 7.2 of van Houwel
 the predictor is a single
 prognostic index summarizing a patient's clinical risk factors at baseline, and the prediction window is
 $w = 3$ years following each landmark time. The 
-superlandmarking approach is used because the proportional hazard assumtion
+superlandmarking approach is used because the proportional hazard assumption
 does not hold here.
 
 # Example: ovarian cancer dataset
@@ -191,8 +191,8 @@ summary(fit_super)$coefficients
 
 # Displaying results
 
-Hazard ratios estiamted using both the crude landmarking and superlandmarking
-approaches cna be displayed using `plot_hazard_ratio()`.
+Hazard ratios estimated using both the crude landmarking and superlandmarking
+approaches can be displayed using `plot_hazard_ratio()`.
 
 ```{r figure-7-9, fig.width = 6, fig.height = 4}
 plot_hazard_ratio(x, covariate = "PI", landmarks = landmarks, w = w, type = "both") +
