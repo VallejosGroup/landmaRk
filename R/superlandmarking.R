@@ -44,7 +44,10 @@
       validation_fold,
       train = train
     )
-    fixed_covs <- setdiff(colnames(survival_df), c("event_time", "event_status"))
+    fixed_covs <- setdiff(
+      colnames(survival_df),
+      c("event_time", "event_status")
+    )
     landmark_df <- .cutLM(
       data = survival_df,
       outcome = list(time = "event_time", status = "event_status"),
@@ -156,7 +159,9 @@ setMethod(
     validation_fold = 0
   ) {
     if (!is.numeric(landmarks) || length(landmarks) < 2) {
-      stop("@landmarks must be a numeric vector of at least two landmark times.")
+      stop(
+        "@landmarks must be a numeric vector of at least two landmark times."
+      )
     }
     if (!is.numeric(w) || length(w) != 1 || w <= 0) {
       stop("@w must be a single, positive numeric prediction window.")
@@ -352,8 +357,11 @@ setMethod(
         fit <- x@survival_fits[[key]]
         if (is.null(fit)) {
           stop(
-            "No crude survival model has been fitted for landmark ", s,
-            " and window ", w, ". Call fit_survival() first."
+            "No crude survival model has been fitted for landmark ",
+            s,
+            " and window ",
+            w,
+            ". Call fit_survival() first."
           )
         }
         reference <- if (is.null(newdata)) {
@@ -374,7 +382,9 @@ setMethod(
       if (is.null(fit)) {
         stop(
           "No superlandmark model has been fitted for landmarks ",
-          paste(landmarks, collapse = ", "), " and window ", w,
+          paste(landmarks, collapse = ", "),
+          " and window ",
+          w,
           ". Call fit_superlandmark() first."
         )
       }
@@ -398,12 +408,14 @@ setMethod(
         ggplot2::geom_step(
           data = crude,
           ggplot2::aes(.data[["s"]], .data[["coef"]] + z * .data[["se"]]),
-          linetype = "solid", linewidth = 0.3
+          linetype = "solid",
+          linewidth = 0.3
         ) +
         ggplot2::geom_step(
           data = crude,
           ggplot2::aes(.data[["s"]], .data[["coef"]] - z * .data[["se"]]),
-          linetype = "solid", linewidth = 0.3
+          linetype = "solid",
+          linewidth = 0.3
         ) +
         ggplot2::geom_step(
           data = crude,
@@ -416,12 +428,14 @@ setMethod(
         ggplot2::geom_line(
           data = supermodel,
           ggplot2::aes(.data[["s"]], .data[["coef"]] + z * .data[["se"]]),
-          linetype = "dashed", linewidth = 0.3
+          linetype = "dashed",
+          linewidth = 0.3
         ) +
         ggplot2::geom_line(
           data = supermodel,
           ggplot2::aes(.data[["s"]], .data[["coef"]] - z * .data[["se"]]),
-          linetype = "dashed", linewidth = 0.3
+          linetype = "dashed",
+          linewidth = 0.3
         ) +
         ggplot2::geom_line(
           data = supermodel,

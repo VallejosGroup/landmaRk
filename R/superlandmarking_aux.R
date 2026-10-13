@@ -161,7 +161,15 @@
   LMdata$LM <- LM
   if (format == "long") {
     cols <- match(
-      c(id, outcome$time, outcome$status, covs$fixed, covs$varying, rtime, "LM"),
+      c(
+        id,
+        outcome$time,
+        outcome$status,
+        covs$fixed,
+        covs$varying,
+        rtime,
+        "LM"
+      ),
       names(LMdata)
     )
   } else {

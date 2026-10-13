@@ -262,8 +262,15 @@ test_that("plot_hazard_ratio matches directly-computed coefficients/SEs", {
   fit_crude <- x@survival_fits[["365.25-730.5"]]
   expect_equal(
     landmaRk:::.hazard_ratio_contrast(
-      fit_crude, "age", 1,
-      landmaRk:::.default_reference_row(fit_crude, "age", character(0), x@data_static)
+      fit_crude,
+      "age",
+      1,
+      landmaRk:::.default_reference_row(
+        fit_crude,
+        "age",
+        character(0),
+        x@data_static
+      )
     )$log_hr,
     unname(coef(fit_crude)["age"])
   )
@@ -273,12 +280,22 @@ test_that("plot_hazard_ratio matches directly-computed coefficients/SEs", {
   model_name <- "365.25,548,730.5-365.25"
   fit_super <- x@superlandmark_fits[[model_name]]
   hr_at_0 <- landmaRk:::.hazard_ratio_contrast(
-    fit_super, "age", 1,
-    data.frame(treat = factor("CBZ", levels = levels(x@data_static$treat)), LM = 0)
+    fit_super,
+    "age",
+    1,
+    data.frame(
+      treat = factor("CBZ", levels = levels(x@data_static$treat)),
+      LM = 0
+    )
   )
   hr_at_5 <- landmaRk:::.hazard_ratio_contrast(
-    fit_super, "age", 1,
-    data.frame(treat = factor("CBZ", levels = levels(x@data_static$treat)), LM = 500)
+    fit_super,
+    "age",
+    1,
+    data.frame(
+      treat = factor("CBZ", levels = levels(x@data_static$treat)),
+      LM = 500
+    )
   )
   expect_equal(hr_at_0$log_hr, hr_at_5$log_hr)
   expect_equal(hr_at_0$log_hr, unname(coef(fit_super)["age"]))
