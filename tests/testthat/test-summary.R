@@ -37,7 +37,7 @@ test_that("Summary method works", {
     fit_longitudinal(
       landmarks = 365.25,
       method = "lme4",
-      formula = value ~ treat + age + gender + learn.dis + (time | id),
+      formula = value ~ treat + age + gender + learn.dis + (1 | id),
       dynamic_covariates = c("dose")
     ) |>
     predict_longitudinal(

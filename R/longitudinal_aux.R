@@ -251,6 +251,28 @@
   Sys.info()[["sysname"]] != "Windows"
 }
 
+# Check convergence of lme4 models; raises an error if the model failed to converge
+.check_lme4_convergence <- function(model_fit) {
+  conv <- model_fit@optinfo$conv
+  conv_messages <- setdiff(
+    unlist(conv$lme4$messages, use.names = FALSE),
+    "boundary (singular) fit: see help('isSingular')"
+  )
+  optimizer_failed <- length(conv$opt) > 0 && any(conv$opt != 0)
+  if (optimizer_failed || length(conv_messages) > 0) {
+    details <- c(
+      if (optimizer_failed) {
+        paste("optimizer convergence code", paste(conv$opt, collapse = ", "))
+      },
+      conv_messages
+    )
+    stop(
+      "lme4 model failed to converge: ",
+      paste(details, collapse = "; ")
+    )
+  }
+}
+
 .fit_longitudinal_model <- function(
   x,
   landmark,
@@ -285,13 +307,20 @@
       )
 
     # Fit longitudinal model according to chosen method
-    model_fits[[
-      dynamic_covariate
-    ]] <- method(
+    model_fit <- method(
       formula,
       data = dataframe,
       ...
     )
+
+    # Check convergence for lme4 models
+    if (inherits(model_fit, "lmerMod")) {
+      .check_lme4_convergence(model_fit)
+    }
+
+    model_fits[[
+      dynamic_covariate
+    ]] <- model_fit
   }
   model_fits
 }

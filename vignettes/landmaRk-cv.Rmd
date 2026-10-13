@@ -106,7 +106,7 @@ landmarking_object <- landmarking_object |>
   fit_longitudinal(
     landmarks = c(6, 8),
     method = "lme4",
-    formula = value ~ prevOI + obstime + (obstime | patient),
+    formula = value ~ prevOI + obstime + (1 | patient),
     dynamic_covariates = c("CD4"),
     validation_fold = 5
   ) |>
@@ -199,7 +199,7 @@ for (k in 1:5) {
     fit_longitudinal(
       landmarks = c(6, 8),
       method = "lme4",
-      formula = value ~ prevOI + obstime + (obstime | patient),
+      formula = value ~ prevOI + obstime + (1 | patient),
       dynamic_covariates = c("CD4"),
       validation_fold = k
     ) |>
