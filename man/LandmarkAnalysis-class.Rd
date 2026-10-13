@@ -60,6 +60,23 @@ specified landmark times and prediction horizons.}
 \item{\code{survival_predictions_test}}{List of out-of-sample predictions
 for the time-to-event outcome if K > 1.}
 
+\item{\code{superlandmark_datasets}}{List of stacked "superdatasets" (one row per
+subject per landmark time, administratively censored at the
+corresponding horizon) used to fit superlandmark survival submodels, as
+produced by \code{\link{fit_superlandmark}}.}
+
+\item{\code{superlandmark_datasets_test}}{List of stacked superdatasets used for
+out-of-sample superlandmark predictions.}
+
+\item{\code{superlandmark_fits}}{List of survival model fits pooled across
+landmark times, as produced by \code{\link{fit_superlandmark}}.}
+
+\item{\code{superlandmark_predictions}}{List of time-to-event predictions from
+superlandmark submodels.}
+
+\item{\code{superlandmark_predictions_test}}{List of out-of-sample time-to-event
+predictions from superlandmark submodels if K > 1.}
+
 \item{\code{K}}{Number of cross-validation folds (1 by default)}
 
 \item{\code{cv_folds}}{Data frame associating individuals to cross-validation folds}
