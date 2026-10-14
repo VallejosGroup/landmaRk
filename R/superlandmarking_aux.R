@@ -40,18 +40,24 @@
 # Default reference values (mean if numeric, first level if a factor) for
 # every variable `fit`'s formula needs other than `covariate`/`exclude`
 # (`exclude` is typically "LM", which callers supply explicitly per
-# landmark instead of defaulting). Values are taken from `data`.
-.default_reference_row <- function(fit, covariate, exclude, data) {
+# landmark instead of defaulting). Values are taken from `data` (normally
+# `data_static`); any variable not found there (e.g. a dynamic covariate,
+# which is never a column of `data_static`) is instead looked up in
+# `model_data`, the data frame the model was actually fitted on (e.g.
+# `x@survival_datasets[[key]]` or `x@superlandmark_datasets[[model_name]]`).
+.default_reference_row <- function(fit, covariate, exclude, data, model_data = NULL) {
   vars <- setdiff(
     all.vars(stats::delete.response(stats::terms(fit))),
     c(covariate, exclude)
   )
-  vars <- intersect(vars, colnames(data))
-  if (length(vars) == 0) {
-    return(data.frame(row.names = 1L))
-  }
   row <- lapply(vars, function(v) {
-    col <- data[[v]]
+    col <- if (v %in% colnames(data)) {
+      data[[v]]
+    } else if (!is.null(model_data) && v %in% colnames(model_data)) {
+      model_data[[v]]
+    } else {
+      return(NULL)
+    }
     if (is.numeric(col)) {
       mean(col, na.rm = TRUE)
     } else {
@@ -59,6 +65,10 @@
     }
   })
   names(row) <- vars
+  row <- row[!vapply(row, is.null, logical(1))]
+  if (length(row) == 0) {
+    return(data.frame(row.names = 1L))
+  }
   as.data.frame(row)
 }
 

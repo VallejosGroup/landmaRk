@@ -365,7 +365,13 @@ setMethod(
           )
         }
         reference <- if (is.null(newdata)) {
-          .default_reference_row(fit, covariate, character(0), x@data_static)
+          .default_reference_row(
+            fit,
+            covariate,
+            character(0),
+            x@data_static,
+            x@survival_datasets[[key]]
+          )
         } else {
           newdata
         }
@@ -389,7 +395,13 @@ setMethod(
         )
       }
       reference <- if (is.null(newdata)) {
-        .default_reference_row(fit, covariate, "LM", x@data_static)
+        .default_reference_row(
+          fit,
+          covariate,
+          "LM",
+          x@data_static,
+          x@superlandmark_datasets[[model_name]]
+        )
       } else {
         newdata
       }
