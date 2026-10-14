@@ -37,7 +37,7 @@ $$
 Repeating this at a grid of landmark times $s_1, \dots, s_L$ gives landmark-specific
 estimate of $\beta_{LM}$ per landmark (the "Crude" estimates below).
 
-Superlandmarking instead pools every landmark-specific dataset
+Superlandmarking instead pools every landmark-specific dataset into
 a single stacked superdataset, and lets $\beta_{LM}$ vary smoothly with $s$
 via a basis expansion rather than being re-estimated independently at each
 landmark:
