@@ -16,7 +16,8 @@
         "+ cluster(",
         ids,
         ")"
-      )
+      ),
+      env = environment(formula)
     )
   }
   formula
