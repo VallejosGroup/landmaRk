@@ -8,17 +8,17 @@
 .add_cluster_term <- function(formula, ids) {
   rhs <- as.character(formula)[3]
   if (!grepl("cluster\\(", rhs)) {
-formula <- stats::as.formula(
-  paste(
-    as.character(formula)[2],
-    as.character(formula)[1],
-    rhs,
-    "+ cluster(",
-    ids,
-    ")"
-  ),
-  env = environment(formula)
-)
+    formula <- stats::as.formula(
+      paste(
+        as.character(formula)[2],
+        as.character(formula)[1],
+        rhs,
+        "+ cluster(",
+        ids,
+        ")"
+      ),
+      env = environment(formula)
+    )
   }
   formula
 }
