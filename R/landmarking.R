@@ -33,6 +33,18 @@
 #'   specified landmark times and prediction horizons.
 #' @slot survival_predictions_test List of out-of-sample predictions
 #'   for the time-to-event outcome if K > 1.
+#' @slot superlandmark_datasets List of stacked "superdatasets" (one row per
+#'   subject per landmark time, administratively censored at the
+#'   corresponding horizon) used to fit superlandmark survival submodels, as
+#'   produced by \code{\link{fit_superlandmark}}.
+#' @slot superlandmark_datasets_test List of stacked superdatasets used for
+#'   out-of-sample superlandmark predictions.
+#' @slot superlandmark_fits List of survival model fits pooled across
+#'   landmark times, as produced by \code{\link{fit_superlandmark}}.
+#' @slot superlandmark_predictions List of time-to-event predictions from
+#'   superlandmark submodels.
+#' @slot superlandmark_predictions_test List of out-of-sample time-to-event
+#'   predictions from superlandmark submodels if K > 1.
 #' @slot K Number of cross-validation folds (1 by default)
 #' @slot cv_folds Data frame associating individuals to cross-validation folds
 #'
@@ -58,6 +70,11 @@ setClass(
     survival_fits = "list",
     survival_predictions = "list",
     survival_predictions_test = "list",
+    superlandmark_datasets = "list",
+    superlandmark_datasets_test = "list",
+    superlandmark_fits = "list",
+    superlandmark_predictions = "list",
+    superlandmark_predictions_test = "list",
     K = "numeric",
     cv_folds = "data.frame"
   )
@@ -232,6 +249,11 @@ LandmarkAnalysis <- function(
     survival_fits = list(),
     survival_predictions = list(),
     survival_predictions_test = list(),
+    superlandmark_datasets = list(),
+    superlandmark_datasets_test = list(),
+    superlandmark_fits = list(),
+    superlandmark_predictions = list(),
+    superlandmark_predictions_test = list(),
     K = K,
     cv_folds = cv_folds
   )
