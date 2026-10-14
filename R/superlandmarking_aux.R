@@ -45,7 +45,13 @@
 # which is never a column of `data_static`) is instead looked up in
 # `model_data`, the data frame the model was actually fitted on (e.g.
 # `x@survival_datasets[[key]]` or `x@superlandmark_datasets[[model_name]]`).
-.default_reference_row <- function(fit, covariate, exclude, data, model_data = NULL) {
+.default_reference_row <- function(
+  fit,
+  covariate,
+  exclude,
+  data,
+  model_data = NULL
+) {
   vars <- setdiff(
     all.vars(stats::delete.response(stats::terms(fit))),
     c(covariate, exclude)
