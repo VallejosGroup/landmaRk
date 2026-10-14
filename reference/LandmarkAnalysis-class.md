@@ -85,6 +85,33 @@ S4 class for performing a landmarking analysis
   List of out-of-sample predictions for the time-to-event outcome if K
   \> 1.
 
+- `superlandmark_datasets`:
+
+  List of stacked "superdatasets" (one row per subject per landmark
+  time, administratively censored at the corresponding horizon) used to
+  fit superlandmark survival submodels, as produced by
+  [`fit_superlandmark`](https://vallejosgroup.github.io/landmaRk/reference/fit_superlandmark.md).
+
+- `superlandmark_datasets_test`:
+
+  List of stacked superdatasets used for out-of-sample superlandmark
+  predictions.
+
+- `superlandmark_fits`:
+
+  List of survival model fits pooled across landmark times, as produced
+  by
+  [`fit_superlandmark`](https://vallejosgroup.github.io/landmaRk/reference/fit_superlandmark.md).
+
+- `superlandmark_predictions`:
+
+  List of time-to-event predictions from superlandmark submodels.
+
+- `superlandmark_predictions_test`:
+
+  List of out-of-sample time-to-event predictions from superlandmark
+  submodels if K \> 1.
+
 - `K`:
 
   Number of cross-validation folds (1 by default)

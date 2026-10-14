@@ -4,7 +4,8 @@ pkgdown_sha: ~
 articles:
   landmaRk-cv: landmaRk-cv.html
   landmaRk: landmaRk.html
-last_built: 2026-10-12T05:13Z
+  superlandmarking: superlandmarking.html
+last_built: 2026-10-14T10:36Z
 urls:
   reference: https://vallejosgroup.github.io/landmaRk/reference
   article: https://vallejosgroup.github.io/landmaRk/articles

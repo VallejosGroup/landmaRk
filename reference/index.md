@@ -11,6 +11,12 @@
 - [`check_lcmm_convergence()`](https://vallejosgroup.github.io/landmaRk/reference/check_lcmm_convergence.md)
   : Checks convergence of lcmm models
 
+- [`cml`](https://vallejosgroup.github.io/landmaRk/reference/cml.md) :
+  Chronic myeloid leukaemia data: static covariates and survival outcome
+
+- [`cml_wbc`](https://vallejosgroup.github.io/landmaRk/reference/cml_wbc.md)
+  : Chronic myeloid leukaemia data: longitudinal white blood cell count
+
 - [`compute_risk_sets(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/compute_risk_sets-LandmarkAnalysis-method.md)
   : Compute the list of individuals at risk at landmark times
 
@@ -28,6 +34,14 @@
   : Fits the specified longitudinal model for time-varying covariates up
   to the landmark times
 
+- [`fit_superlandmark(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/fit_superlandmark-LandmarkAnalysis-method.md)
+  : Fits a survival model pooled across several landmark times
+  (superlandmarking)
+
+- [`fit_superlandmark()`](https://vallejosgroup.github.io/landmaRk/reference/fit_superlandmark.md)
+  : Fits a survival model pooled across several landmark times
+  (superlandmarking)
+
 - [`fit_survival(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/fit_survival-LandmarkAnalysis-method.md)
   : Fits the specified survival model at the landmark times and up to
   the horizon times specified by the user
@@ -35,6 +49,9 @@
 - [`fit_survival()`](https://vallejosgroup.github.io/landmaRk/reference/fit_survival.md)
   : Fits the specified survival model at the landmark times and up to
   the horizon times specified by the user
+
+- [`ova`](https://vallejosgroup.github.io/landmaRk/reference/ova.md) :
+  Advanced ovarian cancer data
 
 - [`performance_metrics(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/performance_metrics-LandmarkAnalysis-method.md)
   : Performance metrics
@@ -46,6 +63,12 @@
   : Plot longitudinal observations and predicted survival curve for one
   individual
 
+- [`plot_hazard_ratio(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/plot_hazard_ratio-LandmarkAnalysis-method.md)
+  : Plot the hazard ratio of a covariate as a function of landmark time
+
+- [`plot_hazard_ratio()`](https://vallejosgroup.github.io/landmaRk/reference/plot_hazard_ratio.md)
+  : Plot the hazard ratio of a covariate as a function of landmark time
+
 - [`predict_longitudinal(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal-LandmarkAnalysis-method.md)
   : Make predictions for time-varying covariates at specified landmark
   times
@@ -53,6 +76,12 @@
 - [`predict_longitudinal()`](https://vallejosgroup.github.io/landmaRk/reference/predict_longitudinal.md)
   : Make predictions for time-varying covariates at specified landmark
   times
+
+- [`predict_superlandmark(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/predict_superlandmark-LandmarkAnalysis-method.md)
+  : Make predictions from a superlandmark survival model
+
+- [`predict_superlandmark()`](https://vallejosgroup.github.io/landmaRk/reference/predict_superlandmark.md)
+  : Make predictions from a superlandmark survival model
 
 - [`predict_survival(`*`<LandmarkAnalysis>`*`)`](https://vallejosgroup.github.io/landmaRk/reference/predict_survival-LandmarkAnalysis-method.md)
   : Make predictions for time-to-event outcomes at specified horizon
