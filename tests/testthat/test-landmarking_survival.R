@@ -34,7 +34,7 @@ test_that("Error handling for fit_survival", {
     fit_longitudinal(
       landmarks = seq(from = 365.25, to = 2 * 365.25, by = 365.25),
       method = "lme4",
-      formula = value ~ treat + age + gender + learn.dis + (time | id),
+      formula = value ~ treat + age + gender + learn.dis + (1 | id),
       dynamic_covariates = c("dose")
     ) |>
     predict_longitudinal(

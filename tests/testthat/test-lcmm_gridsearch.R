@@ -43,10 +43,12 @@ test_that(".fit_lcmm sequential grid search (rep > 1) converges", {
     ng = 2,
     rep = 3,
     classmb = ~ X2 + X3,
-    maxiter = 30
+    maxiter = 30,
+    idiag = TRUE
   )
   expect_s3_class(fit, "hlme")
   expect_equal(fit$conv, 1)
+  expect_identical(fit$call$idiag, TRUE)
 })
 
 test_that(".fit_lcmm parallel grid search (rep > 1, cl > 1) converges", {
@@ -64,10 +66,12 @@ test_that(".fit_lcmm parallel grid search (rep > 1, cl > 1) converges", {
     rep = 3,
     classmb = ~ X2 + X3,
     maxiter = 30,
-    cl = 2
+    cl = 2,
+    idiag = TRUE
   )
   expect_s3_class(fit, "hlme")
   expect_equal(fit$conv, 1)
+  expect_identical(fit$call$idiag, TRUE)
   # model_fit$call$data is fixed up to the real data frame, not the
   # temporary global-environment binding used to work around
   # lcmm::gridsearch()'s cluster-export mechanism
@@ -76,6 +80,24 @@ test_that(".fit_lcmm parallel grid search (rep > 1, cl > 1) converges", {
     ls(envir = globalenv(), pattern = "^\\.landmaRk_gridsearch_data_"),
     0
   )
+})
+
+test_that(".fit_lcmm passes idiag to direct fits", {
+  data(data_hlme, package = "lcmm")
+
+  fit <- .fit_lcmm(
+    Y ~ Time * X1,
+    data = data_hlme,
+    mixture = ~Time,
+    random = ~Time,
+    subject = "ID",
+    ng = 2,
+    classmb = ~ X2 + X3,
+    idiag = TRUE
+  )
+
+  expect_s3_class(fit, "hlme")
+  expect_identical(fit$call$idiag, TRUE)
 })
 
 test_that(".fit_lcmm requires lcmm to be attached for rep > 1 grid search", {

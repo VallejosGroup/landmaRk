@@ -68,8 +68,8 @@
 #'
 #' @details
 #'  This function implements "superlandmarking": a single Cox model is fitted to a
-#'  "superdataset" subjects are present as many times as
-#'  \code{landmarks} they are at risk. The landmark time is available to \code{formula} as
+#'  "superdataset" in which subjects are present once for every
+#'  landmark at which they are at risk.
 #'  the \code{LM} column, so that covariate effects and/or the baseline
 #'  hazard can be allowed to vary with landmark time (via an interaction term with
 #'  covariates f(LM), or \code{strata(LM)}).
